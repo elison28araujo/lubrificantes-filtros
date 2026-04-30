@@ -1,0 +1,21 @@
+{
+  "name": "lubrificantes-filtros",
+  "version": "1.0.0",
+  "description": "Consulta offline de filtros e lubrificantes por equipamento",
+  "main": "app.js",
+  "scripts": {
+    "parse:data": "node parse_data.js",
+    "build:web": "node build-web.js",
+    "android:sync": "npm run build:web && npx cap sync android",
+    "android:apk": "npm run android:sync && cd android && gradlew.bat assembleDebug"
+  },
+  "keywords": [],
+  "author": "Elison Araujo",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@capacitor/android": "^8.3.1",
+    "@capacitor/cli": "^8.3.1",
+    "@capacitor/core": "^8.3.1"
+  }
+}

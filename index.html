@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#004a2f" />
+  <meta name="description" content="Aplicativo de Lubrificantes e Filtros por Equipamento - Elison Araujo" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Lubrificantes" />
+  <title>Lubrificantes e Filtros</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Splash Screen -->
+  <div id="splash" class="splash">
+    <div class="splash-content">
+      <div class="splash-icon">
+        <img src="FORM_117 (1).xlsx~1/resources/image_1069608006_0.jpg" alt="Logo U&M" style="max-width: 180px; height: auto; border-radius: 8px; filter: drop-shadow(0 0 15px rgba(255,255,255,0.2))">
+      </div>
+      <h1 class="splash-title">Lubrificantes<br/>& Filtros</h1>
+      <p class="splash-sub">Elison Araujo</p>
+      <div class="splash-spinner">
+        <div class="spinner-ring"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- App -->
+  <div id="app" class="app hidden">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="header-logo">
+          <img src="FORM_117 (1).xlsx~1/resources/image_1069608006_0.jpg" alt="Logo" style="width: auto; height: 32px; object-fit: contain; border-radius: 4px;">
+        </div>
+        <div class="header-text">
+          <h1 class="header-title">Lubrificantes & Filtros</h1>
+          <p class="header-dev">Elison Araujo</p>
+        </div>
+        <button class="btn-info" id="btnInfo" title="Informações">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Search & Filter Bar -->
+    <div class="search-bar">
+      <div class="search-wrap">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="Buscar equipamento..."
+          autocomplete="off"
+          autocorrect="off"
+          spellcheck="false"
+        />
+        <button class="btn-clear hidden" id="btnClear">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Category Filter Pills -->
+    <div class="pills-wrap" id="pillsWrap">
+      <div class="pills-scroll" id="pillsScroll">
+        <!-- pills inserted by JS -->
+      </div>
+    </div>
+
+    <!-- Results Count -->
+    <div class="results-info" id="resultsInfo">
+      <span id="resultsCount"></span>
+    </div>
+
+    <!-- Equipment List -->
+    <main class="main" id="mainContent">
+      <div class="equipment-list" id="equipmentList">
+        <!-- cards inserted by JS -->
+      </div>
+      <div class="empty-state hidden" id="emptyState">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+        <p>Nenhum equipamento encontrado</p>
+        <small>Tente outro nome ou categoria</small>
+      </div>
+    </main>
+
+    <!-- Modal Detalhes -->
+    <div class="modal-overlay hidden" id="modalOverlay">
+      <div class="modal" id="modal">
+        <div class="modal-header" id="modalHeader">
+          <div class="modal-title-wrap">
+            <div class="modal-icon" id="modalIcon"></div>
+            <div>
+              <h2 class="modal-title" id="modalTitle"></h2>
+              <p class="modal-subtitle" id="modalSubtitle"></p>
+            </div>
+          </div>
+          <button class="modal-close" id="modalClose">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body" id="modalBody">
+          <!-- compartments inserted by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div class="modal-overlay hidden" id="infoOverlay">
+      <div class="modal info-modal">
+        <div class="modal-header" style="background: linear-gradient(135deg, #1a3a6b, #0a1628)">
+          <div class="modal-title-wrap">
+            <div class="modal-icon" style="background: rgba(255,255,255,0.1)">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </div>
+            <div>
+              <h2 class="modal-title">Sobre o App</h2>
+              <p class="modal-subtitle">Versão 1.0</p>
+            </div>
+          </div>
+          <button class="modal-close" id="infoClose">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body" style="padding: 24px">
+          <div class="info-row"><strong>Aplicativo:</strong> Lubrificantes e Filtros</div>
+          <div class="info-row"><strong>Desenvolvedor:</strong> Elison Araujo</div>
+          <div class="info-row"><strong>Versão:</strong> 1.0.0</div>
+          <div class="info-row"><strong>Objetivo:</strong> Consulta rápida de filtros e lubrificantes por equipamento e compartimento.</div>
+          <div style="margin-top: 20px; padding: 14px; background: rgba(37,99,235,0.1); border-radius: 10px; border: 1px solid rgba(37,99,235,0.3)">
+            <p style="color: #93c5fd; font-size: 13px; line-height: 1.6; margin: 0">
+              💡 <strong>Dica:</strong> Toque em qualquer equipamento para ver todos os compartimentos com filtros e fluidos recomendados.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/5594991014378" class="whatsapp-float" id="whatsappBtn">
+      <svg viewBox="0 0 24 24">
+        <path d="M12.012 2c-5.508 0-9.987 4.479-9.987 9.987 0 1.763.462 3.421 1.262 4.862L2 22l5.364-1.408c1.391.76 2.969 1.195 4.648 1.195 5.508 0 9.987-4.479 9.987-9.987S17.52 2 12.012 2zm0 18.283c-1.523 0-2.951-.402-4.186-1.103l-.3-.171-3.111.816.83-3.033-.188-.299a8.232 8.232 0 0 1-1.264-4.506c0-4.561 3.71-8.271 8.271-8.271s8.271 3.71 8.271 8.271-3.71 8.271-8.271 8.271-.048 0-.048 0zM16.19 13.9c-.23-.115-1.354-.667-1.564-.744-.21-.077-.362-.115-.515.115-.153.23-.592.744-.726.897-.134.153-.268.172-.498.057-.23-.115-.97-.358-1.848-1.141-.683-.61-1.144-1.363-1.278-1.592-.134-.23-.014-.354.101-.468.103-.103.23-.268.344-.402.115-.134.153-.23.23-.383.077-.153.038-.287-.019-.402-.057-.115-.515-1.243-.706-1.703-.186-.447-.373-.386-.515-.394-.132-.007-.285-.008-.439-.008-.153 0-.402.057-.611.287-.21.23-.803.784-.803 1.912 0 1.127.822 2.217.937 2.37.115.153 1.618 2.471 3.918 3.46.547.235 1.012.376 1.403.499.551.173 1.052.148 1.448.089.441-.066 1.354-.555 1.545-1.09.191-.535.191-.994.134-1.09-.057-.096-.21-.153-.44-.268z"/>
+      </svg>
+    </a>
+
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

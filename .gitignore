@@ -1,0 +1,8 @@
+node_modules/
+android/
+www/
+dist/
+*.apk
+*.log
+.DS_Store
+package-lock.json

@@ -1,0 +1,12 @@
+{
+  "appId": "br.com.elisonaraujo.lubrificantesfiltros",
+  "appName": "Lubrificantes e Filtros",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}
