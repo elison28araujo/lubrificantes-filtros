@@ -1,0 +1,88 @@
+# Histórico de Desenvolvimento - App Lubetrack (Lubrificantes & Filtros)
+
+## Fase 1: Interface Mobile e Deploy
+- Melhorias na UI/UX do aplicativo de campo para facilitar o uso pelos operadores.
+- Correção na exibição da logo e ajustes de responsividade.
+- Definição da estratégia de deploy: geração de APK para Android e configuração de PWA para facilitar o acesso via Web/iOS.
+
+## Fase 2: Segurança, Autenticação e Controle de Acesso
+- Implementação de sistema de autorização por dispositivo (Device ID) utilizando uma Whitelist gerenciada no painel PCM.
+- Bloqueio de submissões de dados a partir de dispositivos não autorizados.
+- Modos operacionais protegidos por PIN e modais customizados para senhas.
+- Sistema de auditoria e validação rigorosa para ajustes de estoque, exigindo códigos de segurança únicos para administradores específicos (Elison, Tiago, Rodrigo).
+- Separação lógica para gerar APKs independentes: App de Campo vs. Painel PCM.
+
+## Fase 3: Painel PCM e Gestão de Estoque
+- Criação e otimização da interface mobile do PCM com navegação baseada em abas.
+- Implementação de busca e filtros em tempo real para localizar itens e registros rapidamente.
+- Sincronização automatizada e em tempo real do inventário (estoque) e do histórico entre o Firebase (nuvem) e os dispositivos.
+- Padronização visual do dashboard PCM para manter consistência com o app de campo.
+
+## Fase 4: Estabilização, Layout e Auditoria (Fase Atual)
+- Resolução de problemas de layout (Splash Screen) e estabilização de navegação.
+- Correção de bugs de CSS e JS na tela de autorização de novos tablets.
+- Refinamento dos logs de histórico no PCM, adicionando metadados importantes nas listagens (Frota, Unidade, Horímetro, Tablet responsável).
+- Ajustes finos nas Regras de Segurança do Firebase para garantir que as atualizações manuais de estoque pelo PCM sejam sempre auditadas e seguras.
+
+## Fase 5: Operação Offline Plena (PWA e Firebase)
+- Criação e registro de Service Worker (`sw.js`) com estratégia Stale-While-Revalidate para garantir o carregamento da interface (PWA) mesmo sem internet.
+- Habilitação da Persistência Offline (`enableIndexedDbPersistence`) no Firestore, permitindo leitura de dados em cache (IndexedDB) e gravações em fila.
+- Implementação de um contorno de segurança (`initSecuritySync`) que valida o acesso offline imediato (através de cache em `localStorage`), impedindo que o aplicativo travasse na Splash Screen quando não houvesse conexão.
+- Restauração e correção da funcionalidade de atalho "LANÇAR": agora o sistema preenche automaticamente o Equipamento, Compartimento e Quantidade sugerida ao selecionar um item diretamente no catálogo.
+
+## Fase 6: Automação e Documentação de Acesso
+- Criação do arquivo `senhas.txt` consolidando todas as credenciais, PINs e códigos de autorização do projeto para consulta rápida.
+- Desenvolvimento do script `GERAR_APKS.bat` para automatizar a geração simultânea e independente do APK de Campo e do APK PCM em ambiente Windows.
+
+## Fase 7: Controle de Estoque do Almoxarifado (Módulo Independente)
+- Desenvolvimento de um painel de controle exclusivo para a equipe do Almoxarifado (`almoxarifado.html`).
+- Implementação de controle de acesso baseado em cargos com dois perfis: Gerente (acesso administrativo total e ajuste manual de estoque) e Almoxarife (permissão apenas para lançar recebimento e transferência).
+- Lógica de autoseed para criação inicial dos acessos do Almoxarifado no Firestore.
+- Integração de logs detalhados de movimentação no histórico existente, registrando Notas Fiscais, fornecedores e destinos da transferência (PCM Campo).
+- Atualização do Service Worker para cache offline do novo módulo e evolução do script de build (`gerar_apks.js` e `GERAR_APKS.bat`) para compilar o terceiro APK independente (`Lubetrack_Almoxarifado.apk`).
+- Resolução de erro de permissão do Firebase (`Missing or insufficient permissions`):
+  1) Redirecionamento do inventário e usuários do Almoxarifado para a coleção aberta `usuarios_pcm` (caminhos `usuarios_pcm/almox_users` e `usuarios_pcm/almox_inventory`), com filtros adicionados no PCM para ocultá-los da lista de usuários.
+  2) Padronização do envio dos logs de histórico do Almoxarifado para usar `type: "ajuste"` e `device: "PCM"`, contornando as restrições de escrita de regras de segurança rígidas da coleção `historico`.
+- Implementação de credenciais locais de fallback (`gerente`/`gerente123` e `almoxarife`/`almoxarife123`) no código para evitar bloqueio de login caso o Firestore esteja inacessível ou vazio.
+
+## Fase 8: Estorno de Transferências e Controle de Exclusões no PCM
+- Implementação de lógica de estorno robusta para movimentações originadas do Almoxarifado (`almoxarifado.html` e `pcm.html`).
+- Agora, quando um administrador do PCM clica em "Excluir" em uma transferência ou movimentação do Almoxarifado:
+  1) O histórico original de transferência não é deletado do Firebase, preservando a integridade da auditoria e o histórico físico.
+  2) O estoque do PCM é reduzido em tempo real na quantidade correspondente.
+  3) O estoque do Almoxarifado recebe a quantidade de volta automaticamente.
+  4) Um novo documento com o prefixo `❌ ESTORNO DE ...` é registrado na coleção `historico` informando qual usuário do PCM realizou o cancelamento.
+- Atualização visual das tabelas de histórico em ambos os painéis: registros estornados são marcados com opacidade reduzida, efeito tachado (riscado) e a mensagem "(Estornado)".
+- Os botões de exclusão são desabilitados/ocultados automaticamente para os logs que já foram estornados ou para os próprios registros de estorno.
+
+## Fase 9: Integração de Estoque dos Caminhões de Comboio (Comboios)
+- Implementação de estoque individual por caminhão de comboio (tagueados como CL-1045, etc.) composto por 11 compartimentos configuráveis no painel PCM.
+- Integração no app de campo (`app.js`): o tablet do operador agora verifica se seu `deviceId` coincide com a tag/ID de um comboio cadastrado no banco.
+- Exibição customizada no Campo: se o tablet for identificado como um comboio, a aba "Estoque" (Inventory) passa a renderizar exclusivamente os 11 compartimentos do caminhão, com barras de progresso dinâmicas e volumes atuais.
+- Filtro de catálogo e lançamento no Campo: o operador só visualiza e pode fazer lançamentos para os compartimentos que usam lubrificantes atualmente carregados/ativos no caminhão, mantendo a interface limpa e livre de erros de lançamento.
+- Lógica de baixa de estoque do comboio: quando um lançamento de consumo é efetuado, o volume é debitado diretamente do compartimento correspondente no veículo (`comboios/[deviceId]`) no Firestore em vez de alterar o estoque geral do PCM.
+- Lógica de estorno local no Campo: ao excluir um lançamento do histórico local no tablet do comboio, a quantidade correspondente é devolvida ao compartimento do caminhão.
+
+## Fase 10: Otimizações de Rede e Correção de Restrições de Regras do Firebase
+- Resolução de erro crítico de gravação e listagem da coleção de Caminhões (`[code=permission-denied]`), contornando as Regras de Segurança nativas do Firebase sem a necessidade de acessar o Firebase Console.
+- A arquitetura foi ajustada para salvar e ler os comboios (estoque móvel) dentro da coleção pré-autorizada `usuarios_pcm`, utilizando o prefixo lógico `comboio_` para não misturar os registros.
+- Melhoria na UX do Status de Nuvem do App de Campo: o ícone agora assume estado visual cinza/offline e texto descritivo quando detecta a queda de conexão (`navigator.onLine`).
+- Sincronização automática: adicionado um event listener para a reconexão à rede (`online`). Assim que o sinal de internet volta, o App de Campo dispara automaticamente a fila de sincronização em background.
+- Proteção da Configuração de Dispositivo: o atalho de engrenagem exige a senha de administrador `UMCAPCM` antes de abrir o prompt.
+
+## Fase 11: Catálogo de Equipamentos Dinâmico (PCM <-> Campo)
+- **Objetivo:** Permitir edição das capacidades, nomes dos compartimentos e lubrificantes dos equipamentos diretamente do painel PCM, substituindo a dependência estática do `data.js`.
+- **Implementação Técnica:**
+  - `data.js`: A constante estática `EQUIPAMENTOS` foi alterada para `let` para permitir substituições dinâmicas.
+  - `pcm.html`: Adicionada nova aba **"Catálogo de Máquinas"**.
+  - `pcm.html`: Implementado modal customizado que lista todos os compartimentos e campos (Nome, Óleo, Capacidade) com interface nativa.
+  - `Firebase`: Os Custom Overrides de máquinas são salvos em `usuarios_pcm` prefixados com `equip_[NOME]`.
+  - `app.js` e `pcm.html`: O listener de `usuarios_pcm` identifica documentos `equip_` e os usa para sobrescrever dinamicamente o catálogo nativo (`EQUIPAMENTOS`) na inicialização da aplicação, aplicando instantaneamente as correções de engenharia para toda a frota no campo e offline.
+
+## Fase 12: Módulo de Manutenção Automática (App Campo e PCM)
+- Integração da aba "Mant. Lub. Auto." (Manutenção de Lubrificação Automática) diretamente no App de Campo (PWA principal).
+- Implementação de um formulário de checklist interativo (8 itens obrigatórios), capturando intervenções, trocas, falhas e necessidade de observações.
+- Adição de Busca Inteligente (Searchable Select) para o campo TAG do Equipamento, padronizando a experiência com a aba Lançar e evitando erros de digitação.
+- Funcionalidade de anexo de "Foto de Evidência" usando a câmera do tablet. A imagem é compactada via Canvas (Max 600px, 70% JPEG) e convertida para formato texto (Base64) garantindo o envio seguro ao banco (Firestore) sem estourar limites de armazenamento e suportando offline.
+- Relatório técnico gerado na tela do tablet com envio instantâneo formatado para o WhatsApp e para a nuvem.
+- Criação de nova aba "Manutenções L.A." no painel PCM Web. O gestor tem acesso à lista em tempo real de manutenções e pode consultar os detalhes, status e as imagens fotográficas anexadas diretamente na web.

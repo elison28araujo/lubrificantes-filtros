@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PCM Dashboard - Elison Araujo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #05100c;
+      --bg2: #0a1a14;
+      --bg3: #0f261d;
+      --surface: #0c2118;
+      --surface2: #123124;
+      --border: rgba(255,255,255,0.06);
+      --border2: rgba(255,255,255,0.12);
+      --primary: #004a2d;
+      --secondary: #00a859;
+      --text: #f0f6ff;
+      --text2: #94a3b8;
+      --text3: #64748b;
+      --blue: #3b82f6;
+      --red: #ef4444;
+      --yellow: #fbbf24;
+      --radius: 14px;
+      --radius-sm: 8px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #004a2d 0%, #05100c 100%);
+      padding: 0 16px;
+      height: 64px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 18px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      text-align: center;
+      transition: transform 0.15s;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-card:last-child:nth-child(odd) {
+      grid-column: span 2;
+    }
+
+    .stat-val {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 2px;
+      color: var(--secondary);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      opacity: 0.6;
+      line-height: 1.2;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+      .stat-card:last-child:nth-child(odd) { grid-column: auto; }
+      .stat-val { font-size: 28px; }
+      .stat-label { font-size: 13px; }
+    }
+
+    @media (min-width: 1024px) {
+      .main-grid {
+        grid-template-columns: 2fr 1fr;
+      }
+      .grid-span-2 { grid-column: span 2; }
+      .header h1 { font-size: 24px; }
+      .header { padding: 20px 40px; }
+      .container { margin: 40px auto; }
+      .stat-val { font-size: 32px; }
+    }
+
+    /* Ajuste para celular deitado */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .header { padding: 8px 15px; }
+      .header h1 { font-size: 16px; }
+      .container { margin: 10px auto; }
+      .stats-grid { margin-bottom: 15px; }
+      .section { padding: 15px; }
+      .stat-card { padding: 8px; }
+      .stat-val { font-size: 20px; }
+    }
+
+    .section {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 16px;
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--secondary);
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 0 -10px;
+      padding: 0 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    th {
+      text-align: left;
+      font-size: 12px;
+      opacity: 0.5;
+      padding: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 12px 10px;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+    }
+
+    .badge {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      display: inline-block;
+    }
+
+    .badge-qty-minus { background: rgba(59,130,246,0.1); color: var(--blue); }
+    .badge-qty-plus { background: rgba(34,197,94,0.1); color: #4ade80; }
+    .badge-alert { background: rgba(239,68,68,0.1); color: var(--red); }
+
+    .inventory-item {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .inventory-item:last-child { border-bottom: none; }
+
+    .inventory-name { 
+      font-size: 14px; 
+      font-weight: 600; 
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .inventory-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface2);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+    }
+
+    .inventory-qty { font-weight: 700; color: var(--secondary); font-size: 16px; }
+    .inventory-qty.low { color: var(--red); }
+
+    .btn-refresh {
+      background: var(--secondary);
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .btn-action {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+    }
+    .btn-action:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
+    
+    .btn-danger { background: rgba(239,68,68,0.1); color: var(--red); border-color: rgba(239,68,68,0.2); }
+    .btn-danger:active { background: rgba(239,68,68,0.2); }
+
+    /* Barras de Busca */
+    .search-container {
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 15px 12px 40px;
+      background: var(--bg2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: white;
+      font-size: 14px;
+      font-family: inherit;
+      box-sizing: border-box;
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--secondary);
+      background: var(--bg3);
+      box-shadow: 0 0 0 4px rgba(0,168,89,0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    /* Navegação por Abas */
+    .tabs-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tab-btn {
+      padding: 12px 18px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 30px;
+      color: var(--text2);
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex: 1;
+      text-align: center;
+    }
+
+    .tab-btn.active {
+      background: var(--secondary);
+      border-color: var(--secondary);
+      color: white;
+      box-shadow: 0 4px 15px rgba(0,168,89,0.3);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn-primary {
+      background: var(--secondary);
+      color: white;
+      border: none;
+      padding: 15px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      width: 100%;
+      margin-top: 15px;
+      font-size: 15px;
+      transition: opacity 0.2s;
+      box-shadow: 0 4px 15px rgba(0,168,89,0.2);
+    }
+    .btn-primary:active { opacity: 0.8; transform: scale(0.98); }
+
+    /* Tela de Login */
+    .login-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(160deg, #004a2d 0%, #05100c 60%, #030a08 100%);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .login-overlay.hidden { display: none; }
+    
+    .login-box {
+      background: var(--surface);
+      padding: 35px 25px;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--border2);
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      animation: fadeIn 0.5s ease;
+    }
+
+    .login-box h2 { 
+      margin-top: 0; 
+      color: white; 
+      margin-bottom: 25px; 
+      font-size: 22px; 
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 16px;
+      margin-bottom: 15px;
+      background: var(--bg) !important;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: white !important;
+      font-size: 16px;
+      font-family: inherit;
+      box-sizing: border-box;
+      transition: all 0.2s;
+    }
+
+    /* Impede fundo branco no preenchimento automático */
+    .login-input:-webkit-autofill,
+    .login-input:-webkit-autofill:hover, 
+    .login-input:-webkit-autofill:focus {
+      -webkit-text-fill-color: white !important;
+      -webkit-box-shadow: 0 0 0px 1000px var(--bg) inset !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+
+    .login-input:focus {
+      outline: none;
+      border-color: var(--secondary);
+      background: var(--bg2) !important;
+      box-shadow: 0 0 0 4px rgba(0,168,89,0.15);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--secondary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba(0,168,89,0.3);
+    }
+
+    .login-btn:active {
+      transform: scale(0.97);
+      opacity: 0.9;
+    }
+
+    #loginError { 
+      background: rgba(239,68,68,0.1);
+      color: var(--red); 
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 13px; 
+      margin-bottom: 15px; 
+      display: none; 
+      border: 1px solid rgba(239,68,68,0.2);
+    }
+
+    /* Modal Customizado */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(5px);
+      z-index: 10000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-overlay.hidden { display: none; }
+    
+    .modal-box {
+      background: var(--surface);
+      border: 1.5px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 25px;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .modal-box h3 { margin: 0 0 20px 0; color: var(--secondary); font-size: 18px; }
+    
+    .modal-field { margin-bottom: 15px; }
+    .modal-field label { display: block; font-size: 12px; opacity: 0.6; margin-bottom: 5px; }
+    .modal-field input, .modal-field select {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--bg) !important;
+      border: 1.5px solid var(--border2);
+      border-radius: 8px;
+      color: white !important;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s;
+      box-sizing: border-box;
+    }
+    .modal-field input:focus, .modal-field select:focus { 
+      border-color: var(--secondary) !important;
+      background: var(--bg2) !important;
+      outline: none; 
+      box-shadow: 0 0 0 4px rgba(0,168,89,0.15);
+    }
+    
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    /* Estilos para Comboio / Caminhões */
+    .comboio-header-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+    .comboio-cards-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .comboio-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    .comboio-card-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+    .comboio-card-title h3 {
+      margin: 0;
+      color: var(--yellow);
+      font-size: 18px;
+    }
+    .compartments-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+    @media (min-width: 600px) {
+      .compartments-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 1200px) {
+      .compartments-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .compartment-card {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .compartment-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text2);
+    }
+    .compartment-item-name {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .compartment-volume-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .progress-bar-bg {
+      background: rgba(255,255,255,0.06);
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      width: 100%;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--secondary) 0%, #10b981 100%);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    .compartment-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 5px;
+    }
+    .btn-comp-action {
+      flex: 1;
+      padding: 6px 0;
+      font-size: 11px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      border: 1px solid var(--border2);
+      background: var(--surface2);
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    .btn-comp-action:hover {
+      background: var(--border2);
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="login-overlay" id="loginOverlay">
+    <form class="login-box" id="loginForm">
+      <h2>Acesso Restrito - PCM</h2>
+      <div id="loginError">Usuário ou senha incorretos.</div>
+      <input type="text" id="loginUser" class="login-input" placeholder="Usuário (Ex: UMCA)" required>
+      <input type="password" id="loginPass" class="login-input" placeholder="Senha" required>
+      <button type="submit" class="login-btn">Acessar Painel</button>
+    </form>
+  </div>
+
+  <header class="header">
+    <h1>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+      </svg>
+      PAINEL PCM - Elison Araujo
+    </h1>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <span id="headerUser" style="font-size:12px; opacity:0.5; color:white;"></span>
+      <button class="btn-refresh" onclick="location.reload()">Atualizar</button>
+      <button class="btn-refresh" style="background:var(--red); border-color:var(--red);" onclick="window.fazerLogout()">Sair</button>
+    </div>
+  </header>
+
+  <!-- Custom Modal HTML -->
+  <div id="customModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h3 id="modalTitle">Título</h3>
+      <div id="modalBody"></div>
+      <div class="modal-footer">
+        <button class="btn-action" onclick="window.closeModal()" id="modalCancelBtn">Cancelar</button>
+        <button class="btn-primary" id="modalConfirmBtn" style="margin-top:0; width:auto; padding: 10px 25px;">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" id="dashboard">
+    <div class="loading" id="statusMsg">Conectando ao banco AI-STUDIO usando SDK Modular...</div>
+  </div>
+
+  <!-- Firebase SDKs (Modern Modular Architecture) -->
+  <script src="data.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { initializeFirestore, collection, getDocs, doc, getDoc, query, orderBy, limit, updateDoc, deleteDoc, onSnapshot, setDoc, addDoc, where, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    
+    // Configuração incorporada para evitar erros de importação em subdiretórios
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7_1RiIIErnUfyWWGCnuVfItHQGAxOsaM",
+      authDomain: "controle-de-lubrificantes.firebaseapp.com",
+      projectId: "controle-de-lubrificantes",
+      storageBucket: "controle-de-lubrificantes.firebasestorage.app",
+      messagingSenderId: "255457530605",
+      appId: "1:255457530605:web:a9179628360caf12f372e4"
+    };
+
+    // Lógica de Login Modificada (Async)
+    const overlay = document.getElementById('loginOverlay');
+    const isLoggedIn = sessionStorage.getItem('pcm_logged_in') === 'true';
+    
+    if (isLoggedIn) {
+      overlay.classList.add('hidden');
+    }
+
+    const app = initializeApp(firebaseConfig);
+    // IMPORTANTE: Definindo o banco de dados exato e forçando Long Polling para evitar quedas em tablets/redes 3G
+    const db = initializeFirestore(app, { experimentalForceLongPolling: true }, "ai-studio-9dc8c906-c888-4a53-973f-6fca4ed7c111");
+
+    // Ativa Persistência Offline do Firebase (IndexedDB)
+    enableIndexedDbPersistence(db).catch((err) => {
+      console.warn("Lubetrack PCM: Persistência offline falhou:", err.code);
+    });
+
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await window.fazerLogin();
+      });
+    }
+
+    window.fazerLogin = async function() {
+      const u = document.getElementById('loginUser').value.trim();
+      const p = document.getElementById('loginPass').value.trim();
+      const loginError = document.getElementById('loginError');
+
+      if (!u || !p) {
+        loginError.textContent = "Preencha todos os campos.";
+        loginError.style.display = 'block';
+        return;
+      }
+
+      // Fallback para Admin Inicial (UMCA)
+      if (u === 'UMCA' && p === '123456ca') {
+        sessionStorage.setItem('pcm_logged_in', 'true');
+        sessionStorage.setItem('user_name', 'Administrador');
+        sessionStorage.setItem('user_role', 'admin');
+        overlay.classList.add('hidden');
+        location.reload();
+        return;
+      }
+
+      try {
+        const q = query(collection(db, 'usuarios_pcm'), where('user', '==', u), where('pass', '==', p));
+        const snap = await getDocs(q);
+
+        if (!snap.empty) {
+          const userData = snap.docs[0].data();
+          sessionStorage.setItem('pcm_logged_in', 'true');
+          sessionStorage.setItem('user_name', userData.user);
+          sessionStorage.setItem('user_role', userData.role || 'controlador');
+          overlay.classList.add('hidden');
+          location.reload();
+        } else {
+          loginError.textContent = "Usuário ou senha incorretos.";
+          loginError.style.display = 'block';
+        }
+      } catch (e) {
+        console.error("Login Error:", e);
+        loginError.textContent = "Erro ao conectar: " + e.message;
+        loginError.style.display = 'block';
+      }
+    };
+
+    window.fazerLogout = function() {
+      if (confirm("Deseja realmente sair do painel?")) {
+        sessionStorage.clear();
+        location.reload();
+      }
+    };
+
+    // Só executa o resto se estiver logado
+    if (isLoggedIn) {
+      try {
+        const container = document.getElementById('dashboard');
+        console.log("Lubetrack PCM: Iniciando dashboard...");
+
+      let historyData = [];
+      let inventoryData = {};
+      let devicesData = [];
+      let usersData = [];
+      let comboiosData = [];
+      const userRole = sessionStorage.getItem('user_role') || 'controlador';
+      const currentUserName = sessionStorage.getItem('user_name') || 'Desconhecido';
+
+      if (currentUserName !== 'Desconhecido') {
+        document.getElementById('headerUser').textContent = `Logado como: ${currentUserName}`;
+      }
+
+      const invDocRef = doc(db, 'estoque', 'status_atual');
+      const devDocRef = doc(db, 'config', 'devices');
+      window.currentTab = window.currentTab || 'lançamentos';
+      window.filterText = '';
+
+      window.switchTab = (tab) => {
+        window.currentTab = tab;
+        window.filterText = ''; // Limpar busca ao trocar aba
+        renderDashboard();
+      };
+
+      window.handleSearch = (val) => {
+        window.filterText = val.toLowerCase();
+        renderDashboard();
+      };
+
+      function renderDashboard() {
+        const container = document.getElementById('dashboard');
+        
+        let isSearchFocused = false;
+        let cursorPos = 0;
+        if (document.activeElement && document.activeElement.id === 'globalSearchInput') {
+          isSearchFocused = true;
+          cursorPos = document.activeElement.selectionStart;
+        }
+
+        // Contagem de alertas de estoque
+        const itemsAlerta = Object.values(inventoryData).filter(item => item.current <= item.min).length;
+
+        // Renderizar Abas
+        let tabsHtml = `
+          <div class="tabs-container">
+            <button class="tab-btn ${window.currentTab === 'lançamentos' ? 'active' : ''}" onclick="window.switchTab('lançamentos')">Lançamentos</button>
+            <button class="tab-btn ${window.currentTab === 'manutencoes' ? 'active' : ''}" onclick="window.switchTab('manutencoes')">Manutenções L.A.</button>
+            <button class="tab-btn ${window.currentTab === 'estoque' ? 'active' : ''}" onclick="window.switchTab('estoque')">
+              Estoque ${itemsAlerta > 0 ? `<span style="background:var(--red); color:white; padding:2px 6px; border-radius:10px; font-size:10px; margin-left:5px;">${itemsAlerta}</span>` : ''}
+            </button>
+            <button class="tab-btn ${window.currentTab === 'comboios' ? 'active' : ''}" onclick="window.switchTab('comboios')">Caminhões (Comboio)</button>
+            <button class="tab-btn ${window.currentTab === 'catalogo' ? 'active' : ''}" onclick="window.switchTab('catalogo')">Catálogo de Máquinas</button>
+            <button class="tab-btn ${window.currentTab === 'indicadores' ? 'active' : ''}" onclick="window.switchTab('indicadores')">Indicadores</button>
+            <button class="tab-btn ${window.currentTab === 'dispositivos' ? 'active' : ''}" onclick="window.switchTab('dispositivos')">Segurança</button>
+          </div>
+        `;
+
+        // Input de Busca
+        const searchHtml = `
+          <div class="search-container">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="globalSearchInput" class="search-input" placeholder="Buscar nesta aba..." value="${window.filterText}" oninput="window.handleSearch(this.value)">
+          </div>
+        `;
+
+        let contentHtml = '';
+
+        if (window.currentTab === 'lançamentos') {
+          const estornados = new Set();
+          historyData.forEach(h => {
+            if (h.equip && h.equip.includes("ESTORNO") && h.reason && h.reason.includes("Lançamento ID: ")) {
+              const parts = h.reason.split("Lançamento ID: ");
+              if (parts[1]) estornados.add(parts[1].trim());
+            }
+          });
+
+          const filteredHistory = historyData.filter(h => 
+            h.type !== 'manutencao' && (
+            (h.equip?.toLowerCase().includes(window.filterText) || 
+             h.item?.toLowerCase().includes(window.filterText) || 
+             h.user?.toLowerCase().includes(window.filterText)))
+          );
+
+          let rowsHtml = '';
+          filteredHistory.forEach(h => {
+            const date = new Date(h.date).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+            const qtyValue = parseFloat(h.qty);
+            const qtyLabel = qtyValue > 0 ? `-${qtyValue}L` : `+${Math.abs(qtyValue)}L`;
+            const qtyClass = qtyValue > 0 ? 'badge-qty-minus' : 'badge-qty-plus';
+            
+            const isEstornado = estornados.has(h.docId);
+            const isEstornoDoc = h.equip && h.equip.includes("ESTORNO");
+            let actionHtml = '';
+            
+            if (isEstornado) {
+              actionHtml = `<span style="color:#ef4444; font-weight:600; font-size:12px;">Estornado</span>`;
+            } else if (isEstornoDoc) {
+              actionHtml = `<span style="opacity:0.5; font-size:12px;">Reg. Estorno</span>`;
+            } else {
+              actionHtml = userRole === 'admin' ? `<button class="btn-action btn-danger" onclick="window.excluirLancamento('${h.docId}', '${h.item}', ${h.qty})">Excluir</button>` : '<span style="opacity:0.3">Restrito</span>';
+            }
+
+            rowsHtml += `
+              <tr>
+                <td style="white-space: nowrap;">${date}</td>
+                <td><strong>${h.equip}</strong></td>
+                <td>${h.frota || '-'}</td>
+                <td>${h.unidade || '-'}</td>
+                <td>${h.horo ? h.horo + 'h' : '-'}</td>
+                <td>${h.item}</td>
+                <td><span class="badge ${qtyClass}">${qtyLabel}</span></td>
+                <td>${h.user}</td>
+                <td style="font-size: 11px; opacity: 0.8;">${h.device || '-'}</td>
+                <td>
+                  ${actionHtml}
+                </td>
+              </tr>
+            `;
+          });
+
+          contentHtml = `
+            <div class="section active">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <div class="section-title" style="margin:0;">Histórico Recente</div>
+                <button class="btn-action" style="background:var(--blue); color:white;" onclick="window.exportarExcel()">📥 Exportar Excel (CSV)</button>
+              </div>
+              ${searchHtml}
+              <div class="table-responsive">
+                <table>
+                  <thead><tr>
+                    <th>Data</th>
+                    <th>Equipamento</th>
+                    <th>Frota</th>
+                    <th>Unidade</th>
+                    <th>Horímetro</th>
+                    <th>Produto</th>
+                    <th>Qtd</th>
+                    <th>Usuário</th>
+                    <th>Tablet</th>
+                    <th>Ações</th>
+                  </tr></thead>
+                  <tbody>${rowsHtml || '<tr><td colspan="10" style="text-align:center; padding:40px; opacity:0.5;">Nenhum lançamento encontrado</td></tr>'}</tbody>
+                </table>
+              </div>
+            </div>
+          `;
+        } else if (window.currentTab === 'manutencoes') {
+          const maintHistory = historyData.filter(h => 
+            h.type === 'manutencao' && (
+            (h.tagEquipamento?.toLowerCase().includes(window.filterText) || 
+             h.nomeLubrificador?.toLowerCase().includes(window.filterText) ||
+             h.codigoRelatorio?.toLowerCase().includes(window.filterText)))
+          );
+
+          let rowsHtml = '';
+          maintHistory.forEach(h => {
+            const date = h.data ? h.data.split('-').reverse().join('/') : '-';
+            const ocorrencias = h.checklist ? h.checklist.filter(c => c.status === "SIM").length : 0;
+            const ocorrenciaBadge = ocorrencias > 0 ? `<span class="badge badge-alert">${ocorrencias} Intervenções</span>` : `<span class="badge badge-qty-plus">Tudo OK</span>`;
+
+            rowsHtml += `
+              <tr>
+                <td style="white-space: nowrap;">${date}</td>
+                <td><strong>${h.tagEquipamento}</strong></td>
+                <td>${h.horimetro || '-'}</td>
+                <td>${h.duracao || '-'}</td>
+                <td>${h.nomeLubrificador || '-'}</td>
+                <td>${ocorrenciaBadge}</td>
+                <td style="font-size: 11px; opacity: 0.8;">${h.deviceId || '-'}</td>
+                <td>
+                  <button class="btn-action" style="background:var(--blue); border-color:var(--blue);" onclick="window.abrirRelatorioMaintPCM('${h.docId}')">Ver Relatório</button>
+                </td>
+              </tr>
+            `;
+          });
+
+          contentHtml = `
+            <div class="section active">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <div class="section-title" style="margin:0;">Histórico de Manutenções (L.A.)</div>
+              </div>
+              ${searchHtml}
+              <div class="table-responsive">
+                <table>
+                  <thead><tr>
+                    <th>Data</th>
+                    <th>Equipamento</th>
+                    <th>Horímetro</th>
+                    <th>Duração</th>
+                    <th>Lubrificador</th>
+                    <th>Status</th>
+                    <th>Tablet</th>
+                    <th>Ações</th>
+                  </tr></thead>
+                  <tbody>${rowsHtml || '<tr><td colspan="8" style="text-align:center; padding:40px; opacity:0.5;">Nenhuma manutenção encontrada</td></tr>'}</tbody>
+                </table>
+              </div>
+            </div>
+          `;
+        } else if (window.currentTab === 'estoque') {
+          const sortedInv = Object.entries(inventoryData)
+            .filter(([name]) => name.toLowerCase().includes(window.filterText))
+            .sort((a,b) => a[0].localeCompare(b[0]));
+
+          let itemsHtml = '';
+          sortedInv.forEach(([name, data]) => {
+            const isLow = data.current <= data.min;
+            itemsHtml += `
+              <div class="inventory-item">
+                <div class="inventory-name">${name}</div>
+                <div class="inventory-controls">
+                  <div class="inventory-qty ${isLow ? 'low' : ''}">${data.current % 1 === 0 ? data.current : data.current.toFixed(1)}L</div>
+                  <div style="display:flex; gap:8px;">
+                    <button class="btn-action" onclick="window.editarEstoque('${name}', ${data.current})" title="Editar Saldo">✏️ Editar</button>
+                    <button class="btn-action" onclick="window.renomearItem('${name}')" title="Renomear Item" style="background:var(--surface2)">🏷️</button>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+
+          contentHtml = `
+            <div class="section active">
+              <div class="section-title">Saldo Consolidado (Cloud)</div>
+              ${searchHtml}
+              ${itemsHtml || '<p style="text-align:center; padding:40px; opacity:0.5;">Nenhum item encontrado</p>'}
+            </div>
+          `;
+        } else if (window.currentTab === 'indicadores') {
+          contentHtml = `
+            <div class="section active">
+              <div class="section-title">Indicadores de Consumo</div>
+              <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px; margin-top:20px;">
+                <div style="background:var(--surface); padding:20px; border-radius:15px; border:1px solid var(--border2);">
+                  <h4 style="margin-top:0; font-size:14px; opacity:0.7;">Consumo por Equipamento (Top 5)</h4>
+                  <canvas id="chartEquip" style="max-height:300px;"></canvas>
+                </div>
+                <div style="background:var(--surface); padding:20px; border-radius:15px; border:1px solid var(--border2);">
+                  <h4 style="margin-top:0; font-size:14px; opacity:0.7;">Consumo por Produto</h4>
+                  <canvas id="chartProduct" style="max-height:300px;"></canvas>
+                </div>
+              </div>
+              <div style="background:var(--surface); padding:20px; border-radius:15px; border:1px solid var(--border2); margin-top:20px;">
+                <h4 style="margin-top:0; font-size:14px; opacity:0.7;">Histórico de Consumo (Últimos 7 dias)</h4>
+                <canvas id="chartTimeline" style="max-height:250px;"></canvas>
+              </div>
+            </div>
+          `;
+          setTimeout(renderCharts, 100);
+        } else if (window.currentTab === 'comboios') {
+          const filteredComboios = comboiosData.filter(c => c.name.toLowerCase().includes(window.filterText) || c.id.toLowerCase().includes(window.filterText));
+          let comboiosHtml = '';
+
+          if (filteredComboios.length === 0) {
+            comboiosHtml = '<div style="opacity:0.5; padding:40px; text-align:center;">Nenhum caminhão de comboio cadastrado.</div>';
+          } else {
+            comboiosHtml += '<div class="comboio-cards-container">';
+            filteredComboios.forEach(c => {
+              let compsHtml = '';
+              const compartments = c.compartments || [];
+              
+              // We render 11 compartments
+              for (let i = 1; i <= 11; i++) {
+                const comp = compartments.find(comp => comp.number === i) || { number: i, item: '', current: 0, capacity: 0 };
+                const pct = comp.capacity > 0 ? Math.round((comp.current / comp.capacity) * 100) : 0;
+                
+                compsHtml += `
+                  <div class="compartment-card">
+                    <div class="compartment-meta">
+                      <span>Compartimento ${comp.number}</span>
+                      <span>Tanque: ${comp.capacity}L</span>
+                    </div>
+                    <div class="compartment-item-name" title="${comp.item || 'Não configurado'}">
+                      ${comp.item || '<span style="opacity:0.3; font-style:italic;">[Vazio / Não Configurado]</span>'}
+                    </div>
+                    <div class="compartment-volume-info">
+                      <span>${comp.current.toFixed(1)}L</span>
+                      <span style="opacity:0.5">${pct}%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                      <div class="progress-bar-fill" style="width: ${Math.min(pct, 100)}%;"></div>
+                    </div>
+                    <div class="compartment-actions">
+                      <button class="btn-comp-action" onclick="window.configurarCompartimento('${c.id}', ${comp.number})">⚙️ Config</button>
+                      <button class="btn-comp-action" ${!comp.item ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''} onclick="window.carregarCompartimento('${c.id}', ${comp.number})">➕ Carregar</button>
+                      <button class="btn-comp-action" ${!comp.item ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''} onclick="window.ajustarCompartimento('${c.id}', ${comp.number})">✏️ Ajustar</button>
+                    </div>
+                  </div>
+                `;
+              }
+
+              comboiosHtml += `
+                <div class="comboio-card">
+                  <div class="comboio-card-title">
+                    <h3>🚛 ${c.name} (${c.id})</h3>
+                    <button class="btn-action btn-danger" style="padding:5px 12px; font-size:12px;" onclick="window.excluirCaminhao('${c.id}')">Excluir Caminhão</button>
+                  </div>
+                  <div class="compartments-grid">
+                    ${compsHtml}
+                  </div>
+                </div>
+              `;
+            });
+            comboiosHtml += '</div>';
+          }
+
+          contentHtml = `
+            <div class="section active">
+              <div class="section-title">Caminhões de Comboio (Estoque Móvel)</div>
+              <div class="comboio-header-actions">
+                <button class="btn-primary" style="margin-top:0; width:auto; padding: 10px 20px;" onclick="window.cadastrarCaminhao()">+ Cadastrar Novo Caminhão</button>
+              </div>
+              ${searchHtml}
+              ${comboiosHtml}
+            </div>
+          `;
+        } else if (window.currentTab === 'dispositivos') {
+          const filteredDevices = devicesData.filter(dev => dev.toLowerCase().includes(window.filterText));
+          let devsListHtml = '';
+          filteredDevices.forEach(dev => {
+            devsListHtml += `
+              <li style="background:var(--surface2); padding:15px; border-radius:12px; border: 1px solid var(--border);">
+                <div style="margin-bottom:10px; font-weight:700; color:var(--text); font-size:14px; word-break:break-all;">${dev}</div>
+                <div style="display:flex; justify-content:flex-end;">
+                  <button class="btn-action btn-danger" style="padding: 10px 20px; font-weight:700;" onclick="window.removerDispositivo('${dev}')">REVOGAR ACESSO</button>
+                </div>
+              </li>
+            `;
+          });
+
+          let usersHtml = '';
+          if (userRole === 'admin') {
+            usersHtml = `
+              <div style="margin-top:40px; padding-top:20px; border-top: 1px solid var(--border);">
+                <div class="section-title">Controladores do Painel (ADM)</div>
+                <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">
+            `;
+            usersData.forEach(u => {
+              usersHtml += `
+                <li style="background:var(--bg2); padding:12px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; border: 1px solid var(--border);">
+                  <div>
+                    <div style="font-weight:600; font-size:14px;">${u.user}</div>
+                    <div style="font-size:11px; opacity:0.5;">Perfil: ${u.role || 'controlador'}</div>
+                  </div>
+                  ${u.user !== 'UMCA' ? `<button class="btn-action btn-danger" onclick="window.removerUsuario('${u.docId}')">Remover</button>` : ''}
+                </li>
+              `;
+            });
+            usersHtml += `
+                </ul>
+                <button class="btn-primary" style="background:#3b82f6; margin-top:15px;" onclick="window.adicionarUsuario()">+ Cadastrar Novo Controlador</button>
+              </div>
+            `;
+          }
+
+          contentHtml = `
+            <div class="section active">
+              <div class="section-title">Gestão de Dispositivos (Segurança)</div>
+              ${searchHtml}
+              <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px;">${devsListHtml}</ul>
+              <button class="btn-primary" onclick="window.adicionarDispositivo()">+ Autorizar Novo Tablet</button>
+              ${usersHtml}
+            </div>
+          `;
+        } else if (window.currentTab === 'catalogo') {
+          // Utiliza a variável global EQUIPAMENTOS (do data.js) já possivelmente sobrescrita com Firebase
+          const filteredCatalog = EQUIPAMENTOS.filter(eq => eq.nome.toLowerCase().includes(window.filterText) || eq.categoria.toLowerCase().includes(window.filterText));
+          let catalogListHtml = '';
+          filteredCatalog.forEach((eq, index) => {
+            catalogListHtml += `
+              <li style="background:var(--surface2); padding:15px; border-radius:12px; border: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <div style="font-weight:700; color:var(--text); font-size:15px;">${eq.nome}</div>
+                  <div style="font-size:12px; opacity:0.6;">${eq.categoria} • ${eq.compartimentos.length} compartimentos</div>
+                </div>
+                <div style="display:flex; gap:10px; width:100%; margin-top:15px;">
+                  <button class="btn-action" style="flex:1; background:var(--blue); color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="window.editarEquipamento(${index}, 'fluido')">💧 Lubrificantes</button>
+                  <button class="btn-action" style="flex:1; background:var(--yellow); color:#05100c; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="window.editarEquipamento(${index}, 'filtro')">⚙️ Filtros</button>
+                </div>
+              </li>
+            `;
+          });
+
+          contentHtml = `
+            <div class="section active">
+              <div class="section-title">Catálogo de Máquinas (Customizações)</div>
+              ${searchHtml}
+              <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">${catalogListHtml}</ul>
+            </div>
+          `;
+        }
+
+        container.innerHTML = `
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-val">${historyData.length}</div>
+              <div class="stat-label">Lançamentos Recentes</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val">${Object.keys(inventoryData).length}</div>
+              <div class="stat-label">Itens no Catálogo</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val">${devicesData.length}</div>
+              <div class="stat-label">Tablets Autorizados</div>
+            </div>
+          </div>
+          ${tabsHtml}
+          ${contentHtml}
+        `;
+
+        if (isSearchFocused) {
+          const newSearch = document.getElementById('globalSearchInput');
+          if (newSearch) {
+            newSearch.focus();
+            newSearch.setSelectionRange(cursorPos, cursorPos);
+          }
+        }
+      }
+
+
+      // Modal Logic
+      window.openModal = function(title, fields, onConfirm) {
+        const modal = document.getElementById('customModal');
+        const mTitle = document.getElementById('modalTitle');
+        const mBody = document.getElementById('modalBody');
+        const mConfirm = document.getElementById('modalConfirmBtn');
+
+        mTitle.textContent = title;
+        mBody.innerHTML = '';
+        
+        const inputs = {};
+        fields.forEach(f => {
+          const div = document.createElement('div');
+          div.className = 'modal-field';
+          div.innerHTML = `<label>${f.label}</label>`;
+          
+          let input;
+          if (f.type === 'select') {
+            input = document.createElement('select');
+            f.options.forEach(opt => {
+              const o = document.createElement('option');
+              o.value = opt.value;
+              o.textContent = opt.label;
+              input.appendChild(o);
+            });
+          } else {
+            input = document.createElement('input');
+            input.type = f.type || 'text';
+            input.value = f.value || '';
+            if (f.placeholder) input.placeholder = f.placeholder;
+          }
+          
+          div.appendChild(input);
+          mBody.appendChild(div);
+          inputs[f.id] = input;
+        });
+
+        document.getElementById('customModal').classList.remove('hidden');
+        
+        document.getElementById('modalConfirmBtn').onclick = () => {
+          const results = {};
+          for (let id in inputs) results[id] = inputs[id].value;
+          onConfirm(results);
+          window.closeModal();
+        };
+      };
+
+      window.editarEquipamento = function(index, tipo) {
+        // Obter o equipamento do catálogo filtrado atual, ou diretamente de EQUIPAMENTOS
+        const filteredCatalog = EQUIPAMENTOS.filter(eq => eq.nome.toLowerCase().includes(window.filterText) || eq.categoria.toLowerCase().includes(window.filterText));
+        const equip = filteredCatalog[index];
+        if (!equip) return;
+        
+        let compHtml = '';
+        equip.compartimentos.forEach((c, i) => {
+          let fieldsHtml = '';
+          
+          if (tipo === 'fluido') {
+            fieldsHtml = `
+              <div style="flex: 2; min-width: 180px;">
+                <label style="font-size:11px; opacity:0.6; display:block; margin-bottom:4px;">Lubrificante</label>
+                <select id="eq_edit_fluido_${i}" style="width:100%; padding:8px; border-radius:6px; background:var(--surface2); color:white; border:1px solid var(--border);">
+                  <option value="">Nenhum / Vazio</option>
+                  ${Object.keys(inventoryData)
+                    .filter(itemName => {
+                      const itemData = inventoryData[itemName];
+                      return itemData && itemData.unit ? itemData.unit === 'L' : !itemName.toLowerCase().includes('filtro');
+                    })
+                    .sort()
+                    .map(itemName => `<option value="${itemName}" ${c.fluido === itemName ? 'selected' : ''}>${itemName}</option>`)
+                    .join('')}
+                  ${c.fluido && !inventoryData[c.fluido] ? `<option value="${c.fluido}" selected>${c.fluido} (Antigo/Manual)</option>` : ''}
+                </select>
+              </div>
+              <div style="flex: 1; min-width: 100px;">
+                <label style="font-size:11px; opacity:0.6; display:block; margin-bottom:4px;">Capacidade (L)</label>
+                <input type="text" id="eq_edit_cap_${i}" value="${c.capacidade || ''}" style="width:100%; padding:8px; border-radius:6px; background:var(--surface2); color:white; border:1px solid var(--border);" placeholder="Ex: 35">
+              </div>
+              <div style="flex: 1; min-width: 100px;">
+                <label style="font-size:11px; opacity:0.6; display:block; margin-bottom:4px;">Viscosidade</label>
+                <input type="text" id="eq_edit_visc_${i}" value="${c.viscosidade || ''}" style="width:100%; padding:8px; border-radius:6px; background:var(--surface2); color:white; border:1px solid var(--border);" placeholder="Ex: SAE 15W40">
+              </div>
+              <div style="flex: 1; min-width: 100px;">
+                <label style="font-size:11px; opacity:0.6; display:block; margin-bottom:4px;">Troca (h)</label>
+                <input type="text" id="eq_edit_per_${i}" value="${c.periodicidade || ''}" style="width:100%; padding:8px; border-radius:6px; background:var(--surface2); color:white; border:1px solid var(--border);" placeholder="Ex: 250">
+              </div>
+            `;
+          } else {
+            fieldsHtml = `
+              <div style="flex: 2; min-width: 180px;">
+                <label style="font-size:11px; opacity:0.6; display:block; margin-bottom:4px;">Filtro Associado</label>
+                <select id="eq_edit_filtro_${i}" style="width:100%; padding:8px; border-radius:6px; background:var(--surface2); color:white; border:1px solid var(--border);">
+                  <option value="">Nenhum / Vazio</option>
+                  ${Object.keys(inventoryData)
+                    .filter(itemName => {
+                      const itemData = inventoryData[itemName];
+                      return itemData && itemData.unit ? itemData.unit === 'UN' : itemName.toLowerCase().includes('filtro');
+                    })
+                    .sort()
+                    .map(itemName => `<option value="${itemName}" ${c.filtro === itemName ? 'selected' : ''}>${itemName}</option>`)
+                    .join('')}
+                  ${c.filtro && !inventoryData[c.filtro] ? `<option value="${c.filtro}" selected>${c.filtro} (Antigo/Manual)</option>` : ''}
+                </select>
+              </div>
+              <div style="flex: 1; min-width: 100px;">
+                <label style="font-size:11px; opacity:0.6; display:block; margin-bottom:4px;">Volume qt.</label>
+                <input type="text" id="eq_edit_cap_${i}" value="${c.capacidade || ''}" style="width:100%; padding:8px; border-radius:6px; background:var(--surface2); color:white; border:1px solid var(--border);" placeholder="Ex: 1">
+              </div>
+              <div style="flex: 1; min-width: 100px;">
+                <label style="font-size:11px; opacity:0.6; display:block; margin-bottom:4px;">Código SAP</label>
+                <input type="text" id="eq_edit_sap_${i}" value="${c.descricao || ''}" style="width:100%; padding:8px; border-radius:6px; background:var(--surface2); color:white; border:1px solid var(--border);" placeholder="Ex: 118943">
+              </div>
+            `;
+          }
+
+          compHtml += `
+            <div style="background:var(--bg2); padding:15px; border-radius:8px; margin-bottom:10px; border:1px solid var(--border);">
+              <div style="font-weight:700; margin-bottom:8px; color:var(--text);">Compartimento ${i + 1}</div>
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <div style="flex:1.5; min-width:150px;">
+                  <label style="font-size:11px; opacity:0.6; display:block; margin-bottom:4px;">Nome</label>
+                  <input type="text" id="eq_edit_nome_${i}" value="${c.nome}" style="width:100%; padding:8px; border-radius:6px; background:var(--surface2); color:white; border:1px solid var(--border);">
+                </div>
+                ${fieldsHtml}
+              </div>
+            </div>
+          `;
+        });
+
+        compHtml += `
+          <div style="margin-top: 15px; display:flex; justify-content:center;">
+            <button class="btn-action" style="background:var(--surface2); width:auto; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer; color:white; border:1px dashed var(--border);" onclick="window.adicionarCompartimentoModal(${index}, '${tipo}')">+ Adicionar Novo Compartimento</button>
+          </div>
+        `;
+
+        const modal = document.getElementById('customModal');
+        const mTitle = document.getElementById('modalTitle');
+        const mBody = document.getElementById('modalBody');
+        const mConfirm = document.getElementById('modalConfirmBtn');
+
+        mTitle.textContent = (tipo === 'fluido' ? "💧 Lubrificantes - " : "⚙️ Filtros - ") + equip.nome;
+        mBody.innerHTML = `<div style="max-height: 60vh; overflow-y: auto; padding-right:5px; margin-bottom:15px;">${compHtml}</div>`;
+        
+        mConfirm.onclick = async () => {
+          mConfirm.textContent = "Salvando...";
+          mConfirm.disabled = true;
+          try {
+            const novosCompartimentos = [];
+            for(let i=0; i<equip.compartimentos.length; i++) {
+              novosCompartimentos.push({
+                ...equip.compartimentos[i],
+                nome: document.getElementById(`eq_edit_nome_${i}`).value,
+                fluido: tipo === 'fluido' ? document.getElementById(`eq_edit_fluido_${i}`).value : (equip.compartimentos[i].fluido || ""),
+                filtro: tipo === 'filtro' ? document.getElementById(`eq_edit_filtro_${i}`).value : (equip.compartimentos[i].filtro || ""),
+                capacidade: document.getElementById(`eq_edit_cap_${i}`) ? document.getElementById(`eq_edit_cap_${i}`).value : (equip.compartimentos[i].capacidade || ""),
+                viscosidade: tipo === 'fluido' ? document.getElementById(`eq_edit_visc_${i}`).value : (equip.compartimentos[i].viscosidade || ""),
+                periodicidade: tipo === 'fluido' ? document.getElementById(`eq_edit_per_${i}`).value : (equip.compartimentos[i].periodicidade || ""),
+                descricao: tipo === 'filtro' ? document.getElementById(`eq_edit_sap_${i}`).value : (equip.compartimentos[i].descricao || ""),
+              });
+            }
+            
+            const updatedEquip = {
+              ...equip,
+              compartimentos: novosCompartimentos
+            };
+
+            await setDoc(doc(db, 'usuarios_pcm', 'equip_' + equip.nome), updatedEquip);
+            
+            alert('Configuração salva com sucesso! O App de campo será atualizado instantaneamente.');
+            window.closeModal();
+          } catch (e) {
+            alert("Erro ao salvar: " + e.message);
+          }
+          mConfirm.textContent = "Confirmar";
+          mConfirm.disabled = false;
+        };
+        
+        modal.classList.remove('hidden');
+      };
+
+      window.abrirRelatorioMaintPCM = function(docId) {
+        const item = historyData.find(h => h.docId === docId);
+        if (!item) return;
+
+        let itemsHtml = '<table style="width:100%; border-collapse:collapse; margin-top:15px;">';
+        itemsHtml += '<tr style="background:rgba(255,255,255,0.05);"><th>Item</th><th>Status</th><th>Detalhe</th></tr>';
+        
+        if (item.checklist) {
+          item.checklist.forEach(c => {
+            const stColor = c.status === "OK" ? "#4ade80" : c.status === "SIM" ? "#ef4444" : "#fbbf24";
+            itemsHtml += `<tr>
+              <td style="border-bottom:1px solid rgba(255,255,255,0.1); padding:8px;">${c.titulo}</td>
+              <td style="border-bottom:1px solid rgba(255,255,255,0.1); padding:8px; color:${stColor}; font-weight:bold;">${c.status}</td>
+              <td style="border-bottom:1px solid rgba(255,255,255,0.1); padding:8px;">${c.detalhe || "-"}</td>
+            </tr>`;
+          });
+        }
+        itemsHtml += '</table>';
+
+        if (item.fotoEvidencia) {
+          itemsHtml += `
+            <div style="margin-top: 20px;">
+              <h4 style="margin: 0 0 10px 0; color: var(--text2);">Evidência Fotográfica</h4>
+              <img src="${item.fotoEvidencia}" style="max-width:100%; border-radius:8px; border:1px solid var(--border);">
+            </div>
+          `;
+        }
+
+        window.openModal(`Relatório de Manutenção: ${item.tagEquipamento}`, [], () => {
+          window.closeModal();
+        });
+
+        // Insert custom HTML via DOM
+        const mBody = document.getElementById('modalBody');
+        mBody.innerHTML = `
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px; font-size:13px; color:var(--text2);">
+            <div><strong>Código:</strong> ${item.codigoRelatorio}</div>
+            <div><strong>Data:</strong> ${item.data ? item.data.split('-').reverse().join('/') : '-'}</div>
+            <div><strong>Horímetro:</strong> ${item.horimetro}</div>
+            <div><strong>Duração:</strong> ${item.duracao}</div>
+            <div><strong>Lubrificador:</strong> ${item.nomeLubrificador}</div>
+          </div>
+          ${itemsHtml}
+        `;
+        document.getElementById('modalConfirmBtn').style.display = 'none'; // Only Close button needed
+      };
+
+      window.adicionarCompartimentoModal = function(index, tipo) {
+        const filteredCatalog = EQUIPAMENTOS.filter(eq => eq.nome.toLowerCase().includes(window.filterText) || eq.categoria.toLowerCase().includes(window.filterText));
+        const equip = filteredCatalog[index];
+        if (!equip) return;
+        
+        // Salvar estado atual do form antes de recarregar
+        const novosCompartimentos = [];
+        for(let i=0; i<equip.compartimentos.length; i++) {
+          novosCompartimentos.push({
+            ...equip.compartimentos[i],
+            nome: document.getElementById(`eq_edit_nome_${i}`).value,
+            fluido: tipo === 'fluido' ? document.getElementById(`eq_edit_fluido_${i}`).value : (equip.compartimentos[i].fluido || ""),
+            filtro: tipo === 'filtro' ? document.getElementById(`eq_edit_filtro_${i}`).value : (equip.compartimentos[i].filtro || ""),
+            capacidade: document.getElementById(`eq_edit_cap_${i}`) ? document.getElementById(`eq_edit_cap_${i}`).value : (equip.compartimentos[i].capacidade || ""),
+            viscosidade: tipo === 'fluido' ? document.getElementById(`eq_edit_visc_${i}`).value : (equip.compartimentos[i].viscosidade || ""),
+            periodicidade: tipo === 'fluido' ? document.getElementById(`eq_edit_per_${i}`).value : (equip.compartimentos[i].periodicidade || ""),
+            descricao: tipo === 'filtro' ? document.getElementById(`eq_edit_sap_${i}`).value : (equip.compartimentos[i].descricao || ""),
+          });
+        }
+        
+        // Adicionar o novo compartimento vazio
+        novosCompartimentos.push({
+           nome: "NOVO COMPARTIMENTO",
+           fluido: "",
+           filtro: "",
+           capacidade: "",
+           cor: "blue",
+           viscosidade: "",
+           periodicidade: "",
+           descricao: ""
+        });
+        
+        equip.compartimentos = novosCompartimentos;
+        
+        // Recarregar o modal para exibir o novo campo
+        window.editarEquipamento(index, tipo);
+        
+        // Rolar o modal para o final para mostrar o novo campo adicionado
+        setTimeout(() => {
+          const mBody = document.getElementById('modalBody');
+          if (mBody && mBody.firstChild) {
+            mBody.firstChild.scrollTop = mBody.firstChild.scrollHeight;
+          }
+        }, 50);
+      };
+
+      // Exportação para Excel (CSV)
+      window.exportarExcel = function() {
+        if (historyData.length === 0) return;
+        
+        const headers = ["Data", "Equipamento", "Produto", "Quantidade", "Responsavel", "Motivo", "Unidade", "Frota"];
+        const rows = historyData.map(h => [
+          new Date(h.date).toLocaleString('pt-BR'),
+          h.equip,
+          h.item,
+          h.qty,
+          h.user,
+          h.reason || "-",
+          h.unidade || "-",
+          h.frota || "-"
+        ]);
+
+        let csvContent = "\uFEFF"; // BOM para Excel abrir acentos corretamente
+        csvContent += headers.join(";") + "\n";
+        rows.forEach(row => {
+          csvContent += row.join(";") + "\n";
+        });
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", `lubetrack_relatorio_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+
+      // Lógica de Gráficos (Chart.js)
+      function renderCharts() {
+        const ctxEquip = document.getElementById('chartEquip');
+        const ctxProd = document.getElementById('chartProduct');
+        const ctxTime = document.getElementById('chartTimeline');
+        if (!ctxEquip || !ctxProd || !ctxTime) return;
+
+        // Processar dados para Equipamentos
+        const equipMap = {};
+        historyData.forEach(h => {
+          if (h.equip.includes("PCM")) return; // Ignorar ajustes do PCM nos gráficos
+          equipMap[h.equip] = (equipMap[h.equip] || 0) + Math.max(0, h.qty);
+        });
+        const equipLabels = Object.keys(equipMap).sort((a,b) => equipMap[b] - equipMap[a]).slice(0, 5);
+        const equipValues = equipLabels.map(l => equipMap[l]);
+
+        // Processar dados para Produtos
+        const prodMap = {};
+        historyData.forEach(h => {
+          if (h.equip.includes("PCM")) return;
+          prodMap[h.item] = (prodMap[h.item] || 0) + Math.max(0, h.qty);
+        });
+
+        // Timeline (Últimos 7 dias)
+        const days = Array.from({length: 7}, (_, i) => {
+          const d = new Date();
+          d.setDate(d.getDate() - i);
+          return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+        }).reverse();
+        
+        const timeMap = {};
+        days.forEach(d => timeMap[d] = 0);
+        historyData.forEach(h => {
+          const day = new Date(h.date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+          if (timeMap[day] !== undefined) timeMap[day] += Math.max(0, h.qty);
+        });
+
+        // Gerenciamento de Instâncias para evitar sobreposição
+        window.myCharts = window.myCharts || {};
+        if (window.myCharts.equip) window.myCharts.equip.destroy();
+        if (window.myCharts.prod) window.myCharts.prod.destroy();
+        if (window.myCharts.time) window.myCharts.time.destroy();
+
+        window.myCharts.equip = new Chart(ctxEquip, {
+          type: 'bar',
+          data: {
+            labels: equipLabels,
+            datasets: [{
+              label: 'Litros Consumidos',
+              data: equipValues,
+              backgroundColor: '#00a859',
+              borderRadius: 5
+            }]
+          },
+          options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } } } }
+        });
+
+        window.myCharts.prod = new Chart(ctxProd, {
+          type: 'doughnut',
+          data: {
+            labels: Object.keys(prodMap),
+            datasets: [{
+              data: Object.values(prodMap),
+              backgroundColor: ['#00a859', '#3b82f6', '#fbbf24', '#ef4444', '#8b5cf6'],
+              borderWidth: 0
+            }]
+          },
+          options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#fff', font: { size: 10 } } } } }
+        });
+
+        window.myCharts.time = new Chart(ctxTime, {
+          type: 'line',
+          data: {
+            labels: days,
+            datasets: [{
+              label: 'Consumo Total (L)',
+              data: days.map(d => timeMap[d]),
+              borderColor: '#00a859',
+              tension: 0.4,
+              fill: true,
+              backgroundColor: 'rgba(0,168,89,0.1)'
+            }]
+          },
+          options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } } } }
+        });
+      }
+
+      // Global functions for actions
+      window.editarEstoque = function(itemName, currentQty) {
+        window.openModal(`Ajustar Estoque: ${itemName}`, [
+          { id: 'qty', label: 'Nova Quantidade Total', type: 'number', value: currentQty },
+          { id: 'unidade', label: 'Unidade Relacionada', type: 'select', options: [
+            { value: 'UMCA', label: 'UMCA' },
+            { value: 'UMGE', label: 'UMGE' }
+          ]},
+          { id: 'frota', label: 'Frota Relacionada (Opcional)', type: 'text', placeholder: 'Ex: Caminhão 01' }
+        ], async (res) => {
+          const newQty = parseFloat(res.qty);
+          if (isNaN(newQty)) return;
+          const diff = newQty - currentQty;
+          if (diff === 0) return;
+
+          try {
+            inventoryData[itemName].current = newQty;
+            await updateDoc(invDocRef, { inventory: inventoryData });
+
+            await addDoc(collection(db, 'historico'), {
+              date: new Date().toISOString(),
+              equip: "🛠️ PCM - CORREÇÃO",
+              item: itemName,
+              qty: -diff,
+              user: currentUserName,
+              reason: "Ajuste manual de saldo no painel",
+              type: "fluido",
+              device: "PCM",
+              unidade: res.unidade,
+              frota: res.frota.trim()
+            });
+          } catch (e) {
+            alert("Erro ao atualizar estoque: " + e.message);
+          }
+        });
+      };
+      window.excluirLancamento = async function(docId, itemName, qty) {
+        const logDoc = historyData.find(h => h.docId === docId);
+        if (!logDoc) return;
+        
+        const isTransfer = logDoc.equip && logDoc.equip.includes("TRANSFERENCIA ALMOX");
+        const isEntrada = logDoc.equip && logDoc.equip.includes("ALMOXARIFADO - ENTRADA");
+        const isAjuste = logDoc.equip && logDoc.equip.includes("ALMOXARIFADO - AJUSTE MANUAL");
+        
+        if (isTransfer) {
+          if (!confirm(`Este lançamento veio do Almoxarifado.\nDeseja estornar esta transferência?\n\n- O estoque do PCM será reduzido em ${Math.abs(qty)}L.\n- O estoque do Almoxarifado receberá de volta ${Math.abs(qty)}L.\n- Um log de estorno será gerado.`)) return;
+          try {
+            if (inventoryData[itemName]) {
+              inventoryData[itemName].current += qty;
+              await updateDoc(invDocRef, { inventory: inventoryData });
+            }
+            const almoxInvDocRef = doc(db, 'usuarios_pcm', 'almox_inventory');
+            const almoxSnap = await getDoc(almoxInvDocRef);
+            if (almoxSnap.exists()) {
+              const almoxData = almoxSnap.data().inventory || {};
+              if (!almoxData[itemName]) almoxData[itemName] = { current: 0, unit: 'L' };
+              almoxData[itemName].current += Math.abs(qty);
+              await setDoc(almoxInvDocRef, { 
+                inventory: almoxData, 
+                lastUpdate: new Date().toISOString(), 
+                lastUser: "PCM (Estorno)" 
+              }, { merge: true });
+            }
+            await addDoc(collection(db, 'historico'), {
+              date: new Date().toISOString(),
+              equip: "❌ ESTORNO DE TRANSFERENCIA",
+              item: itemName,
+              qty: -Math.abs(qty),
+              user: currentUserName || "PCM Admin",
+              reason: `Estornado pelo PCM | Lançamento ID: ${docId}`,
+              type: "ajuste",
+              device: "PCM"
+            });
+            alert("Transferência estornada com sucesso!");
+          } catch (e) {
+            alert("Erro ao estornar: " + e.message);
+          }
+          return;
+        }
+        
+        if (isEntrada) {
+          if (!confirm(`Deseja estornar esta Entrada de Estoque do Almoxarifado?\n\n- O estoque do Almoxarifado será reduzido em ${Math.abs(qty)}L.\n- Um log de estorno será gerado.`)) return;
+          try {
+            const almoxInvDocRef = doc(db, 'usuarios_pcm', 'almox_inventory');
+            const almoxSnap = await getDoc(almoxInvDocRef);
+            if (almoxSnap.exists()) {
+              const almoxData = almoxSnap.data().inventory || {};
+              if (almoxData[itemName]) {
+                almoxData[itemName].current -= Math.abs(qty);
+                await setDoc(almoxInvDocRef, { 
+                  inventory: almoxData, 
+                  lastUpdate: new Date().toISOString(), 
+                  lastUser: "PCM (Estorno)" 
+                }, { merge: true });
+              }
+            }
+            await addDoc(collection(db, 'historico'), {
+              date: new Date().toISOString(),
+              equip: "❌ ESTORNO DE ENTRADA ALMOX",
+              item: itemName,
+              qty: Math.abs(qty),
+              user: currentUserName || "PCM Admin",
+              reason: `Estornado pelo PCM | Lançamento ID: ${docId}`,
+              type: "ajuste",
+              device: "PCM"
+            });
+            alert("Entrada estornada com sucesso!");
+          } catch (e) {
+            alert("Erro ao estornar: " + e.message);
+          }
+          return;
+        }
+        
+        if (isAjuste) {
+          if (!confirm(`Deseja estornar este Ajuste Manual do Almoxarifado?\n\n- O estoque do Almoxarifado será revertido em ${-qty}L.\n- Um log de estorno será gerado.`)) return;
+          try {
+            const almoxInvDocRef = doc(db, 'usuarios_pcm', 'almox_inventory');
+            const almoxSnap = await getDoc(almoxInvDocRef);
+            if (almoxSnap.exists()) {
+              const almoxData = almoxSnap.data().inventory || {};
+              if (almoxData[itemName]) {
+                almoxData[itemName].current += qty;
+                await setDoc(almoxInvDocRef, { 
+                  inventory: almoxData, 
+                  lastUpdate: new Date().toISOString(), 
+                  lastUser: "PCM (Estorno)" 
+                }, { merge: true });
+              }
+            }
+            await addDoc(collection(db, 'historico'), {
+              date: new Date().toISOString(),
+              equip: "❌ ESTORNO DE AJUSTE ALMOX",
+              item: itemName,
+              qty: -qty,
+              user: currentUserName || "PCM Admin",
+              reason: `Estornado pelo PCM | Lançamento ID: ${docId}`,
+              type: "ajuste",
+              device: "PCM"
+            });
+            alert("Ajuste estornado com sucesso!");
+          } catch (e) {
+            alert("Erro ao estornar: " + e.message);
+          }
+          return;
+        }
+
+        if (!confirm(`Tem certeza que deseja excluir o lançamento de ${qty}L de ${itemName}?\nO estoque será recalculado automaticamente (+${qty}L).`)) return;
+        try {
+          await deleteDoc(doc(db, 'historico', docId));
+          if (inventoryData[itemName]) {
+            inventoryData[itemName].current += qty;
+            await updateDoc(invDocRef, { inventory: inventoryData });
+          }
+        } catch (e) {
+          alert("Erro ao excluir: " + e.message);
+        }
+      };
+
+      window.adicionarDispositivo = function() {
+        window.openModal('Autorizar Tablet', [
+          { id: 'name', label: 'Nome do Tablet (ex: COMBOIO-01)', placeholder: 'NOME_DO_DISPOSITIVO' }
+        ], async (res) => {
+          const devName = res.name.trim().toUpperCase().replace(/\s+/g, '_');
+          if (!devName) return;
+          try {
+            const newList = [...devicesData, devName];
+            await setDoc(devDocRef, { list: newList }, { merge: true });
+          } catch (e) {
+            alert("Erro ao autorizar: " + e.message);
+          }
+        });
+      };
+
+      window.removerDispositivo = async function(devName) {
+        if (!confirm(`Tem certeza que deseja REVOGAR o acesso do tablet ${devName}?`)) return;
+        try {
+          const newList = devicesData.filter(d => d !== devName);
+          await setDoc(devDocRef, { list: newList }, { merge: true });
+        } catch (e) {
+          alert("Erro ao remover tablet: " + e.message);
+        }
+      };
+
+      window.renomearItem = function(oldName) {
+        window.openModal('Renomear Produto', [
+          { id: 'name', label: 'Novo nome do produto', value: oldName }
+        ], async (res) => {
+          const newName = res.name.trim();
+          if (!newName || newName === oldName) return;
+          try {
+            const itemData = inventoryData[oldName];
+            const newInventory = { ...inventoryData };
+            delete newInventory[oldName];
+            newInventory[newName] = itemData;
+            await updateDoc(invDocRef, { inventory: newInventory });
+          } catch (e) {
+            alert("Erro ao renomear: " + e.message);
+          }
+        });
+      };
+
+      // User Management Functions
+      window.adicionarUsuario = function() {
+        if (userRole !== 'admin') return;
+        window.openModal('Novo Controlador', [
+          { id: 'user', label: 'Login do usuário' },
+          { id: 'pass', label: 'Senha do usuário', type: 'password' },
+          { id: 'role', label: 'Perfil de Acesso', type: 'select', options: [
+            { value: 'controlador', label: 'Controlador (Básico)' },
+            { value: 'admin', label: 'Administrador (Total)' }
+          ]}
+        ], async (res) => {
+          try {
+            await addDoc(collection(db, 'usuarios_pcm'), {
+              user: res.user.trim(),
+              pass: res.pass.trim(),
+              role: res.role
+            });
+            alert("Usuário cadastrado!");
+          } catch (e) {
+            alert("Erro ao cadastrar: " + e.message);
+          }
+        });
+      };
+
+      window.removerUsuario = async function(docId) {
+        if (userRole !== 'admin') return;
+        if (!confirm("Tem certeza que deseja remover este acesso?")) return;
+        try {
+          await deleteDoc(doc(db, 'usuarios_pcm', docId));
+        } catch (e) {
+          alert("Erro ao remover: " + e.message);
+        }
+      };
+
+      // Comboio Management Functions
+      window.cadastrarCaminhao = async function() {
+        const name = prompt("Digite o nome/tag do caminhão (Ex: CL-1045, COMBOIO-01):");
+        if (!name) return;
+        const id = name.trim().toUpperCase().replace(/\s+/g, '_');
+        if (comboiosData.some(c => c.id === id)) {
+          alert("Um caminhão com este ID já está cadastrado.");
+          return;
+        }
+        
+        const compartments = [];
+        for (let i = 1; i <= 11; i++) {
+          compartments.push({ number: i, item: '', current: 0, capacity: 0 });
+        }
+
+        try {
+          await setDoc(doc(db, 'usuarios_pcm', 'comboio_' + id), {
+            id: id,
+            name: name.trim(),
+            compartments: compartments,
+            lastUpdate: new Date().toISOString(),
+            lastUser: currentUserName
+          });
+          alert(`Caminhão ${id} cadastrado com sucesso!`);
+        } catch (e) {
+          alert("Erro ao cadastrar caminhão: " + e.message);
+        }
+      };
+
+      window.excluirCaminhao = async function(id) {
+        if (!confirm(`Tem certeza que deseja excluir o caminhão ${id} e zerar todo o seu estoque?`)) return;
+        try {
+          await deleteDoc(doc(db, 'usuarios_pcm', 'comboio_' + id));
+          alert(`Caminhão ${id} removido.`);
+        } catch (e) {
+          alert("Erro ao remover: " + e.message);
+        }
+      };
+
+      window.configurarCompartimento = function(caminhaoId, compNum) {
+        const caminhao = comboiosData.find(c => c.id === caminhaoId);
+        if (!caminhao) return;
+        const comp = caminhao.compartments.find(cp => cp.number === compNum) || { number: compNum, item: '', current: 0, capacity: 0 };
+        
+        const options = [{ value: '', label: '[Nenhum / Desconfigurado]' }];
+        Object.keys(inventoryData).forEach(k => {
+          options.push({ value: k, label: k });
+        });
+
+        window.openModal(`Configurar Comp. ${compNum} - ${caminhao.name}`, [
+          { id: 'item', label: 'Produto associado', type: 'select', options: options, value: comp.item },
+          { id: 'capacity', label: 'Capacidade máxima (L)', type: 'number', value: comp.capacity }
+        ], async (res) => {
+          const capacity = parseFloat(res.capacity) || 0;
+          const item = res.item;
+          
+          const updatedComps = caminhao.compartments.map(cp => {
+            if (cp.number === compNum) {
+              return { ...cp, item: item, capacity: capacity, current: item ? cp.current : 0 };
+            }
+            return cp;
+          });
+
+          try {
+            await updateDoc(doc(db, 'usuarios_pcm', 'comboio_' + caminhaoId), {
+              compartments: updatedComps,
+              lastUpdate: new Date().toISOString(),
+              lastUser: currentUserName
+            });
+          } catch (e) {
+            alert("Erro ao configurar compartimento: " + e.message);
+          }
+        });
+      };
+
+      window.carregarCompartimento = function(caminhaoId, compNum) {
+        const caminhao = comboiosData.find(c => c.id === caminhaoId);
+        if (!caminhao) return;
+        const comp = caminhao.compartments.find(cp => cp.number === compNum);
+        if (!comp || !comp.item) return;
+
+        window.openModal(`Carga de Compartimento ${compNum} (${comp.item})`, [
+          { id: 'qty', label: 'Quantidade a carregar (L)', type: 'number' },
+          { id: 'auth', label: 'Código de autorização (4 a 6 dígitos)', type: 'password' }
+        ], async (res) => {
+          const qty = parseFloat(res.qty);
+          if (!qty || qty <= 0) {
+            alert("Quantidade inválida.");
+            return;
+          }
+          
+          const authCodes = {
+            '1234': 'Elison Araujo',
+            '12345': 'Tiago Vidal',
+            '123456': 'Rodrigo Brito'
+          };
+          const authorizedUser = authCodes[res.auth.trim()];
+          if (!authorizedUser) {
+            alert("Código de autorização inválido!");
+            return;
+          }
+
+          const pcmStock = inventoryData[comp.item] ? inventoryData[comp.item].current : 0;
+          if (qty > pcmStock) {
+            alert(`Saldo insuficiente no estoque central do PCM! Saldo disponível: ${pcmStock}L.`);
+            return;
+          }
+
+          if (comp.capacity > 0 && (comp.current + qty) > comp.capacity) {
+            if (!confirm(`A quantidade informada excede a capacidade do compartimento (${comp.capacity}L).\nVolume atual: ${comp.current}L + Carga: ${qty}L = ${comp.current + qty}L.\nDeseja carregar mesmo assim?`)) {
+              return;
+            }
+          }
+
+          try {
+            // Update PCM stock
+            inventoryData[comp.item].current -= qty;
+            await updateDoc(invDocRef, { inventory: inventoryData });
+
+            // Update truck compartments
+            const updatedComps = caminhao.compartments.map(cp => {
+              if (cp.number === compNum) {
+                return { ...cp, current: cp.current + qty };
+              }
+              return cp;
+            });
+            await updateDoc(doc(db, 'usuarios_pcm', 'comboio_' + caminhaoId), {
+              compartments: updatedComps,
+              lastUpdate: new Date().toISOString(),
+              lastUser: authorizedUser
+            });
+
+            // Add history log
+            await addDoc(collection(db, 'historico'), {
+              date: new Date().toISOString(),
+              equip: `🚛 CARGA COMBOIO ➔ ${caminhao.name} (COMP. ${compNum})`,
+              item: comp.item,
+              qty: -qty,
+              user: authorizedUser,
+              reason: `Carga do compartimento ${compNum}`,
+              type: "ajuste",
+              device: "PCM"
+            });
+
+            alert(`Carga de ${qty}L realizada com sucesso!`);
+          } catch (e) {
+            alert("Erro na operação: " + e.message);
+          }
+        });
+      };
+
+      window.ajustarCompartimento = function(caminhaoId, compNum) {
+        const caminhao = comboiosData.find(c => c.id === caminhaoId);
+        if (!caminhao) return;
+        const comp = caminhao.compartments.find(cp => cp.number === compNum);
+        if (!comp || !comp.item) return;
+
+        window.openModal(`Ajuste Manual - Comp. ${compNum} (${comp.item})`, [
+          { id: 'qty', label: 'Novo saldo atual do compartimento (L)', type: 'number', value: comp.current }
+        ], async (res) => {
+          const qty = parseFloat(res.qty);
+          if (isNaN(qty) || qty < 0) {
+            alert("Quantidade inválida.");
+            return;
+          }
+
+          try {
+            const updatedComps = caminhao.compartments.map(cp => {
+              if (cp.number === compNum) {
+                return { ...cp, current: qty };
+              }
+              return cp;
+            });
+            await updateDoc(doc(db, 'usuarios_pcm', 'comboio_' + caminhaoId), {
+              compartments: updatedComps,
+              lastUpdate: new Date().toISOString(),
+              lastUser: currentUserName
+            });
+            alert("Ajuste manual realizado!");
+          } catch (e) {
+            alert("Erro ao ajustar: " + e.message);
+          }
+        });
+      };
+
+      // ─── LISTENERS EM TEMPO REAL ───────────────────────────────────────────
+      
+      // Histórico
+      const historyQuery = query(collection(db, 'historico'), orderBy('date', 'desc'), limit(50));
+      onSnapshot(historyQuery, (snapshot) => {
+        historyData = snapshot.docs.map(d => ({ docId: d.id, ...d.data() }));
+        renderDashboard();
+      });
+
+      // Estoque
+      onSnapshot(invDocRef, (docSnap) => {
+        inventoryData = docSnap.exists() ? docSnap.data().inventory : {};
+        renderDashboard();
+      });
+
+      // Dispositivos
+      onSnapshot(devDocRef, (docSnap) => {
+        devicesData = docSnap.exists() && docSnap.data().list ? docSnap.data().list : [];
+        renderDashboard();
+      });
+
+      // Usuários PCM e Comboios (que compartilham o caminho usuarios_pcm devido a regras de segurança)
+      onSnapshot(collection(db, 'usuarios_pcm'), (snapshot) => {
+        const docs = snapshot.docs.map(d => ({ docId: d.id, ...d.data() }));
+        
+        usersData = docs.filter(u => u.user && u.docId !== 'almox_users' && u.docId !== 'almox_inventory' && !u.docId.startsWith('comboio_') && !u.docId.startsWith('equip_'));
+        
+        comboiosData = docs
+          .filter(d => d.docId.startsWith('comboio_'))
+          .map(d => ({
+            ...d,
+            id: d.docId.replace('comboio_', '') // Extrai o ID real do caminhão
+          }));
+          
+        // Aplica overrides no EQUIPAMENTOS
+        const equipOverrides = docs.filter(d => d.docId.startsWith('equip_'));
+        equipOverrides.forEach(custom => {
+          const equipIndex = EQUIPAMENTOS.findIndex(e => e.nome === custom.nome);
+          if (equipIndex !== -1) {
+            EQUIPAMENTOS[equipIndex] = custom;
+          } else {
+            EQUIPAMENTOS.push(custom); // Se criarem novo no futuro
+          }
+        });
+
+        renderDashboard();
+      });
+
+      } catch (err) {
+        console.error("Erro crítico no dashboard:", err);
+        const statusMsg = document.getElementById('statusMsg');
+        if (statusMsg) {
+          statusMsg.innerHTML = `Erro crítico do SDK Modular: <br><span style="color:red">${err.message}</span>`;
+        }
+      }
+    }
+  </script>
+    <!-- PWA Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('Service Worker Registrado no PCM!', reg.scope))
+            .catch(err => console.error('Falha ao registrar SW no PCM:', err));
+        });
+      }
+    </script>
+</body>
+</html>
