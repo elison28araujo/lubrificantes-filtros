@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manutenção Corretiva | Lubrificação Automática</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="loginScreen" class="login-screen">
+    <div class="login-decoration"></div>
+    <div class="login-card">
+      <div class="brand">
+        <div class="brand-icon">⚙️</div>
+        <span class="system-label">Sistema Técnico</span>
+        <h1>Lubrificação Automática</h1>
+        <p>Controle de manutenção corretiva, checklist e histórico por equipamento</p>
+      </div>
+
+      <form id="loginForm" class="login-form">
+        <label>Login</label>
+        <input type="text" id="login" placeholder="Digite seu login" required autocomplete="username" />
+
+        <label>Senha</label>
+        <input type="password" id="senha" placeholder="Digite sua senha" required autocomplete="current-password" />
+
+        <button type="submit">Acessar Sistema</button>
+        <p id="loginError" class="error"></p>
+      </form>
+
+      <div class="access-hint">
+        <strong>Acesso padrão:</strong> ELISON / 123456
+      </div>
+    </div>
+  </div>
+
+  <main id="app" class="app hidden">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="app-logo">LA</div>
+        <div>
+          <span class="system-label">Manutenção Corretiva</span>
+          <h2>Lubrificação Automática</h2>
+          <p>Checklist técnico, relatório profissional e histórico operacional.</p>
+        </div>
+      </div>
+      <button id="logoutBtn" class="btn btn-dark">Sair</button>
+    </header>
+
+    <section class="dashboard">
+      <div class="stat-card">
+        <span>Total de Manutenções</span>
+        <strong id="totalManutencoes">0</strong>
+      </div>
+      <div class="stat-card">
+        <span>Equipamentos Atendidos</span>
+        <strong id="totalEquipamentos">0</strong>
+      </div>
+      <div class="stat-card">
+        <span>Último Registro</span>
+        <strong id="ultimoRegistro">--</strong>
+      </div>
+      <div class="stat-card">
+        <span>Registros com Ocorrência</span>
+        <strong id="totalOcorrencias">0</strong>
+      </div>
+    </section>
+
+    <section class="layout">
+      <section class="panel">
+        <div class="section-title">
+          <div>
+            <span class="section-kicker">Registro técnico</span>
+            <h3>Novo Checklist de Manutenção</h3>
+          </div>
+          <button id="limparForm" class="btn btn-soft" type="button">Limpar formulário</button>
+        </div>
+
+        <form id="checklistForm">
+          <div class="form-block">
+            <h4>Dados da manutenção</h4>
+            <div class="grid two">
+              <div>
+                <label>TAG do Equipamento</label>
+                <input type="text" id="tagEquipamento" placeholder="Ex: EX-001" required />
+              </div>
+
+              <div>
+                <label>Horímetro</label>
+                <input type="number" id="horimetro" min="0" placeholder="Ex: 15420" required />
+              </div>
+
+              <div>
+                <label>Data</label>
+                <input type="date" id="data" required />
+              </div>
+
+              <div>
+                <label>Hora Inicial</label>
+                <input type="time" id="horaInicial" required />
+              </div>
+
+              <div>
+                <label>Hora Fim</label>
+                <input type="time" id="horaFim" required />
+              </div>
+
+              <div>
+                <label>Nome do Lubrificador</label>
+                <input type="text" id="nomeLubrificador" placeholder="Nome completo" required />
+              </div>
+
+              <div>
+                <label>Matrícula</label>
+                <input type="text" id="matricula" placeholder="Ex: 12345" required />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-block">
+            <h4>Checklist obrigatório</h4>
+            <p class="helper">Marque OK quando estiver conforme. Marque SIM quando houver intervenção, troca, falha ou necessidade de observação.</p>
+            <div id="checklistItems" class="checklist"></div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full">Confirmar e Finalizar Manutenção</button>
+        </form>
+      </section>
+
+      <aside class="panel">
+        <div class="section-title">
+          <div>
+            <span class="section-kicker">Consulta</span>
+            <h3>Histórico</h3>
+          </div>
+          <button id="exportarCSV" class="btn btn-soft" type="button">Exportar CSV</button>
+        </div>
+
+        <div class="filter-box">
+          <label>Filtrar por TAG do Equipamento</label>
+          <input type="text" id="filtroTag" placeholder="Digite a TAG para localizar" />
+        </div>
+
+        <div id="historico" class="historico"></div>
+      </aside>
+    </section>
+
+    <section id="relatorioSection" class="panel report-panel hidden">
+      <div class="section-title no-print">
+        <div>
+          <span class="section-kicker">Documento gerado</span>
+          <h3>Relatório da Manutenção</h3>
+        </div>
+        <div class="actions">
+          <button id="whatsappRelatorio" class="btn btn-whatsapp" type="button">Enviar via WhatsApp</button>
+          <button id="copiarRelatorio" class="btn btn-soft" type="button">Copiar texto</button>
+          <button id="imprimirRelatorio" class="btn btn-dark" type="button">Imprimir / PDF</button>
+          <button id="fecharRelatorio" class="btn btn-soft" type="button">Fechar</button>
+        </div>
+      </div>
+      <div id="relatorio" class="relatorio"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

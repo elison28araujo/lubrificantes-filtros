@@ -18231,7 +18231,7 @@ const DADOS_LUBRIFICANTES = [
   }
 ];
 
-const EQUIPAMENTOS = [
+let EQUIPAMENTOS = [
   {
     "id": 81,
     "nome": "140_CAT",

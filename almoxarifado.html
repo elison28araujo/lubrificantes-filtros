@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Almoxarifado - Lubetrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05100c;
+      --bg2: #0a1a14;
+      --bg3: #0f261d;
+      --surface: #0c2118;
+      --surface2: #123124;
+      --border: rgba(255,255,255,0.06);
+      --border2: rgba(255,255,255,0.12);
+      --primary: #004a2d;
+      --secondary: #00a859;
+      --text: #f0f6ff;
+      --text2: #94a3b8;
+      --text3: #64748b;
+      --blue: #3b82f6;
+      --red: #ef4444;
+      --yellow: #fbbf24;
+      --radius: 14px;
+      --radius-sm: 8px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #004a2d 0%, #05100c 100%);
+      padding: 0 16px;
+      height: 64px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 18px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-val {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 2px;
+      color: var(--yellow);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      opacity: 0.6;
+      line-height: 1.2;
+    }
+
+    .section {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 16px;
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--yellow);
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 0 -10px;
+      padding: 0 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    th {
+      text-align: left;
+      font-size: 12px;
+      opacity: 0.5;
+      padding: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 12px 10px;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+    }
+
+    .badge {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      display: inline-block;
+    }
+
+    .badge-qty-minus { background: rgba(59,130,246,0.1); color: var(--blue); }
+    .badge-qty-plus { background: rgba(34,197,94,0.1); color: #4ade80; }
+    .badge-qty-transfer { background: rgba(251,191,36,0.1); color: var(--yellow); }
+
+    .inventory-item {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .inventory-item:last-child { border-bottom: none; }
+
+    .inventory-name { 
+      font-size: 14px; 
+      font-weight: 600; 
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .inventory-controls {
+      display: flex;
+      flex-direction: column;
+      background: var(--surface2);
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      gap: 8px;
+    }
+
+    .inventory-stock-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+    }
+
+    .btn-refresh {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .btn-action {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+    }
+    .btn-action:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
+    
+    .btn-danger { background: rgba(239,68,68,0.1); color: var(--red); border-color: rgba(239,68,68,0.2); }
+    .btn-danger:active { background: rgba(239,68,68,0.2); }
+
+    .search-container {
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 15px 12px 40px;
+      background: var(--bg2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: white;
+      font-size: 14px;
+      font-family: inherit;
+      box-sizing: border-box;
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--yellow);
+      background: var(--bg3);
+      box-shadow: 0 0 0 4px rgba(251,191,36,0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .tabs-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tab-btn {
+      padding: 12px 18px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 30px;
+      color: var(--text2);
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex: 1;
+      text-align: center;
+    }
+
+    .tab-btn.active {
+      background: var(--yellow);
+      border-color: var(--yellow);
+      color: #05100c;
+      box-shadow: 0 4px 15px rgba(251,191,36,0.3);
+    }
+
+    .btn-primary {
+      background: var(--yellow);
+      color: #05100c;
+      border: none;
+      padding: 15px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      width: 100%;
+      margin-top: 15px;
+      font-size: 15px;
+      transition: opacity 0.2s;
+      box-shadow: 0 4px 15px rgba(251,191,36,0.2);
+    }
+    .btn-primary:active { opacity: 0.8; transform: scale(0.98); }
+
+    .login-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(160deg, #004a2d 0%, #05100c 60%, #030a08 100%);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .login-overlay.hidden { display: none; }
+    
+    .login-box {
+      background: var(--surface);
+      padding: 35px 25px;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--border2);
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      animation: fadeIn 0.5s ease;
+    }
+
+    .login-box h2 { 
+      margin-top: 0; 
+      color: white; 
+      margin-bottom: 5px; 
+      font-size: 22px; 
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .login-box p {
+      font-size: 12px;
+      opacity: 0.6;
+      margin-bottom: 25px;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 16px;
+      margin-bottom: 15px;
+      background: var(--bg) !important;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: white !important;
+      font-size: 16px;
+      font-family: inherit;
+      box-sizing: border-box;
+      transition: all 0.2s;
+    }
+
+    .login-input:focus {
+      outline: none;
+      border-color: var(--yellow);
+      background: var(--bg2) !important;
+      box-shadow: 0 0 0 4px rgba(251,191,36,0.15);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--yellow);
+      color: #05100c;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba(251,191,36,0.3);
+    }
+
+    .login-btn:active {
+      transform: scale(0.97);
+      opacity: 0.9;
+    }
+
+    #loginError { 
+      background: rgba(239,68,68,0.1);
+      color: var(--red); 
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 13px; 
+      margin-bottom: 15px; 
+      display: none; 
+      border: 1px solid rgba(239,68,68,0.2);
+    }
+
+    /* Modal Customizado */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(5px);
+      z-index: 10000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-overlay.hidden { display: none; }
+    
+    .modal-box {
+      background: var(--surface);
+      border: 1.5px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 25px;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .modal-box h3 { margin: 0 0 20px 0; color: var(--yellow); font-size: 18px; }
+    
+    .modal-field { margin-bottom: 15px; }
+    .modal-field label { display: block; font-size: 12px; opacity: 0.6; margin-bottom: 5px; }
+    .modal-field input, .modal-field select {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--bg) !important;
+      border: 1.5px solid var(--border2);
+      border-radius: 8px;
+      color: white !important;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s;
+      box-sizing: border-box;
+    }
+    .modal-field input:focus, .modal-field select:focus { 
+      border-color: var(--yellow) !important;
+      background: var(--bg2) !important;
+      outline: none; 
+      box-shadow: 0 0 0 4px rgba(251,191,36,0.15);
+    }
+    
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    @media (min-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+      .inventory-controls {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .inventory-stock-row {
+        gap: 30px;
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-overlay" id="loginOverlay">
+    <form class="login-box" id="loginForm">
+      <h2>Painel Almoxarifado</h2>
+      <p>Acesso restrito U&M - Lubetrack</p>
+      <div id="loginError">Usuário ou senha incorretos.</div>
+      <input type="text" id="loginUser" class="login-input" placeholder="Usuário" autocomplete="username" required>
+      <input type="password" id="loginPass" class="login-input" placeholder="Senha" autocomplete="current-password" required>
+      <button type="submit" class="login-btn">Entrar no Sistema</button>
+    </form>
+  </div>
+
+  <header class="header">
+    <h1>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+      </svg>
+      LUBETRACK - Almoxarifado
+    </h1>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <span id="headerUser" style="font-size:12px; opacity:0.5; color:white;"></span>
+      <button class="btn-refresh" onclick="location.reload()">Atualizar</button>
+      <button class="btn-refresh" style="background:var(--red); border-color:var(--red);" onclick="window.fazerLogout()">Sair</button>
+    </div>
+  </header>
+
+  <!-- Custom Modal HTML -->
+  <div id="customModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h3 id="modalTitle">Título</h3>
+      <div id="modalBody"></div>
+      <div class="modal-footer">
+        <button class="btn-action" onclick="window.closeModal()">Cancelar</button>
+        <button class="btn-primary" id="modalConfirmBtn" style="margin-top:0; width:auto; padding: 10px 25px;">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" id="dashboard">
+    <div style="text-align:center; padding:50px; opacity:0.5;">Conectando ao banco AI-STUDIO...</div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { initializeFirestore, collection, getDocs, doc, getDoc, query, orderBy, limit, updateDoc, deleteDoc, onSnapshot, setDoc, addDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7_1RiIIErnUfyWWGCnuVfItHQGAxOsaM",
+      authDomain: "controle-de-lubrificantes.firebaseapp.com",
+      projectId: "controle-de-lubrificantes",
+      storageBucket: "controle-de-lubrificantes.firebasestorage.app",
+      messagingSenderId: "255457530605",
+      appId: "1:255457530605:web:a9179628360caf12f372e4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = initializeFirestore(app, { experimentalForceLongPolling: true }, "ai-studio-9dc8c906-c888-4a53-973f-6fca4ed7c111");
+
+    const overlay = document.getElementById('loginOverlay');
+    const isLoggedIn = sessionStorage.getItem('almox_logged_in') === 'true';
+    
+    if (isLoggedIn) {
+      overlay.classList.add('hidden');
+    }
+
+    // Usando a coleção 'usuarios_pcm' que tem permissão aberta de leitura/escrita no Firebase de produção.
+    const usersDocRef = doc(db, 'usuarios_pcm', 'almox_users');
+    let usersList = [];
+
+    // Auto-seed default users inside the historico/almox_users document (which is open)
+    async function checkAndSeedUsers() {
+      try {
+        const docSnap = await getDoc(usersDocRef);
+        let data = docSnap.exists() ? docSnap.data() : null;
+        if (!data || !data.users || data.users.length === 0) {
+          console.log("Almoxarifado: Criando usuários padrão (seed) em historico/almox_users...");
+          const defaultData = {
+            users: [
+              { user: "gerente", pass: "gerente123", role: "gerente" },
+              { user: "almoxarife", pass: "almoxarife123", role: "almoxarife" }
+            ]
+          };
+          await setDoc(usersDocRef, defaultData);
+          usersList = defaultData.users;
+        } else {
+          usersList = data.users || [];
+        }
+      } catch (err) {
+        console.error("Erro ao verificar/criar usuários do Almoxarifado:", err);
+      }
+    }
+    await checkAndSeedUsers();
+
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const u = document.getElementById('loginUser').value.trim().toLowerCase();
+        const p = document.getElementById('loginPass').value.trim();
+        const loginError = document.getElementById('loginError');
+
+        try {
+          // Re-fetch users to get latest
+          const docSnap = await getDoc(usersDocRef);
+          let currentUsers = docSnap.exists() ? (docSnap.data().users || []) : usersList;
+          
+          if (currentUsers.length === 0) {
+            currentUsers = [
+              { user: "gerente", pass: "gerente123", role: "gerente" },
+              { user: "almoxarife", pass: "almoxarife123", role: "almoxarife" }
+            ];
+          }
+
+          const matchedUser = currentUsers.find(user => user.user.toLowerCase() === u && user.pass === p)
+                              || (u === 'gerente' && p === 'gerente123' ? { user: 'gerente', role: 'gerente' } : null)
+                              || (u === 'almoxarife' && p === 'almoxarife123' ? { user: 'almoxarife', role: 'almoxarife' } : null);
+
+          if (matchedUser) {
+            sessionStorage.setItem('almox_logged_in', 'true');
+            sessionStorage.setItem('almox_user_name', matchedUser.user);
+            sessionStorage.setItem('almox_user_role', matchedUser.role || 'almoxarife');
+            overlay.classList.add('hidden');
+            location.reload();
+          } else {
+            loginError.textContent = "Usuário ou senha incorretos.";
+            loginError.style.display = 'block';
+          }
+        } catch (e) {
+          loginError.textContent = "Erro ao conectar: " + e.message;
+          loginError.style.display = 'block';
+        }
+      });
+    }
+
+    window.fazerLogout = function() {
+      if (confirm("Deseja realmente sair do painel?")) {
+        sessionStorage.clear();
+        location.reload();
+      }
+    };
+
+    if (isLoggedIn) {
+      try {
+        const userRole = sessionStorage.getItem('almox_user_role') || 'almoxarife';
+        const currentUserName = sessionStorage.getItem('almox_user_name') || 'Desconhecido';
+        document.getElementById('headerUser').textContent = `Usuário: ${currentUserName} (${userRole.toUpperCase()})`;
+
+        let historyData = [];
+        let pcmInventoryData = {};
+        let almoxInventoryData = {};
+        let usersData = [];
+
+        const pcmInvDocRef = doc(db, 'estoque', 'status_atual');
+        const almoxInvDocRef = doc(db, 'usuarios_pcm', 'almox_inventory');
+        window.currentTab = 'estoque';
+        window.filterText = '';
+
+        window.switchTab = (tab) => {
+          window.currentTab = tab;
+          window.filterText = '';
+          renderDashboard();
+        };
+
+        window.handleSearch = (val) => {
+          window.filterText = val.toLowerCase();
+          renderDashboard();
+        };
+
+          function renderDashboard() {
+          const container = document.getElementById('dashboard');
+
+          let isSearchFocused = false;
+          let cursorPos = 0;
+          if (document.activeElement && document.activeElement.id === 'globalSearchInput') {
+            isSearchFocused = true;
+            cursorPos = document.activeElement.selectionStart;
+          }
+
+          let tabsHtml = `
+            <div class="tabs-container">
+              <button class="tab-btn ${window.currentTab === 'estoque' ? 'active' : ''}" onclick="window.switchTab('estoque')">Estoque Almoxarifado</button>
+              <button class="tab-btn ${window.currentTab === 'historico' ? 'active' : ''}" onclick="window.switchTab('historico')">Histórico de Ações</button>
+              ${userRole === 'gerente' ? `<button class="tab-btn ${window.currentTab === 'usuarios' ? 'active' : ''}" onclick="window.switchTab('usuarios')">Gestão de Usuários</button>` : ''}
+            </div>
+          `;
+
+          const searchHtml = `
+            <div class="search-container">
+              <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" id="globalSearchInput" class="search-input" placeholder="Buscar produto..." value="${window.filterText}" oninput="window.handleSearch(this.value)">
+            </div>
+          `;
+
+          let contentHtml = '';
+
+          if (window.currentTab === 'estoque') {
+            const sortedInv = Object.entries(pcmInventoryData)
+              .filter(([name]) => name.toLowerCase().includes(window.filterText))
+              .sort((a,b) => a[0].localeCompare(b[0]));
+
+            let itemsHtml = '';
+            sortedInv.forEach(([name, pcmData]) => {
+              const almoxItem = almoxInventoryData[name] || { current: 0, unit: 'L' };
+              const isLow = pcmData.current <= pcmData.min;
+
+              itemsHtml += `
+                <div class="inventory-item">
+                  <div class="inventory-name">${name}</div>
+                  <div class="inventory-controls">
+                    <div class="inventory-stock-row">
+                      <div style="opacity:0.8;">Almoxarifado: <strong style="color:var(--yellow); font-size:15px;">${almoxItem.current % 1 === 0 ? almoxItem.current : almoxItem.current.toFixed(1)}L</strong></div>
+                      <div style="opacity:0.8;">PCM (Campo): <strong style="color:${isLow ? 'var(--red)' : 'var(--secondary)'}; font-size:15px;">${pcmData.current % 1 === 0 ? pcmData.current : pcmData.current.toFixed(1)}L</strong></div>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                      <button class="btn-action" style="background:rgba(251,191,36,0.1); color:var(--yellow); border-color:rgba(251,191,36,0.2);" onclick="window.receberAlmoxarifado('${name}', ${almoxItem.current})">➕ Receber</button>
+                      <button class="btn-action" style="background:rgba(59,130,246,0.1); color:var(--blue); border-color:rgba(59,130,246,0.2);" onclick="window.transferirParaPCM('${name}', ${almoxItem.current}, ${pcmData.current})">➔ Transferir</button>
+                      ${userRole === 'gerente' ? `<button class="btn-action" onclick="window.ajustarManualEstoque('${name}', ${almoxItem.current})" title="Ajustar Manualmente">✏️</button>` : ''}
+                    </div>
+                  </div>
+                </div>
+              `;
+            });
+
+            contentHtml = `
+              <div class="section active">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
+                  <div class="section-title" style="margin:0;">Controle Geral de Estoques</div>
+                  <div style="display:flex; gap:10px;">
+                    <button class="btn-action" style="background:var(--blue); color:white; border-color:transparent;" onclick="window.cadastrarNovoProduto('filtro')">+ Cadastrar Filtro</button>
+                    <button class="btn-action" style="background:var(--yellow); color:#05100c; border-color:transparent;" onclick="window.cadastrarNovoProduto('lubrificante')">+ Cadastrar Lubrificante</button>
+                  </div>
+                </div>
+                ${searchHtml}
+                ${itemsHtml || '<p style="text-align:center; padding:40px; opacity:0.5;">Nenhum produto encontrado</p>'}
+              </div>
+            `;
+          } else if (window.currentTab === 'historico') {
+            const estornados = new Set();
+            historyData.forEach(h => {
+              if (h.equip && h.equip.includes("ESTORNO") && h.reason && h.reason.includes("Lançamento ID: ")) {
+                const parts = h.reason.split("Lançamento ID: ");
+                if (parts[1]) estornados.add(parts[1].trim());
+              }
+            });
+
+            const filteredHistory = historyData.filter(h => 
+              (h.equip && (h.equip.includes("ALMOXARIFADO") || h.equip.includes("TRANSFERENCIA ALMOX") || h.equip.includes("ESTORNO"))) &&
+              (h.item?.toLowerCase().includes(window.filterText) || h.user?.toLowerCase().includes(window.filterText) || h.reason?.toLowerCase().includes(window.filterText))
+            );
+
+            let rowsHtml = '';
+            filteredHistory.forEach(h => {
+              const date = new Date(h.date).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+              const qtyValue = parseFloat(h.qty);
+              const qtyLabel = qtyValue > 0 ? `-${qtyValue}L` : `+${Math.abs(qtyValue)}L`;
+              
+              let badgeClass = 'badge-qty-minus';
+              if (h.equip && h.equip.includes('ENTRADA')) badgeClass = 'badge-qty-plus';
+              if (h.equip && h.equip.includes('TRANSFERENCIA')) badgeClass = 'badge-qty-transfer';
+              if (h.equip && h.equip.includes('ESTORNO')) {
+                badgeClass = qtyValue < 0 ? 'badge-qty-plus' : 'badge-qty-minus';
+              }
+
+              const isEstornado = estornados.has(h.docId);
+              const isEstornoDoc = h.equip && h.equip.includes("ESTORNO");
+              
+              let rowStyle = '';
+              let badgeLabelHtml = qtyLabel;
+              if (isEstornado) {
+                rowStyle = 'style="opacity: 0.5; text-decoration: line-through;"';
+                badgeLabelHtml += ' (Estornado)';
+              } else if (isEstornoDoc) {
+                rowStyle = 'style="background-color: rgba(239, 68, 68, 0.05);"';
+              }
+
+              rowsHtml += `
+                <tr ${rowStyle}>
+                  <td style="white-space: nowrap;">${date}</td>
+                  <td><strong>${h.equip}</strong></td>
+                  <td>${h.item}</td>
+                  <td><span class="badge ${badgeClass}">${badgeLabelHtml}</span></td>
+                  <td>${h.reason}</td>
+                  <td>${h.user}</td>
+                </tr>
+              `;
+            });
+
+            contentHtml = `
+              <div class="section active">
+                <div class="section-title">Histórico de Ações do Almoxarifado</div>
+                ${searchHtml}
+                <div class="table-responsive">
+                  <table>
+                    <thead><tr>
+                      <th>Data</th>
+                      <th>Movimentação</th>
+                      <th>Produto</th>
+                      <th>Qtd</th>
+                      <th>Documento/Motivo</th>
+                      <th>Usuário</th>
+                    </tr></thead>
+                    <tbody>${rowsHtml || '<tr><td colspan="6" style="text-align:center; padding:40px; opacity:0.5;">Nenhuma movimentação registrada</td></tr>'}</tbody>
+                  </table>
+                </div>
+              </div>
+            `;
+          } else if (window.currentTab === 'usuarios' && userRole === 'gerente') {
+            let usersListHtml = '';
+            usersData.forEach(u => {
+              usersListHtml += `
+                <li style="background:var(--bg2); padding:15px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border: 1px solid var(--border); margin-bottom:10px;">
+                  <div>
+                    <div style="font-weight:700; color:var(--text); font-size:15px;">${u.user}</div>
+                    <div style="font-size:12px; opacity:0.5;">Perfil: ${u.role === 'gerente' ? 'Gerente' : 'Almoxarife'}</div>
+                  </div>
+                  ${u.user !== 'gerente' && u.user !== currentUserName ? `<button class="btn-action btn-danger" onclick="window.removerUsuario('${u.user}')">Remover</button>` : ''}
+                </li>
+              `;
+            });
+
+            contentHtml = `
+              <div class="section active">
+                <div class="section-title">Gerenciar Equipe do Almoxarifado</div>
+                <ul style="list-style:none; padding:0; margin:0 0 20px 0;">${usersListHtml || '<p style="opacity:0.5;">Nenhum usuário cadastrado</p>'}</ul>
+                <button class="btn-primary" onclick="window.adicionarUsuario()">+ Cadastrar Novo Usuário</button>
+              </div>
+            `;
+          }
+
+          // Count total stocks for stats card
+          const totalAlmoxQty = Object.values(almoxInventoryData).reduce((acc, curr) => acc + (curr.current || 0), 0);
+          const totalPcmQty = Object.values(pcmInventoryData).reduce((acc, curr) => acc + (curr.current || 0), 0);
+
+          container.innerHTML = `
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-val">${totalAlmoxQty % 1 === 0 ? totalAlmoxQty : totalAlmoxQty.toFixed(1)}L</div>
+                <div class="stat-label">Total Almoxarifado</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-val" style="color:var(--secondary);">${totalPcmQty % 1 === 0 ? totalPcmQty : totalPcmQty.toFixed(1)}L</div>
+                <div class="stat-label">Total PCM (Campo)</div>
+              </div>
+            </div>
+            ${tabsHtml}
+            ${contentHtml}
+          `;
+
+          if (isSearchFocused) {
+            const newSearch = document.getElementById('globalSearchInput');
+            if (newSearch) {
+              newSearch.focus();
+              newSearch.setSelectionRange(cursorPos, cursorPos);
+            }
+          }
+        }
+
+        // Modal Logic
+        window.openModal = function(title, fields, onConfirm) {
+          const modal = document.getElementById('customModal');
+          const mTitle = document.getElementById('modalTitle');
+          const mBody = document.getElementById('modalBody');
+          const mConfirm = document.getElementById('modalConfirmBtn');
+
+          mTitle.textContent = title;
+          mBody.innerHTML = '';
+          
+          const inputs = {};
+          fields.forEach(f => {
+            const div = document.createElement('div');
+            div.className = 'modal-field';
+            div.innerHTML = `<label>${f.label}</label>`;
+            
+            let input;
+            if (f.type === 'select') {
+              input = document.createElement('select');
+              f.options.forEach(opt => {
+                const o = document.createElement('option');
+                o.value = opt.value;
+                o.textContent = opt.label;
+                input.appendChild(o);
+              });
+            } else {
+              input = document.createElement('input');
+              input.type = f.type || 'text';
+              input.value = f.value || '';
+              if (f.placeholder) input.placeholder = f.placeholder;
+            }
+            
+            div.appendChild(input);
+            mBody.appendChild(div);
+            inputs[f.id] = input;
+          });
+
+          modal.classList.remove('hidden');
+          
+          mConfirm.onclick = () => {
+            const results = {};
+            for (let id in inputs) results[id] = inputs[id].value;
+            onConfirm(results);
+            window.closeModal();
+          };
+        };
+
+        window.closeModal = () => {
+          document.getElementById('customModal').classList.add('hidden');
+        };
+
+        // Actions
+        window.cadastrarNovoProduto = function(tipo) {
+          const isFiltro = tipo === 'filtro';
+          const titulo = isFiltro ? 'Novo Filtro' : 'Novo Lubrificante';
+          const unidade = isFiltro ? 'UN' : 'L';
+          
+          window.openModal(titulo, [
+            { id: 'nome', label: `Nome do ${isFiltro ? 'Filtro' : 'Lubrificante'}`, placeholder: isFiltro ? 'Ex: Filtro de Ar Secundário' : 'Ex: Óleo 15W40' },
+            { id: 'min', label: 'Estoque Mínimo de Alerta no Campo (PCM)', type: 'number', placeholder: 'Ex: 10' },
+            { id: 'init', label: `Estoque Inicial Recebido (${unidade})`, type: 'number', placeholder: 'Ex: 0' }
+          ], async (res) => {
+            const nome = res.nome.trim();
+            if (!nome) { alert("Nome é obrigatório."); return; }
+            
+            const minQty = parseFloat(res.min) || 0;
+            const initQty = parseFloat(res.init) || 0;
+            
+            // Verificação case-insensitive usando o objeto já carregado
+            const lowerNome = nome.toLowerCase();
+            const existsPcm = Object.keys(pcmInventoryData).some(k => k.toLowerCase() === lowerNome);
+            const existsAlmox = Object.keys(almoxInventoryData).some(k => k.toLowerCase() === lowerNome);
+
+            if (existsPcm || existsAlmox) {
+              alert("Já existe um produto com este nome ou um nome muito parecido.");
+              return;
+            }
+
+            try {
+              // 1. Atualizar PCM (estoque/status_atual)
+              const updatedPcm = { ...pcmInventoryData };
+              updatedPcm[nome] = { current: 0, min: minQty, unit: unidade };
+              const pcmInvDocRef = doc(db, 'estoque', 'status_atual');
+              await updateDoc(pcmInvDocRef, { inventory: updatedPcm });
+
+              // 2. Atualizar Almoxarifado (usuarios_pcm/almox_inventory)
+              const updatedAlmox = { ...almoxInventoryData };
+              updatedAlmox[nome] = { current: initQty, unit: unidade };
+              const almoxInvDocRef = doc(db, 'usuarios_pcm', 'almox_inventory');
+              await setDoc(almoxInvDocRef, { 
+                inventory: updatedAlmox, 
+                lastUpdate: new Date().toISOString(), 
+                lastUser: currentUserName 
+              }, { merge: true });
+
+              // 3. Gerar Log
+              await addDoc(collection(db, 'historico'), {
+                date: new Date().toISOString(),
+                equip: "📦 ALMOXARIFADO - NOVO CADASTRO",
+                item: nome,
+                qty: -initQty, // Almoxarifado entrada é negativa visualmente no histórico
+                user: currentUserName,
+                reason: `Cadastro de novo ${tipo} (Min: ${minQty}, Inicial: ${initQty}${unidade})`,
+                type: "ajuste",
+                device: "PCM"
+              });
+
+              alert(`${titulo} cadastrado com sucesso!`);
+            } catch (e) {
+              alert("Erro ao cadastrar: " + e.message);
+            }
+          });
+        };
+        window.receberAlmoxarifado = function(itemName, currentQty) {
+          window.openModal(`Receber: ${itemName}`, [
+            { id: 'qty', label: 'Quantidade Recebida (Litros)', type: 'number', placeholder: 'Ex: 200' },
+            { id: 'nf', label: 'Nota Fiscal / Documento', type: 'text', placeholder: 'Nº da Nota Fiscal' },
+            { id: 'obs', label: 'Observação / Fornecedor (Opcional)', type: 'text', placeholder: 'Ex: Fornecedor X' }
+          ], async (res) => {
+            const addQty = parseFloat(res.qty);
+            if (isNaN(addQty) || addQty <= 0) { alert("Quantidade inválida."); return; }
+            const nf = res.nf.trim() || "-";
+            const obs = res.obs.trim() || "-";
+
+            try {
+              const updatedAlmox = { ...almoxInventoryData };
+              if (!updatedAlmox[itemName]) {
+                updatedAlmox[itemName] = { current: 0, unit: 'L' };
+              }
+              updatedAlmox[itemName].current += addQty;
+
+              await setDoc(almoxInvDocRef, { 
+                inventory: updatedAlmox, 
+                lastUpdate: new Date().toISOString(), 
+                lastUser: currentUserName 
+              });
+
+              await addDoc(collection(db, 'historico'), {
+                date: new Date().toISOString(),
+                equip: "📦 ALMOXARIFADO - ENTRADA",
+                item: itemName,
+                qty: -addQty,
+                user: currentUserName,
+                reason: `Nota Fiscal: ${nf} | Fornecedor: ${obs}`,
+                type: "ajuste",
+                device: "PCM"
+              });
+            } catch (e) {
+              alert("Erro ao receber produto: " + e.message);
+            }
+          });
+        };
+
+        window.transferirParaPCM = function(itemName, almoxQty, pcmQty) {
+          window.openModal(`Transferir para PCM: ${itemName}`, [
+            { id: 'qty', label: `Quantidade a Transferir (Disponível: ${almoxQty}L)`, type: 'number', placeholder: 'Ex: 100' },
+            { id: 'unidade', label: 'Unidade Relacionada', type: 'select', options: [
+              { value: 'UMCA', label: 'UMCA' },
+              { value: 'UMGE', label: 'UMGE' }
+            ]},
+            { id: 'frota', label: 'Frota/Destinatário (Opcional)', type: 'text', placeholder: 'Ex: Comboio-01' }
+          ], async (res) => {
+            const transQty = parseFloat(res.qty);
+            if (isNaN(transQty) || transQty <= 0) { alert("Quantidade inválida."); return; }
+            if (transQty > almoxQty) { alert("Estoque insuficiente no Almoxarifado."); return; }
+
+            const targetFrota = res.frota.trim() || "-";
+
+            try {
+              // Update Almoxarifado
+              const updatedAlmox = { ...almoxInventoryData };
+              updatedAlmox[itemName].current -= transQty;
+
+              // Update PCM
+              const updatedPcm = { ...pcmInventoryData };
+              if (!updatedPcm[itemName]) {
+                updatedPcm[itemName] = { current: 0, min: 0, unit: 'L' };
+              }
+              updatedPcm[itemName].current += transQty;
+
+              await setDoc(almoxInvDocRef, { 
+                inventory: updatedAlmox, 
+                lastUpdate: new Date().toISOString(), 
+                lastUser: currentUserName 
+              });
+              
+              await updateDoc(pcmInvDocRef, { inventory: updatedPcm });
+
+              await addDoc(collection(db, 'historico'), {
+                date: new Date().toISOString(),
+                equip: "🔄 TRANSFERENCIA ALMOX ➔ PCM",
+                item: itemName,
+                qty: -transQty,
+                user: currentUserName,
+                reason: `Transferido para PCM (${res.unidade}) | Destino: ${targetFrota}`,
+                type: "ajuste",
+                device: "PCM",
+                unidade: res.unidade,
+                frota: targetFrota
+              });
+            } catch (e) {
+              alert("Erro ao realizar transferência: " + e.message);
+            }
+          });
+        };
+
+        window.ajustarManualEstoque = function(itemName, currentQty) {
+          if (userRole !== 'gerente') return;
+          window.openModal(`Ajustar Almoxarifado: ${itemName}`, [
+            { id: 'qty', label: 'Corrigir para a Quantidade Total', type: 'number', value: currentQty },
+            { id: 'motivo', label: 'Motivo da Correção', type: 'text', placeholder: 'Ex: Inventário de conferência física' }
+          ], async (res) => {
+            const newQty = parseFloat(res.qty);
+            if (isNaN(newQty)) { alert("Quantidade inválida."); return; }
+            const motivo = res.motivo.trim() || "Ajuste manual do Gerente";
+            const diff = newQty - currentQty;
+            if (diff === 0) return;
+
+            try {
+              const updatedAlmox = { ...almoxInventoryData };
+              if (!updatedAlmox[itemName]) {
+                updatedAlmox[itemName] = { current: 0, unit: 'L' };
+              }
+              updatedAlmox[itemName].current = newQty;
+
+              await setDoc(almoxInvDocRef, { 
+                inventory: updatedAlmox, 
+                lastUpdate: new Date().toISOString(), 
+                lastUser: currentUserName 
+              });
+
+              await addDoc(collection(db, 'historico'), {
+                date: new Date().toISOString(),
+                equip: "🛠️ ALMOXARIFADO - AJUSTE MANUAL",
+                item: itemName,
+                qty: -diff, // Mantém padrão: negativo se adiciona, positivo se remove
+                user: currentUserName,
+                reason: motivo,
+                type: "ajuste",
+                device: "PCM"
+              });
+            } catch (e) {
+              alert("Erro ao ajustar estoque: " + e.message);
+            }
+          });
+        };
+
+        // User management
+        window.adicionarUsuario = function() {
+          if (userRole !== 'gerente') return;
+          window.openModal('Novo Usuário', [
+            { id: 'user', label: 'Login de acesso' },
+            { id: 'pass', label: 'Senha', type: 'password' },
+            { id: 'role', label: 'Perfil de Acesso', type: 'select', options: [
+              { value: 'almoxarife', label: 'Almoxarife (Operador)' },
+              { value: 'gerente', label: 'Gerente (Administrador)' }
+            ]}
+          ], async (res) => {
+            const username = res.user.trim().toLowerCase();
+            const password = res.pass.trim();
+            if (!username || !password) { alert("Preencha todos os campos."); return; }
+
+            try {
+              const updatedUsers = [...usersData];
+              if (updatedUsers.some(u => u.user.toLowerCase() === username)) {
+                alert("Este usuário já existe.");
+                return;
+              }
+              updatedUsers.push({ user: username, pass: password, role: res.role });
+              await setDoc(usersDocRef, { users: updatedUsers });
+              alert("Usuário adicionado com sucesso!");
+            } catch (e) {
+              alert("Erro ao adicionar usuário: " + e.message);
+            }
+          });
+        };
+
+        window.removerUsuario = async function(username) {
+          if (userRole !== 'gerente') return;
+          if (!confirm(`Tem certeza que deseja remover o usuário ${username}?`)) return;
+
+          try {
+            const updatedUsers = usersData.filter(u => u.user !== username);
+            await setDoc(usersDocRef, { users: updatedUsers });
+            alert("Usuário removido.");
+          } catch (e) {
+            alert("Erro ao remover: " + e.message);
+          }
+        };
+
+        // ─── LISTENERS ────────────────────────────────────────────────────────
+        onSnapshot(pcmInvDocRef, (docSnap) => {
+          pcmInventoryData = docSnap.exists() ? docSnap.data().inventory : {};
+          renderDashboard();
+        });
+
+        onSnapshot(almoxInvDocRef, (docSnap) => {
+          almoxInventoryData = docSnap.exists() ? docSnap.data().inventory : {};
+          renderDashboard();
+        });
+
+        const historyQuery = query(collection(db, 'historico'), orderBy('date', 'desc'), limit(50));
+        onSnapshot(historyQuery, (snapshot) => {
+          historyData = snapshot.docs.map(d => ({ docId: d.id, ...d.data() }));
+          renderDashboard();
+        });
+
+        onSnapshot(usersDocRef, (docSnap) => {
+          usersData = docSnap.exists() ? (docSnap.data().users || []) : [];
+          renderDashboard();
+        });
+
+      } catch (err) {
+        document.getElementById('dashboard').innerHTML = `<div style="color:var(--red); padding:30px; text-align:center;">Erro ao inicializar dashboard: ${err.message}</div>`;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1682,18 +1682,24 @@ import { firebaseConfig } from "./firebase-config.js";
         date: agora.toISOString(), // Campo obrigatório para a query do PCM (orderBy 'date')
         codigoRelatorio,
         tagEquipamento: tag,
+        equip: tag, // Alinhado para validação de segurança
         horimetro: document.getElementById("horimetroMaint").value,
         data,
         horaInicial,
         horaFim,
         duracao,
         nomeLubrificador: document.getElementById("nomeLubrificador").value.trim(),
+        user: document.getElementById("nomeLubrificador").value.trim(), // Alinhado para validação de segurança
         matricula: document.getElementById("matriculaLubrificador").value.trim(),
         checklist,
         fotoEvidencia: fotoBase64Maint,
         criadoEm: agora.toLocaleString("pt-BR"),
         deviceId: deviceId,
-        type: "manutencao"
+        device: deviceId, // Campo CRÍTICO: validado pelas regras de segurança do Firebase
+        type: "manutencao",
+        comp: "Manutenção L.A.", // Alinhado para validação de segurança
+        item: "MANUTENÇÃO L.A.", // Alinhado para validação de segurança
+        qty: 0 // Alinhado para validação de segurança
       };
 
       // 1. Salva local
@@ -1709,6 +1715,7 @@ import { firebaseConfig } from "./firebase-config.js";
           console.log("Lubetrack: Manutenção enviada para o Firebase com sucesso.");
         } catch (error) {
           console.error("Lubetrack: Erro ao salvar manutenção no Firebase:", error);
+          alert("Aviso: O relatório foi salvo localmente no tablet, mas não pôde ser enviado para a nuvem. Erro: " + error.message);
         }
       }
 

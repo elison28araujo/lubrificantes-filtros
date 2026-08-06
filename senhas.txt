@@ -1,0 +1,28 @@
+CREDENCIAIS E SENHAS DO PROJETO LUBETRACK
+
+1. DESBLOQUEIO DE TELA (SPLASH SCREEN):
+   PIN: UMCA2026
+
+2. ACESSO AO PAINEL PCM (ADMIN FALLBACK):
+   Usuário: UMCA
+   Senha: 123456ca
+
+3. AJUSTE DE ESTOQUE E EXCLUSÃO (PCM):
+   Senha: UMCA123456
+
+4. CÓDIGOS DE AUTORIZAÇÃO (ENTRADA DE ESTOQUE):
+   1234   -> Elison Araujo
+   12345  -> Tiago Vidal
+   123456 -> Rodrigo Brito
+
+Obs: Outros usuários do PCM são gerenciados via coleção 'usuarios_pcm' no Firebase Firestore.
+
+5. ACESSO AO PAINEL DO ALMOXARIFADO (CREDENCIAIS INICIAIS):
+   - Gerente (Administrador):
+     Usuário: gerente
+     Senha: gerente123
+   - Almoxarife (Operador):
+     Usuário: almoxarife
+     Senha: almoxarife123
+
+   Obs: Novos usuários do Almoxarifado podem ser gerenciados diretamente na aba "Gestão de Usuários" (acesso exclusivo do Gerente), salvos na coleção 'usuarios_almoxarifado'.

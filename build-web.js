@@ -5,10 +5,14 @@ const root = __dirname;
 const outDir = path.join(root, 'www');
 const files = [
   'index.html',
+  'pcm.html',
+  'almoxarifado.html',
   'style.css',
   'app.js',
   'data.js',
+  'sw.js',
   'manifest.json',
+  'firebase-config.js',
   'icon-192.png',
   'icon-512.png',
 ];
@@ -28,7 +32,7 @@ for (const file of files) {
 }
 
 // Copiar Logo U&M especificamente se não estiver na lista
-const logoPath = 'FORM_117 (1).xlsx~1/resources/image_1069608006_0.jpg';
+const logoPath = 'FORM_117 (1).xlsx~1/resources/logo_esa.png';
 const logoSource = path.join(root, logoPath);
 if (fs.existsSync(logoSource)) {
   const logoDest = path.join(outDir, logoPath);
