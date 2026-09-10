@@ -9189,6 +9189,534 @@ const DADOS_FILTROS = [
     "original": "1P8482",
     "fleetguard": "AF874",
     "sap": "8486"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "CB VOLVO_FMX540",
+    "sistema": "Motor",
+    "descricaoSap": "CJ FILTRO FMX540 24633960 VOLVO",
+    "aplicacao": "Filtro de Combistível Avulso",
+    "qtd": "1",
+    "original": "24633960",
+    "fleetguard": "-",
+    "sap": "172344"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "CB VOLVO_FMX540",
+    "sistema": "Motor",
+    "descricaoSap": "CJ FILTRO COMB FMX540 24137737 VOLVO",
+    "aplicacao": "Filtro Separador de Água (Racor) Avulso",
+    "qtd": "1",
+    "original": "24137737",
+    "fleetguard": "-",
+    "sap": "172343"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "CB VOLVO_FMX540",
+    "sistema": "Motor",
+    "descricaoSap": "FILTRO LUB FMX540 23759508 VOLVO",
+    "aplicacao": "Filtros de Óleo do Motor",
+    "qtd": "1",
+    "original": "23759508",
+    "fleetguard": "-",
+    "sap": "175112"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "CB VOLVO_FMX540",
+    "sistema": "Motor",
+    "descricaoSap": "FILTRO AR FMX540 21337557 VOLVO",
+    "aplicacao": "Filtro de Ar do Motor",
+    "qtd": "1",
+    "original": "21337557",
+    "fleetguard": "-",
+    "sap": "174115"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "CB VOLVO_FMX540",
+    "sistema": "Combustível",
+    "descricaoSap": "FILTRO AR FH520 21743197 VOLVO",
+    "aplicacao": "Tanque de Combustível",
+    "qtd": "1",
+    "original": "21743197",
+    "fleetguard": "-",
+    "sap": "160663"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "CB VOLVO_FMX540",
+    "sistema": "Arla",
+    "descricaoSap": "FILTRO ARLA FMX540 23825903 VOLVO",
+    "aplicacao": "Filtro de Arla",
+    "qtd": "1",
+    "original": "23825903",
+    "fleetguard": "-",
+    "sap": "172355"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "CB VOLVO_FMX540",
+    "sistema": "Transmissão",
+    "descricaoSap": "CJ FILTRO FMX540 24283117 VOLVO",
+    "aplicacao": "Filtro de Caixa de Marchas",
+    "qtd": "1",
+    "original": "24283117",
+    "fleetguard": "-",
+    "sap": "172354"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "CB VOLVO_FMX540",
+    "sistema": "Cabine",
+    "descricaoSap": "FILTRO FMX540 84457567 VOLVO",
+    "aplicacao": "Filtro de Ar da Cabine",
+    "qtd": "1",
+    "original": "84457567",
+    "fleetguard": "-",
+    "sap": "180738"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "CB VOLVO_FMX540",
+    "sistema": "Ar",
+    "descricaoSap": "CJ FILTRO SEC FMX540 23690622 VOLVO",
+    "aplicacao": "Filtro Secador de AR",
+    "qtd": "1",
+    "original": "23690622",
+    "fleetguard": "-",
+    "sap": "172353"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "CB VOLVO_FMX540",
+    "sistema": "Arla",
+    "descricaoSap": "FILTRO ARLA FMX540 23251838 VOLVO",
+    "aplicacao": "Peneira do Arla",
+    "qtd": "1",
+    "original": "23251838",
+    "fleetguard": "-",
+    "sap": "176862"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "CB VOLVO_FMX540",
+    "sistema": "Arla",
+    "descricaoSap": "FILTRO FMX540 24111100 VOLVO",
+    "aplicacao": "Peneira do Arla - kit",
+    "qtd": "1",
+    "original": "24111100",
+    "fleetguard": "-",
+    "sap": "176750"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "CB VOLVO_FMX540",
+    "sistema": "DPF/Catalisador",
+    "descricaoSap": "FILTRO PARTICULADO FMX540 85023140 VOLVO",
+    "aplicacao": "Filtro Particulado / DPF",
+    "qtd": "1",
+    "original": "85023140",
+    "fleetguard": "-",
+    "sap": "172346"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "CB VOLVO_FMX540",
+    "sistema": "Ar",
+    "descricaoSap": "FILTRO AR FMX540 84425617 VOLVO",
+    "aplicacao": "Filtro de Ar Condicionado",
+    "qtd": "1",
+    "original": "84425617",
+    "fleetguard": "-",
+    "sap": "172352"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "SY215H_SANY",
+    "sistema": "Motor",
+    "descricaoSap": "FILTRO OLEO SY365 B222100000494 SANY",
+    "aplicacao": "Filtro de óleo do motor",
+    "qtd": "1",
+    "original": "B222100000494",
+    "fleetguard": "-",
+    "sap": "173431"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "SY215H_SANY",
+    "sistema": "Motor",
+    "descricaoSap": "FILTRO COMB SY215H 60307173 SANY",
+    "aplicacao": "Filtro de combustível separador",
+    "qtd": "1",
+    "original": "60307173",
+    "fleetguard": "-",
+    "sap": "174945"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "SY215H_SANY",
+    "sistema": "Motor",
+    "descricaoSap": "FILTRO SEP SY215H GLQ007357390 SANY",
+    "aplicacao": "Filtro de combustível separador",
+    "qtd": "1",
+    "original": "GLQ007357390",
+    "fleetguard": "-",
+    "sap": "174944"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "SY215H_SANY",
+    "sistema": "Ar",
+    "descricaoSap": "FILTRO AR SEC SY215H 60207264 SANY",
+    "aplicacao": "Filtro de ar interno do motor",
+    "qtd": "1",
+    "original": "60207264",
+    "fleetguard": "-",
+    "sap": "174947"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "SY215H_SANY",
+    "sistema": "Ar",
+    "descricaoSap": "FILTRO AR PRIM SY215H 60207265 SANY",
+    "aplicacao": "Filtro de ar interno do motor",
+    "qtd": "1",
+    "original": "60207265",
+    "fleetguard": "-",
+    "sap": "174946"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "SY215H_SANY",
+    "sistema": "Ar",
+    "descricaoSap": "FILTRO AR INT SY215H 60278857 SANY",
+    "aplicacao": "Filtro A/C interno",
+    "qtd": "1",
+    "original": "60278857",
+    "fleetguard": "-",
+    "sap": "174949"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "SY215H_SANY",
+    "sistema": "Ar",
+    "descricaoSap": "FILTRO A/C SY365 60250669 SANY",
+    "aplicacao": "Filtro A/C externo",
+    "qtd": "1",
+    "original": "60250669",
+    "fleetguard": "-",
+    "sap": "173436"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "SY215H_SANY",
+    "sistema": "Hidráulico",
+    "descricaoSap": "FILTRO SUCCAO SY215H 60200364 SANY",
+    "aplicacao": "Filtro hidráulico de sucção",
+    "qtd": "1",
+    "original": "60200364",
+    "fleetguard": "-",
+    "sap": "174950"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "SY215H_SANY",
+    "sistema": "Hidráulico",
+    "descricaoSap": "FILTRO HIDR SW978 60200365 SANY",
+    "aplicacao": "Filtro hidráulico de retorno",
+    "qtd": "1",
+    "original": "60200365",
+    "fleetguard": "-",
+    "sap": "172413"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "SY215H_SANY",
+    "sistema": "Hidráulico",
+    "descricaoSap": "FILTRO SW978 60186788 SANY",
+    "aplicacao": "Filtro hidráulico do respiro",
+    "qtd": "1",
+    "original": "60186788",
+    "fleetguard": "-",
+    "sap": "172414"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "LGMG_RHT100",
+    "sistema": "Motor",
+    "descricaoSap": "FILTRO OLEO RTH100 4110705667015 LGMG",
+    "aplicacao": "Filtro de óleo do motor",
+    "qtd": "1",
+    "original": "4110705667015",
+    "fleetguard": "-",
+    "sap": "178013"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "LGMG_RHT100",
+    "sistema": "Motor",
+    "descricaoSap": "FILTRO COMB RTH100 4110702739293 LGMG",
+    "aplicacao": "Filtro primário de combustível",
+    "qtd": "1",
+    "original": "4110702739293",
+    "fleetguard": "-",
+    "sap": "178014"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "LGMG_RHT100",
+    "sistema": "Motor",
+    "descricaoSap": "FILTRO COMB RTH100 4110705667002 LGMG",
+    "aplicacao": "Filtro secundário de combustível",
+    "qtd": "1",
+    "original": "4110705667002",
+    "fleetguard": "-",
+    "sap": "178015"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "LGMG_RHT100",
+    "sistema": "Motor",
+    "descricaoSap": "FILTRO COMB RTH100 4110705667013 LGMG",
+    "aplicacao": "Filtro de combustível refinado",
+    "qtd": "1",
+    "original": "4110705667013",
+    "fleetguard": "-",
+    "sap": "178016"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "LGMG_RHT100",
+    "sistema": "Hidráulico",
+    "descricaoSap": "FILTRO RET CMT106 4120001743 LGMG",
+    "aplicacao": "Filtro de retorno de óleo hidráulico",
+    "qtd": "1",
+    "original": "4120001743",
+    "fleetguard": "-",
+    "sap": "177988"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "LGMG_RHT100",
+    "sistema": "Hidráulico",
+    "descricaoSap": "FILTRO AR RTH100 4120000303 LGMG",
+    "aplicacao": "Filtro de ar do sistema hidráulico",
+    "qtd": "1",
+    "original": "4120000303",
+    "fleetguard": "-",
+    "sap": "178017"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "LGMG_RHT100",
+    "sistema": "Ar",
+    "descricaoSap": "FILTRO RTH100 4120711498001 LGMG",
+    "aplicacao": "Filtro do compressor de ar",
+    "qtd": "1",
+    "original": "4120711498001",
+    "fleetguard": "-",
+    "sap": "178018"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "LGMG_RHT100",
+    "sistema": "Ar condicionado",
+    "descricaoSap": "FILTRO A/C RTH100 4190709290001 LGMG",
+    "aplicacao": "Filtro de ar condicionado",
+    "qtd": "1",
+    "original": "4190709290001",
+    "fleetguard": "-",
+    "sap": "178019"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "LGMG_RHT100",
+    "sistema": "Combustível",
+    "descricaoSap": "RESPIRADOR RTH100 4110708184004 LGMG",
+    "aplicacao": "Respirador do tanque de combustível",
+    "qtd": "1",
+    "original": "4110708184004",
+    "fleetguard": "-",
+    "sap": "178020"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "LGMG_RHT100",
+    "sistema": "Combustível",
+    "descricaoSap": "FILTRO AR RTH100 4110708184005 LGMG",
+    "aplicacao": "Filtro de ar do tanque de combustível",
+    "qtd": "1",
+    "original": "4110708184005",
+    "fleetguard": "-",
+    "sap": "178021"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "LGMG_RHT100",
+    "sistema": "Motor",
+    "descricaoSap": "FILTRO CMT106 4190707575001 LGMG",
+    "aplicacao": "Filtro principal do filtro de ar do motor",
+    "qtd": "1",
+    "original": "4190707575001",
+    "fleetguard": "-",
+    "sap": "177986"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "LGMG_RHT100",
+    "sistema": "Motor",
+    "descricaoSap": "FILTRO SEC CMT106 4120001086001 LGMG",
+    "aplicacao": "Cilindro seco (desidratador)",
+    "qtd": "1",
+    "original": "4120001086001",
+    "fleetguard": "-",
+    "sap": "177992"
+  },
+  {
+    "categoria": "ROAD TRUCKS",
+    "modelo": "LGMG_RHT100",
+    "sistema": "Motor",
+    "descricaoSap": "FILTRO CMT106 4190707575002 LGMG",
+    "aplicacao": "Filtro de segurança do filtro de ar do motor",
+    "qtd": "1",
+    "original": "4190707575002",
+    "fleetguard": "-",
+    "sap": "177987"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "PC500_KOMATSU",
+    "sistema": "Motor",
+    "descricaoSap": "FILTRO OLEO HD785 6002111341 KOMATSU",
+    "aplicacao": "Cartucho do filtro óleo do motor diesel",
+    "qtd": "1",
+    "original": "600-211-1341",
+    "fleetguard": "-",
+    "sap": "179087"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "PC500_KOMATSU",
+    "sistema": "Motor",
+    "descricaoSap": "FILTRO COMB PC500 6003195410 KOMATSU",
+    "aplicacao": "Cartucho do Pré-filtro de combustível",
+    "qtd": "1",
+    "original": "600-319-5410",
+    "fleetguard": "-",
+    "sap": "175523"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "PC500_KOMATSU",
+    "sistema": "Motor",
+    "descricaoSap": "ELEMENTO HD785 4216035170 KOMATSU",
+    "aplicacao": "Respiro do reservatório de combustível",
+    "qtd": "1",
+    "original": "421-60-35170",
+    "fleetguard": "-",
+    "sap": "136237"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "PC500_KOMATSU",
+    "sistema": "Motor",
+    "descricaoSap": "FILTRO COMB PC500 6003193841 KOMATSU",
+    "aplicacao": "Cartucho do filtro de combustível principal",
+    "qtd": "1",
+    "original": "600-319-3841",
+    "fleetguard": "-",
+    "sap": "175525"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "PC500_KOMATSU",
+    "sistema": "Motor",
+    "descricaoSap": "FILTRO HD785 6001856100 KOMATSU",
+    "aplicacao": "Conjunto do filtro de ar do motor",
+    "qtd": "1",
+    "original": "600-185-6100",
+    "fleetguard": "-",
+    "sap": "148900"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "PC500_KOMATSU",
+    "sistema": "Hidráulico",
+    "descricaoSap": "ELEMENTO HD785 4216035170 KOMATSU",
+    "aplicacao": "Respiro do reservatório hidráulico",
+    "qtd": "1",
+    "original": "421-603-5170",
+    "fleetguard": "-",
+    "sap": "136237"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "PC500_KOMATSU",
+    "sistema": "Ar",
+    "descricaoSap": "FILTRO A/C PC360 17M9113530 KOMATSU",
+    "aplicacao": "Filtro de ar fresco (Air fresh filter)",
+    "qtd": "1",
+    "original": "17M-911-3530",
+    "fleetguard": "-",
+    "sap": "112137"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "PC500_KOMATSU",
+    "sistema": "Ar",
+    "descricaoSap": "FILTRO A/C PC360 2A59791551 KOMATSU",
+    "aplicacao": "Filtro de ar recirculado (Air recirc filter)",
+    "qtd": "1",
+    "original": "2A5-979-1551",
+    "fleetguard": "-",
+    "sap": "174891"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "PC500_KOMATSU",
+    "sistema": "Hidráulico",
+    "descricaoSap": "FILTRO OLEO PC500 2086071124 KOMATSU",
+    "aplicacao": "Elemento do filtro de óleo hidráulico",
+    "qtd": "1",
+    "original": "208-60-71124",
+    "fleetguard": "-",
+    "sap": "175524"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "PC500_KOMATSU",
+    "sistema": "Hidráulico",
+    "descricaoSap": "ANEL O PC500 0700015215 KOMATSU",
+    "aplicacao": "Anel O (Elemento do filtro de óleo hidráulico)",
+    "qtd": "1",
+    "original": "07000-15215",
+    "fleetguard": "-",
+    "sap": "176047"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "PC500_KOMATSU",
+    "sistema": "Hidráulico",
+    "descricaoSap": "FILTRO PC500 22B6011160 KOMATSU",
+    "aplicacao": "Filtro-tela do reservatório hidráulico",
+    "qtd": "1",
+    "original": "22B-60-11160",
+    "fleetguard": "-",
+    "sap": "176048"
+  },
+  {
+    "categoria": "EXCAVATORS",
+    "modelo": "PC500_KOMATSU",
+    "sistema": "Ar",
+    "descricaoSap": "FILTRO AR PC500 20Y9793120 KOMATSU",
+    "aplicacao": "Filtro secador do ar condicionado",
+    "qtd": "1",
+    "original": "20Y-979-3120",
+    "fleetguard": "-",
+    "sap": "176050"
   }
 ];
 
@@ -12350,7 +12878,7 @@ const DADOS_LUBRIFICANTES = [
     "quantidade": "12,8",
     "periodicidade": "500",
     "viscosidade": "SAE 10W30",
-    "petronas": "Arbor MTF 10W30"
+    "petronas": "Urania 3000 K 10W-30"
   },
   {
     "categoria": "ROAD TRUCKS",
@@ -12359,7 +12887,7 @@ const DADOS_LUBRIFICANTES = [
     "quantidade": "17,6",
     "periodicidade": "500",
     "viscosidade": "SAE 50",
-    "petronas": "Tutela Trans TO4 50W"
+    "petronas": "Urania Plus 50 (mineral)"
   },
   {
     "categoria": "ROAD TRUCKS",
@@ -12809,7 +13337,7 @@ const DADOS_LUBRIFICANTES = [
     "quantidade": "12,8",
     "periodicidade": "500",
     "viscosidade": "SAE 10W30",
-    "petronas": "Arbor MTF 10W30"
+    "petronas": "Urania 3000 K 10W-30"
   },
   {
     "categoria": "ROAD TRUCKS",
@@ -12818,7 +13346,7 @@ const DADOS_LUBRIFICANTES = [
     "quantidade": "17,6",
     "periodicidade": "500",
     "viscosidade": "SAE 50",
-    "petronas": "Tutela Trans TO4 50W"
+    "petronas": "Urania Plus 50 (mineral)"
   },
   {
     "categoria": "ROAD TRUCKS",
@@ -13376,7 +13904,7 @@ const DADOS_LUBRIFICANTES = [
     "quantidade": "12,8",
     "periodicidade": "500",
     "viscosidade": "SAE 10W30",
-    "petronas": "Arbor MTF 10W30"
+    "petronas": "Urania 3000 K 10W-30"
   },
   {
     "categoria": "ROAD TRUCKS",
@@ -13385,7 +13913,7 @@ const DADOS_LUBRIFICANTES = [
     "quantidade": "17,6",
     "periodicidade": "500",
     "viscosidade": "SAE 50",
-    "petronas": "Tutela Trans TO4 50W"
+    "petronas": "Urania Plus 50 (mineral)"
   },
   {
     "categoria": "ROAD TRUCKS",
@@ -13592,7 +14120,7 @@ const DADOS_LUBRIFICANTES = [
     "quantidade": "12,8",
     "periodicidade": "500",
     "viscosidade": "SAE 10W30",
-    "petronas": "Arbor MTF 10W30"
+    "petronas": "Urania 3000 K 10W-30"
   },
   {
     "categoria": "ROAD TRUCKS",
@@ -13601,7 +14129,7 @@ const DADOS_LUBRIFICANTES = [
     "quantidade": "17,6",
     "periodicidade": "500",
     "viscosidade": "SAE 50",
-    "petronas": "Tutela Trans TO4 50W"
+    "petronas": "Urania Plus 50 (mineral)"
   },
   {
     "categoria": "ROAD TRUCKS",
@@ -13664,7 +14192,7 @@ const DADOS_LUBRIFICANTES = [
     "quantidade": "12,8",
     "periodicidade": "500",
     "viscosidade": "SAE 10W30",
-    "petronas": "Arbor MTF 10W30"
+    "petronas": "Urania 3000 K 10W-30"
   },
   {
     "categoria": "ROAD TRUCKS",
@@ -13673,7 +14201,7 @@ const DADOS_LUBRIFICANTES = [
     "quantidade": "17,6",
     "periodicidade": "500",
     "viscosidade": "SAE 50",
-    "petronas": "Tutela Trans TO4 50W"
+    "petronas": "Urania Plus 50 (mineral)"
   },
   {
     "categoria": "ROAD TRUCKS",
@@ -14582,7 +15110,7 @@ const DADOS_LUBRIFICANTES = [
     "quantidade": "12,8",
     "periodicidade": "500",
     "viscosidade": "SAE 10W30",
-    "petronas": "Arbor MTF 10W30"
+    "petronas": "Urania 3000 K 10W-30"
   },
   {
     "categoria": "ROAD TRUCKS",
@@ -14591,7 +15119,7 @@ const DADOS_LUBRIFICANTES = [
     "quantidade": "17,6",
     "periodicidade": "500",
     "viscosidade": "SAE 50",
-    "petronas": "Tutela Trans TO4 50W"
+    "petronas": "Urania Plus 50 (mineral)"
   },
   {
     "categoria": "ROAD TRUCKS",
@@ -14654,7 +15182,7 @@ const DADOS_LUBRIFICANTES = [
     "quantidade": "12,8",
     "periodicidade": "500",
     "viscosidade": "SAE 10W30",
-    "petronas": "Arbor MTF 10W30"
+    "petronas": "Urania 3000 K 10W-30"
   },
   {
     "categoria": "ROAD TRUCKS",
@@ -14663,7 +15191,7 @@ const DADOS_LUBRIFICANTES = [
     "quantidade": "17,6",
     "periodicidade": "500",
     "viscosidade": "SAE 50",
-    "petronas": "Tutela Trans TO4 50W"
+    "petronas": "Urania Plus 50 (mineral)"
   },
   {
     "categoria": "ROAD TRUCKS",
@@ -16981,24 +17509,6 @@ const DADOS_LUBRIFICANTES = [
   {
     "categoria": "EXCAVATORS",
     "modelo": "PC500_KOMATSU",
-    "compartimento": "COMANDO FINAL TRASEIRO ESQUERDO",
-    "quantidade": "9,5",
-    "periodicidade": "2000",
-    "viscosidade": "SAE 30",
-    "petronas": "Tutela Trans TO4 30"
-  },
-  {
-    "categoria": "EXCAVATORS",
-    "modelo": "PC500_KOMATSU",
-    "compartimento": "COMANDO FINAL TRASEIRO DIREITO",
-    "quantidade": "9,5",
-    "periodicidade": "2000",
-    "viscosidade": "SAE 30",
-    "petronas": "Tutela Trans TO4 30"
-  },
-  {
-    "categoria": "EXCAVATORS",
-    "modelo": "PC500_KOMATSU",
     "compartimento": "LIQUIDO ARREFECEDOR",
     "quantidade": "48",
     "periodicidade": "2000",
@@ -17072,24 +17582,6 @@ const DADOS_LUBRIFICANTES = [
     "categoria": "EXCAVATORS",
     "modelo": "PC500LC_KOMATSU",
     "compartimento": "COMANDO FINAL DIANTEIRO DIREITO",
-    "quantidade": "9,5",
-    "periodicidade": "2000",
-    "viscosidade": "SAE 30",
-    "petronas": "Tutela Trans TO4 30"
-  },
-  {
-    "categoria": "EXCAVATORS",
-    "modelo": "PC500LC_KOMATSU",
-    "compartimento": "COMANDO FINAL TRASEIRO ESQUERDO",
-    "quantidade": "9,5",
-    "periodicidade": "2000",
-    "viscosidade": "SAE 30",
-    "petronas": "Tutela Trans TO4 30"
-  },
-  {
-    "categoria": "EXCAVATORS",
-    "modelo": "PC500LC_KOMATSU",
-    "compartimento": "COMANDO FINAL TRASEIRO DIREITO",
     "quantidade": "9,5",
     "periodicidade": "2000",
     "viscosidade": "SAE 30",
@@ -18047,7 +18539,7 @@ const DADOS_LUBRIFICANTES = [
     "quantidade": "12,8",
     "periodicidade": "500",
     "viscosidade": "SAE 10W30",
-    "petronas": "Arbor MTF 10W30"
+    "petronas": "Urania 3000 K 10W-30"
   },
   {
     "categoria": "ROAD TRUCKS",
@@ -18056,7 +18548,7 @@ const DADOS_LUBRIFICANTES = [
     "quantidade": "17,6",
     "periodicidade": "500",
     "viscosidade": "SAE 50",
-    "petronas": "Tutela Trans TO4 50W"
+    "petronas": "Urania Plus 50 (mineral)"
   },
   {
     "categoria": "ROAD TRUCKS",
@@ -18228,12 +18720,255 @@ const DADOS_LUBRIFICANTES = [
     "periodicidade": "2000",
     "viscosidade": "COOLANT",
     "petronas": "Coolant UP Pronto P/ Uso"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SSR120C_SANY",
+    "compartimento": "DIESEL",
+    "quantidade": "-",
+    "periodicidade": "-",
+    "viscosidade": "Diesel",
+    "petronas": "Diesel"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SSR120C_SANY",
+    "compartimento": "COMANDO FINAL TRASEIRO ESQUERDO",
+    "quantidade": "3",
+    "periodicidade": "500",
+    "viscosidade": "SAE 85W140",
+    "petronas": "TUTELA GEAR 300 EP 85W-140"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SSR120C_SANY",
+    "compartimento": "COMANDO FINAL TRASEIRO DIREITO",
+    "quantidade": "3",
+    "periodicidade": "500",
+    "viscosidade": "SAE 85W140",
+    "petronas": "TUTELA GEAR 300 EP 85W-140"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SSR120C_SANY",
+    "compartimento": "CARCAÇA CENTRAL",
+    "quantidade": "2,2",
+    "periodicidade": "500",
+    "viscosidade": "SAE 85W140",
+    "petronas": "TUTELA GEAR 300 EP 85W-140"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SSR120C_SANY",
+    "compartimento": "REDUTOR PRINCIPAL",
+    "quantidade": "13",
+    "periodicidade": "500",
+    "viscosidade": "SAE 85W140",
+    "petronas": "TUTELA GEAR 300 EP 85W-140"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SSR120C_SANY",
+    "compartimento": "MOTOR DIESEL",
+    "quantidade": "12",
+    "periodicidade": "250",
+    "viscosidade": "SAE 10W40",
+    "petronas": "Urania K 10W40"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SSR120C_SANY",
+    "compartimento": "TAMBOR GIRATÓRIO",
+    "quantidade": "10",
+    "periodicidade": "250",
+    "viscosidade": "SAE 10W40",
+    "petronas": "Urania K 10W40"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SSR120C_SANY",
+    "compartimento": "REDUTOR DE TRANSLAÇÃO (TAMBOR)",
+    "quantidade": "3",
+    "periodicidade": "250",
+    "viscosidade": "SAE 85W140",
+    "petronas": "Tutela Gear 300 85W140"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SSR120C_SANY",
+    "compartimento": "GRAXA",
+    "quantidade": "-",
+    "periodicidade": "-",
+    "viscosidade": "EP NLGI No. 2",
+    "petronas": "Casx 460/2"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SSR120C_SANY",
+    "compartimento": "RADIADOR",
+    "quantidade": "41",
+    "periodicidade": "1000",
+    "viscosidade": "COOLANT",
+    "petronas": "Coolant UP Pronto P/ Uso"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SSR120C_SANY",
+    "compartimento": "SISTEMA HIDRAULICO",
+    "quantidade": "60",
+    "periodicidade": "1000",
+    "viscosidade": "ISO 46/68",
+    "petronas": "Hydrocer 68"
+  },
+  {
+    "categoria": "FORKLIFT",
+    "modelo": "SCP160V2A_SANY",
+    "compartimento": "DIESEL",
+    "quantidade": "310",
+    "periodicidade": "-",
+    "viscosidade": "Diesel",
+    "petronas": "Diesel"
+  },
+  {
+    "categoria": "FORKLIFT",
+    "modelo": "SCP160V2A_SANY",
+    "compartimento": "EIXO DIANTEIRO",
+    "quantidade": "25",
+    "periodicidade": "1000",
+    "viscosidade": "SAE 85W140",
+    "petronas": "TUTELA GEAR 300 EP 85W-140"
+  },
+  {
+    "categoria": "FORKLIFT",
+    "modelo": "SCP160V2A_SANY",
+    "compartimento": "MOTOR CARTER",
+    "quantidade": "24",
+    "periodicidade": "250",
+    "viscosidade": "SAE 10W30",
+    "petronas": "Urania 3000 K 10W-30"
+  },
+  {
+    "categoria": "FORKLIFT",
+    "modelo": "SCP160V2A_SANY",
+    "compartimento": "TRANSMISSAO",
+    "quantidade": "35",
+    "periodicidade": "1000",
+    "viscosidade": "SAE 10W",
+    "petronas": "TUTELA TRANS TO-4 SAE 10W"
+  },
+  {
+    "categoria": "FORKLIFT",
+    "modelo": "SCP160V2A_SANY",
+    "compartimento": "GRAXA",
+    "quantidade": "-",
+    "periodicidade": "100",
+    "viscosidade": "EP NLGI No. 2",
+    "petronas": "Casx 460/2"
+  },
+  {
+    "categoria": "FORKLIFT",
+    "modelo": "SCP160V2A_SANY",
+    "compartimento": "RADIADOR",
+    "quantidade": "50",
+    "periodicidade": "6000",
+    "viscosidade": "COOLANT",
+    "petronas": "Coolant UP Pronto P/ Uso"
+  },
+  {
+    "categoria": "FORKLIFT",
+    "modelo": "SCP160V2A_SANY",
+    "compartimento": "SISTEMA HIDRAULICO",
+    "quantidade": "230",
+    "periodicidade": "2000",
+    "viscosidade": "ISO 46/68",
+    "petronas": "TUTELA HV 68"
+  },
+  {
+    "categoria": "FORKLIFT",
+    "modelo": "SCP160V2A_SANY",
+    "compartimento": "SISTEMA DE FREIOS",
+    "quantidade": "60",
+    "periodicidade": "500",
+    "viscosidade": "SAE 10W30",
+    "petronas": "ARBOR MTF BF"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SY956H5_SANY",
+    "compartimento": "DIESEL",
+    "quantidade": "300",
+    "periodicidade": "-",
+    "viscosidade": "Diesel",
+    "petronas": "Diesel"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SY956H5_SANY",
+    "compartimento": "MOTOR CARTER",
+    "quantidade": "24",
+    "periodicidade": "250",
+    "viscosidade": "SAE 10W-40",
+    "petronas": "URANIA K 10W-40"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SY956H5_SANY",
+    "compartimento": "TRANSMISSAO",
+    "quantidade": "65",
+    "periodicidade": "1000",
+    "viscosidade": "ATF",
+    "petronas": "TUTELA MULTI ATF 500"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SY956H5_SANY",
+    "compartimento": "EIXO DIANTEIRO",
+    "quantidade": "26,2",
+    "periodicidade": "1000",
+    "viscosidade": "SAE 80W-90",
+    "petronas": "TUTELA GEAR 300 EP 80W-90"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SY956H5_SANY",
+    "compartimento": "EIXO TRASEIRO",
+    "quantidade": "26,2",
+    "periodicidade": "1000",
+    "viscosidade": "SAE 80W-90",
+    "petronas": "TUTELA GEAR 300 EP 80W-90"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SY956H5_SANY",
+    "compartimento": "SISTEMA HIDRAULICO",
+    "quantidade": "220",
+    "periodicidade": "4000",
+    "viscosidade": "ISO 46/68",
+    "petronas": "TUTELA HV 68"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SY956H5_SANY",
+    "compartimento": "RADIADOR",
+    "quantidade": "45",
+    "periodicidade": "2000",
+    "viscosidade": "COOLANT",
+    "petronas": "Coolant UP Pronto P/ Uso"
+  },
+  {
+    "categoria": "LOADERS",
+    "modelo": "SY956H5_SANY",
+    "compartimento": "GRAXA",
+    "quantidade": "-",
+    "periodicidade": "10",
+    "viscosidade": "EP NLGI No. 2",
+    "petronas": "Casx 460/2"
   }
 ];
 
 let EQUIPAMENTOS = [
   {
-    "id": 81,
+    "id": 85,
     "nome": "140_CAT",
     "modelo": "Graders",
     "categoria": "GRADERS",
@@ -19452,7 +20187,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 82,
+    "id": 86,
     "nome": "250D7E V600",
     "modelo": "Forklift",
     "categoria": "FORKLIFT",
@@ -19878,7 +20613,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 83,
+    "id": 87,
     "nome": "349_CAT",
     "modelo": "Excavators",
     "categoria": "EXCAVATORS",
@@ -19978,7 +20713,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 84,
+    "id": 88,
     "nome": "3520_HAMM",
     "modelo": "Loaders",
     "categoria": "LOADERS",
@@ -20051,7 +20786,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 85,
+    "id": 89,
     "nome": "35D - 7SA Hyundai",
     "modelo": "Forklift",
     "categoria": "FORKLIFT",
@@ -24120,7 +24855,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 86,
+    "id": 90,
     "nome": "CAT_988",
     "modelo": "Loaders",
     "categoria": "LOADERS",
@@ -24202,7 +24937,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 87,
+    "id": 91,
     "nome": "CB MB_4844",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -24284,7 +25019,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 88,
+    "id": 92,
     "nome": "CB MB_4851",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -24375,7 +25110,134 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 124,
+    "id": 81,
+    "nome": "CB VOLVO_FMX540",
+    "modelo": "Road Trucks",
+    "categoria": "ROAD TRUCKS",
+    "icone": "🚚",
+    "cor": "orange",
+    "compartimentos": [
+      {
+        "nome": "Motor - Filtro de Combistível Avulso",
+        "cor": "gold",
+        "filtro": "Original: 24633960 | SAP: 172344 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "CJ FILTRO FMX540 24633960 VOLVO"
+      },
+      {
+        "nome": "Motor - Filtro Separador de Água (Racor) Avulso",
+        "cor": "gold",
+        "filtro": "Original: 24137737 | SAP: 172343 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "CJ FILTRO COMB FMX540 24137737 VOLVO"
+      },
+      {
+        "nome": "Motor - Filtros de Óleo do Motor",
+        "cor": "gold",
+        "filtro": "Original: 23759508 | SAP: 175112 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO LUB FMX540 23759508 VOLVO"
+      },
+      {
+        "nome": "Motor - Filtro de Ar do Motor",
+        "cor": "gold",
+        "filtro": "Original: 21337557 | SAP: 174115 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO AR FMX540 21337557 VOLVO"
+      },
+      {
+        "nome": "Combustível - Tanque de Combustível",
+        "cor": "gold",
+        "filtro": "Original: 21743197 | SAP: 160663 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO AR FH520 21743197 VOLVO"
+      },
+      {
+        "nome": "Arla - Filtro de Arla",
+        "cor": "blue",
+        "filtro": "Original: 23825903 | SAP: 172355 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO ARLA FMX540 23825903 VOLVO"
+      },
+      {
+        "nome": "Transmissão - Filtro de Caixa de Marchas",
+        "cor": "blue",
+        "filtro": "Original: 24283117 | SAP: 172354 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "CJ FILTRO FMX540 24283117 VOLVO"
+      },
+      {
+        "nome": "Cabine - Filtro de Ar da Cabine",
+        "cor": "green",
+        "filtro": "Original: 84457567 | SAP: 180738 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO FMX540 84457567 VOLVO"
+      },
+      {
+        "nome": "Ar - Filtro Secador de AR",
+        "cor": "red",
+        "filtro": "Original: 23690622 | SAP: 172353 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "CJ FILTRO SEC FMX540 23690622 VOLVO"
+      },
+      {
+        "nome": "Arla - Peneira do Arla",
+        "cor": "blue",
+        "filtro": "Original: 23251838 | SAP: 176862 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO ARLA FMX540 23251838 VOLVO"
+      },
+      {
+        "nome": "Arla - Peneira do Arla - kit",
+        "cor": "blue",
+        "filtro": "Original: 24111100 | SAP: 176750 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO FMX540 24111100 VOLVO"
+      },
+      {
+        "nome": "DPF/Catalisador - Filtro Particulado / DPF",
+        "cor": "blue",
+        "filtro": "Original: 85023140 | SAP: 172346 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO PARTICULADO FMX540 85023140 VOLVO"
+      },
+      {
+        "nome": "Ar - Filtro de Ar Condicionado",
+        "cor": "red",
+        "filtro": "Original: 84425617 | SAP: 172352 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO AR FMX540 84425617 VOLVO"
+      }
+    ]
+  },
+  {
+    "id": 125,
     "nome": "CC MB_117",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -24439,7 +25301,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 89,
+    "id": 93,
     "nome": "CC VW_11180",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -25010,7 +25872,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 90,
+    "id": 94,
     "nome": "CD VOLVO_FMX500",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -25057,7 +25919,7 @@ let EQUIPAMENTOS = [
         "nome": "MOTOR CARTER",
         "cor": "blue",
         "filtro": "-",
-        "fluido": "Arbor MTF 10W30",
+        "fluido": "Urania 3000 K 10W-30",
         "capacidade": "12,8 L",
         "viscosidade": "SAE 10W30",
         "periodicidade": "500"
@@ -25066,7 +25928,7 @@ let EQUIPAMENTOS = [
         "nome": "TRANSMISSAO",
         "cor": "blue",
         "filtro": "-",
-        "fluido": "Tutela Trans TO4 50W",
+        "fluido": "Urania Plus 50 (mineral)",
         "capacidade": "17,6 L",
         "viscosidade": "SAE 50",
         "periodicidade": "500"
@@ -25961,7 +26823,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 91,
+    "id": 95,
     "nome": "CG VOLVO_VM360",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -26008,7 +26870,7 @@ let EQUIPAMENTOS = [
         "nome": "MOTOR CARTER",
         "cor": "blue",
         "filtro": "-",
-        "fluido": "Arbor MTF 10W30",
+        "fluido": "Urania 3000 K 10W-30",
         "capacidade": "12,8 L",
         "viscosidade": "SAE 10W30",
         "periodicidade": "500"
@@ -26017,7 +26879,7 @@ let EQUIPAMENTOS = [
         "nome": "TRANSMISSAO",
         "cor": "blue",
         "filtro": "-",
-        "fluido": "Tutela Trans TO4 50W",
+        "fluido": "Urania Plus 50 (mineral)",
         "capacidade": "17,6 L",
         "viscosidade": "SAE 50",
         "periodicidade": "500"
@@ -27075,7 +27937,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 92,
+    "id": 96,
     "nome": "CL VOLVO_VM360",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -27122,7 +27984,7 @@ let EQUIPAMENTOS = [
         "nome": "MOTOR CARTER",
         "cor": "blue",
         "filtro": "-",
-        "fluido": "Arbor MTF 10W30",
+        "fluido": "Urania 3000 K 10W-30",
         "capacidade": "12,8 L",
         "viscosidade": "SAE 10W30",
         "periodicidade": "500"
@@ -27131,7 +27993,7 @@ let EQUIPAMENTOS = [
         "nome": "TRANSMISSAO",
         "cor": "blue",
         "filtro": "-",
-        "fluido": "Tutela Trans TO4 50W",
+        "fluido": "Urania Plus 50 (mineral)",
         "capacidade": "17,6 L",
         "viscosidade": "SAE 50",
         "periodicidade": "500"
@@ -27302,7 +28164,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 93,
+    "id": 97,
     "nome": "CM MB_3344",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -27384,7 +28246,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 94,
+    "id": 98,
     "nome": "CM VOLVO_FH1240",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -27431,7 +28293,7 @@ let EQUIPAMENTOS = [
         "nome": "MOTOR CARTER",
         "cor": "blue",
         "filtro": "-",
-        "fluido": "Arbor MTF 10W30",
+        "fluido": "Urania 3000 K 10W-30",
         "capacidade": "12,8 L",
         "viscosidade": "SAE 10W30",
         "periodicidade": "500"
@@ -27440,7 +28302,7 @@ let EQUIPAMENTOS = [
         "nome": "TRANSMISSAO",
         "cor": "blue",
         "filtro": "-",
-        "fluido": "Tutela Trans TO4 50W",
+        "fluido": "Urania Plus 50 (mineral)",
         "capacidade": "17,6 L",
         "viscosidade": "SAE 50",
         "periodicidade": "500"
@@ -27466,7 +28328,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 95,
+    "id": 99,
     "nome": "CM VOLVO_FMX540",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -27513,7 +28375,7 @@ let EQUIPAMENTOS = [
         "nome": "MOTOR CARTER",
         "cor": "blue",
         "filtro": "-",
-        "fluido": "Arbor MTF 10W30",
+        "fluido": "Urania 3000 K 10W-30",
         "capacidade": "12,8 L",
         "viscosidade": "SAE 10W30",
         "periodicidade": "500"
@@ -27522,7 +28384,7 @@ let EQUIPAMENTOS = [
         "nome": "TRANSMISSAO",
         "cor": "blue",
         "filtro": "-",
-        "fluido": "Tutela Trans TO4 50W",
+        "fluido": "Urania Plus 50 (mineral)",
         "capacidade": "17,6 L",
         "viscosidade": "SAE 50",
         "periodicidade": "500"
@@ -28038,7 +28900,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 96,
+    "id": 100,
     "nome": "CO VW 15.210",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -28102,7 +28964,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 97,
+    "id": 101,
     "nome": "CO VW_11180",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -28293,7 +29155,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 98,
+    "id": 102,
     "nome": "CP 777C_CAT",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -29063,7 +29925,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 99,
+    "id": 103,
     "nome": "CP MB_4851",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -29154,7 +30016,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 100,
+    "id": 104,
     "nome": "CP VOLVO_FMX500",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -29201,7 +30063,7 @@ let EQUIPAMENTOS = [
         "nome": "MOTOR CARTER",
         "cor": "blue",
         "filtro": "-",
-        "fluido": "Arbor MTF 10W30",
+        "fluido": "Urania 3000 K 10W-30",
         "capacidade": "12,8 L",
         "viscosidade": "SAE 10W30",
         "periodicidade": "500"
@@ -29210,7 +30072,7 @@ let EQUIPAMENTOS = [
         "nome": "TRANSMISSAO",
         "cor": "blue",
         "filtro": "-",
-        "fluido": "Tutela Trans TO4 50W",
+        "fluido": "Urania Plus 50 (mineral)",
         "capacidade": "17,6 L",
         "viscosidade": "SAE 50",
         "periodicidade": "500"
@@ -29236,7 +30098,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 101,
+    "id": 105,
     "nome": "CP VOLVO_FMX540",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -29283,7 +30145,7 @@ let EQUIPAMENTOS = [
         "nome": "MOTOR CARTER",
         "cor": "blue",
         "filtro": "-",
-        "fluido": "Arbor MTF 10W30",
+        "fluido": "Urania 3000 K 10W-30",
         "capacidade": "12,8 L",
         "viscosidade": "SAE 10W30",
         "periodicidade": "500"
@@ -29292,7 +30154,7 @@ let EQUIPAMENTOS = [
         "nome": "TRANSMISSAO",
         "cor": "blue",
         "filtro": "-",
-        "fluido": "Tutela Trans TO4 50W",
+        "fluido": "Urania Plus 50 (mineral)",
         "capacidade": "17,6 L",
         "viscosidade": "SAE 50",
         "periodicidade": "500"
@@ -29852,7 +30714,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 102,
+    "id": 106,
     "nome": "D10R_CAT",
     "modelo": "Buldozers",
     "categoria": "BULDOZERS",
@@ -30603,7 +31465,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 103,
+    "id": 107,
     "nome": "D61_KOMATSU",
     "modelo": "Buldozers",
     "categoria": "BULDOZERS",
@@ -31463,7 +32325,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 104,
+    "id": 108,
     "nome": "EP HYTER 18",
     "modelo": "Forklift",
     "categoria": "FORKLIFT",
@@ -31654,7 +32516,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 105,
+    "id": 109,
     "nome": "EX1200_HITACHI",
     "modelo": "Excavators",
     "categoria": "EXCAVATORS",
@@ -32740,7 +33602,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 106,
+    "id": 110,
     "nome": "EX5500_HITACHI",
     "modelo": "Excavators",
     "categoria": "EXCAVATORS",
@@ -32885,7 +33747,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 107,
+    "id": 111,
     "nome": "EX5500_HITACHI_B",
     "modelo": "Excavators",
     "categoria": "EXCAVATORS",
@@ -33447,7 +34309,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 108,
+    "id": 112,
     "nome": "EX5600_HITACHI",
     "modelo": "Excavators",
     "categoria": "EXCAVATORS",
@@ -33827,7 +34689,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 109,
+    "id": 113,
     "nome": "LGMG_CMT106",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -33900,13 +34762,130 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 110,
+    "id": 83,
     "nome": "LGMG_RHT100",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
     "icone": "🚚",
     "cor": "orange",
     "compartimentos": [
+      {
+        "nome": "Motor - Filtro de óleo do motor",
+        "cor": "gold",
+        "filtro": "Original: 4110705667015 | SAP: 178013 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO OLEO RTH100 4110705667015 LGMG"
+      },
+      {
+        "nome": "Motor - Filtro primário de combustível",
+        "cor": "gold",
+        "filtro": "Original: 4110702739293 | SAP: 178014 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO COMB RTH100 4110702739293 LGMG"
+      },
+      {
+        "nome": "Motor - Filtro secundário de combustível",
+        "cor": "gold",
+        "filtro": "Original: 4110705667002 | SAP: 178015 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO COMB RTH100 4110705667002 LGMG"
+      },
+      {
+        "nome": "Motor - Filtro de combustível refinado",
+        "cor": "gold",
+        "filtro": "Original: 4110705667013 | SAP: 178016 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO COMB RTH100 4110705667013 LGMG"
+      },
+      {
+        "nome": "Hidráulico - Filtro de retorno de óleo hidráulico",
+        "cor": "orange",
+        "filtro": "Original: 4120001743 | SAP: 177988 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO RET CMT106 4120001743 LGMG"
+      },
+      {
+        "nome": "Hidráulico - Filtro de ar do sistema hidráulico",
+        "cor": "orange",
+        "filtro": "Original: 4120000303 | SAP: 178017 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO AR RTH100 4120000303 LGMG"
+      },
+      {
+        "nome": "Ar - Filtro do compressor de ar",
+        "cor": "red",
+        "filtro": "Original: 4120711498001 | SAP: 178018 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO RTH100 4120711498001 LGMG"
+      },
+      {
+        "nome": "Ar condicionado - Filtro de ar condicionado",
+        "cor": "red",
+        "filtro": "Original: 4190709290001 | SAP: 178019 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO A/C RTH100 4190709290001 LGMG"
+      },
+      {
+        "nome": "Combustível - Respirador do tanque de combustível",
+        "cor": "gold",
+        "filtro": "Original: 4110708184004 | SAP: 178020 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "RESPIRADOR RTH100 4110708184004 LGMG"
+      },
+      {
+        "nome": "Combustível - Filtro de ar do tanque de combustível",
+        "cor": "gold",
+        "filtro": "Original: 4110708184005 | SAP: 178021 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO AR RTH100 4110708184005 LGMG"
+      },
+      {
+        "nome": "Motor - Filtro principal do filtro de ar do motor",
+        "cor": "gold",
+        "filtro": "Original: 4190707575001 | SAP: 177986 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO CMT106 4190707575001 LGMG"
+      },
+      {
+        "nome": "Motor - Cilindro seco (desidratador)",
+        "cor": "gold",
+        "filtro": "Original: 4120001086001 | SAP: 177992 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO SEC CMT106 4120001086001 LGMG"
+      },
+      {
+        "nome": "Motor - Filtro de segurança do filtro de ar do motor",
+        "cor": "gold",
+        "filtro": "Original: 4190707575002 | SAP: 177987 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO CMT106 4190707575002 LGMG"
+      },
       {
         "nome": "MOTOR CARTER",
         "cor": "blue",
@@ -34136,7 +35115,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 111,
+    "id": 114,
     "nome": "PC360LC_KOMATSU",
     "modelo": "Excavators",
     "categoria": "EXCAVATORS",
@@ -34227,13 +35206,121 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 112,
+    "id": 84,
     "nome": "PC500_KOMATSU",
     "modelo": "Excavators",
     "categoria": "EXCAVATORS",
     "icone": "🏗️",
     "cor": "blue",
     "compartimentos": [
+      {
+        "nome": "Motor - Cartucho do filtro óleo do motor diesel",
+        "cor": "gold",
+        "filtro": "Original: 600-211-1341 | SAP: 179087 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO OLEO HD785 6002111341 KOMATSU"
+      },
+      {
+        "nome": "Motor - Cartucho do Pré-filtro de combustível",
+        "cor": "gold",
+        "filtro": "Original: 600-319-5410 | SAP: 175523 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO COMB PC500 6003195410 KOMATSU"
+      },
+      {
+        "nome": "Motor - Respiro do reservatório de combustível",
+        "cor": "gold",
+        "filtro": "Original: 421-60-35170 | SAP: 136237 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "ELEMENTO HD785 4216035170 KOMATSU"
+      },
+      {
+        "nome": "Motor - Cartucho do filtro de combustível principal",
+        "cor": "gold",
+        "filtro": "Original: 600-319-3841 | SAP: 175525 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO COMB PC500 6003193841 KOMATSU"
+      },
+      {
+        "nome": "Motor - Conjunto do filtro de ar do motor",
+        "cor": "gold",
+        "filtro": "Original: 600-185-6100 | SAP: 148900 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO HD785 6001856100 KOMATSU"
+      },
+      {
+        "nome": "Hidráulico - Respiro do reservatório hidráulico",
+        "cor": "orange",
+        "filtro": "Original: 421-603-5170 | SAP: 136237 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "ELEMENTO HD785 4216035170 KOMATSU"
+      },
+      {
+        "nome": "Ar - Filtro de ar fresco (Air fresh filter)",
+        "cor": "red",
+        "filtro": "Original: 17M-911-3530 | SAP: 112137 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO A/C PC360 17M9113530 KOMATSU"
+      },
+      {
+        "nome": "Ar - Filtro de ar recirculado (Air recirc filter)",
+        "cor": "red",
+        "filtro": "Original: 2A5-979-1551 | SAP: 174891 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO A/C PC360 2A59791551 KOMATSU"
+      },
+      {
+        "nome": "Hidráulico - Elemento do filtro de óleo hidráulico",
+        "cor": "orange",
+        "filtro": "Original: 208-60-71124 | SAP: 175524 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO OLEO PC500 2086071124 KOMATSU"
+      },
+      {
+        "nome": "Hidráulico - Anel O (Elemento do filtro de óleo hidráulico)",
+        "cor": "orange",
+        "filtro": "Original: 07000-15215 | SAP: 176047 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "ANEL O PC500 0700015215 KOMATSU"
+      },
+      {
+        "nome": "Hidráulico - Filtro-tela do reservatório hidráulico",
+        "cor": "orange",
+        "filtro": "Original: 22B-60-11160 | SAP: 176048 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO PC500 22B6011160 KOMATSU"
+      },
+      {
+        "nome": "Ar - Filtro secador do ar condicionado",
+        "cor": "red",
+        "filtro": "Original: 20Y-979-3120 | SAP: 176050 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO AR PC500 20Y9793120 KOMATSU"
+      },
       {
         "nome": "MOTOR CARTER",
         "cor": "blue",
@@ -34307,24 +35394,6 @@ let EQUIPAMENTOS = [
         "periodicidade": "2000"
       },
       {
-        "nome": "COMANDO FINAL TRASEIRO ESQUERDO",
-        "cor": "green",
-        "filtro": "-",
-        "fluido": "Tutela Trans TO4 30",
-        "capacidade": "9,5 L",
-        "viscosidade": "SAE 30",
-        "periodicidade": "2000"
-      },
-      {
-        "nome": "COMANDO FINAL TRASEIRO DIREITO",
-        "cor": "orange",
-        "filtro": "-",
-        "fluido": "Tutela Trans TO4 30",
-        "capacidade": "9,5 L",
-        "viscosidade": "SAE 30",
-        "periodicidade": "2000"
-      },
-      {
         "nome": "LIQUIDO ARREFECEDOR",
         "cor": "gold",
         "filtro": "-",
@@ -34336,7 +35405,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 113,
+    "id": 115,
     "nome": "PC500LC_KOMATSU",
     "modelo": "Excavators",
     "categoria": "EXCAVATORS",
@@ -34408,24 +35477,6 @@ let EQUIPAMENTOS = [
       },
       {
         "nome": "COMANDO FINAL DIANTEIRO DIREITO",
-        "cor": "orange",
-        "filtro": "-",
-        "fluido": "Tutela Trans TO4 30",
-        "capacidade": "9,5 L",
-        "viscosidade": "SAE 30",
-        "periodicidade": "2000"
-      },
-      {
-        "nome": "COMANDO FINAL TRASEIRO ESQUERDO",
-        "cor": "green",
-        "filtro": "-",
-        "fluido": "Tutela Trans TO4 30",
-        "capacidade": "9,5 L",
-        "viscosidade": "SAE 30",
-        "periodicidade": "2000"
-      },
-      {
-        "nome": "COMANDO FINAL TRASEIRO DIREITO",
         "cor": "orange",
         "filtro": "-",
         "fluido": "Tutela Trans TO4 30",
@@ -35123,7 +36174,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 114,
+    "id": 116,
     "nome": "R984C_LIEBHERR",
     "modelo": "Excavators",
     "categoria": "EXCAVATORS",
@@ -35196,7 +36247,198 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 115,
+    "id": 127,
+    "nome": "SCP160V2A_SANY",
+    "modelo": "Forklift",
+    "categoria": "FORKLIFT",
+    "icone": "⚙️",
+    "cor": "purple",
+    "compartimentos": [
+      {
+        "nome": "DIESEL",
+        "cor": "blue",
+        "filtro": "-",
+        "fluido": "Diesel",
+        "capacidade": "310 L",
+        "viscosidade": "Diesel",
+        "periodicidade": "-"
+      },
+      {
+        "nome": "EIXO DIANTEIRO",
+        "cor": "orange",
+        "filtro": "-",
+        "fluido": "TUTELA GEAR 300 EP 85W-140",
+        "capacidade": "25 L",
+        "viscosidade": "SAE 85W140",
+        "periodicidade": "1000"
+      },
+      {
+        "nome": "MOTOR CARTER",
+        "cor": "blue",
+        "filtro": "-",
+        "fluido": "Urania 3000 K 10W-30",
+        "capacidade": "24 L",
+        "viscosidade": "SAE 10W30",
+        "periodicidade": "250"
+      },
+      {
+        "nome": "TRANSMISSAO",
+        "cor": "blue",
+        "filtro": "-",
+        "fluido": "TUTELA TRANS TO-4 SAE 10W",
+        "capacidade": "35 L",
+        "viscosidade": "SAE 10W",
+        "periodicidade": "1000"
+      },
+      {
+        "nome": "GRAXA",
+        "cor": "red",
+        "filtro": "-",
+        "fluido": "Casx 460/2",
+        "capacidade": "-",
+        "viscosidade": "EP NLGI No. 2",
+        "periodicidade": "100"
+      },
+      {
+        "nome": "RADIADOR",
+        "cor": "blue",
+        "filtro": "-",
+        "fluido": "Coolant UP Pronto P/ Uso",
+        "capacidade": "50 L",
+        "viscosidade": "COOLANT",
+        "periodicidade": "6000"
+      },
+      {
+        "nome": "SISTEMA HIDRAULICO",
+        "cor": "orange",
+        "filtro": "-",
+        "fluido": "TUTELA HV 68",
+        "capacidade": "230 L",
+        "viscosidade": "ISO 46/68",
+        "periodicidade": "2000"
+      },
+      {
+        "nome": "SISTEMA DE FREIOS",
+        "cor": "purple",
+        "filtro": "-",
+        "fluido": "ARBOR MTF BF",
+        "capacidade": "60 L",
+        "viscosidade": "SAE 10W30",
+        "periodicidade": "500"
+      }
+    ]
+  },
+  {
+    "id": 126,
+    "nome": "SSR120C_SANY",
+    "modelo": "Loaders",
+    "categoria": "LOADERS",
+    "icone": "⚙️",
+    "cor": "blue",
+    "compartimentos": [
+      {
+        "nome": "DIESEL",
+        "cor": "blue",
+        "filtro": "-",
+        "fluido": "Diesel",
+        "capacidade": "-",
+        "viscosidade": "Diesel",
+        "periodicidade": "-"
+      },
+      {
+        "nome": "COMANDO FINAL TRASEIRO ESQUERDO",
+        "cor": "green",
+        "filtro": "-",
+        "fluido": "TUTELA GEAR 300 EP 85W-140",
+        "capacidade": "3 L",
+        "viscosidade": "SAE 85W140",
+        "periodicidade": "500"
+      },
+      {
+        "nome": "COMANDO FINAL TRASEIRO DIREITO",
+        "cor": "orange",
+        "filtro": "-",
+        "fluido": "TUTELA GEAR 300 EP 85W-140",
+        "capacidade": "3 L",
+        "viscosidade": "SAE 85W140",
+        "periodicidade": "500"
+      },
+      {
+        "nome": "CARCAÇA CENTRAL",
+        "cor": "red",
+        "filtro": "-",
+        "fluido": "TUTELA GEAR 300 EP 85W-140",
+        "capacidade": "2,2 L",
+        "viscosidade": "SAE 85W140",
+        "periodicidade": "500"
+      },
+      {
+        "nome": "REDUTOR PRINCIPAL",
+        "cor": "gold",
+        "filtro": "-",
+        "fluido": "TUTELA GEAR 300 EP 85W-140",
+        "capacidade": "13 L",
+        "viscosidade": "SAE 85W140",
+        "periodicidade": "500"
+      },
+      {
+        "nome": "MOTOR DIESEL",
+        "cor": "gold",
+        "filtro": "-",
+        "fluido": "Urania K 10W40",
+        "capacidade": "12 L",
+        "viscosidade": "SAE 10W40",
+        "periodicidade": "250"
+      },
+      {
+        "nome": "TAMBOR GIRATÓRIO",
+        "cor": "purple",
+        "filtro": "-",
+        "fluido": "Urania K 10W40",
+        "capacidade": "10 L",
+        "viscosidade": "SAE 10W40",
+        "periodicidade": "250"
+      },
+      {
+        "nome": "REDUTOR DE TRANSLAÇÃO (TAMBOR)",
+        "cor": "blue",
+        "filtro": "-",
+        "fluido": "Tutela Gear 300 85W140",
+        "capacidade": "3 L",
+        "viscosidade": "SAE 85W140",
+        "periodicidade": "250"
+      },
+      {
+        "nome": "GRAXA",
+        "cor": "red",
+        "filtro": "-",
+        "fluido": "Casx 460/2",
+        "capacidade": "-",
+        "viscosidade": "EP NLGI No. 2",
+        "periodicidade": "-"
+      },
+      {
+        "nome": "RADIADOR",
+        "cor": "blue",
+        "filtro": "-",
+        "fluido": "Coolant UP Pronto P/ Uso",
+        "capacidade": "41 L",
+        "viscosidade": "COOLANT",
+        "periodicidade": "1000"
+      },
+      {
+        "nome": "SISTEMA HIDRAULICO",
+        "cor": "orange",
+        "filtro": "-",
+        "fluido": "Hydrocer 68",
+        "capacidade": "60 L",
+        "viscosidade": "ISO 46/68",
+        "periodicidade": "1000"
+      }
+    ]
+  },
+  {
+    "id": 117,
     "nome": "SSR200C_SANY",
     "modelo": "Loaders",
     "categoria": "LOADERS",
@@ -35278,7 +36520,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 116,
+    "id": 118,
     "nome": "SW978_SANY",
     "modelo": "Loaders",
     "categoria": "LOADERS",
@@ -35396,7 +36638,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 117,
+    "id": 119,
     "nome": "SW978K_SANY",
     "modelo": "Loaders",
     "categoria": "LOADERS",
@@ -35514,13 +36756,103 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 118,
+    "id": 82,
     "nome": "SY215H_SANY",
     "modelo": "Excavators",
     "categoria": "EXCAVATORS",
     "icone": "🏗️",
     "cor": "blue",
     "compartimentos": [
+      {
+        "nome": "Motor - Filtro de óleo do motor",
+        "cor": "gold",
+        "filtro": "Original: B222100000494 | SAP: 173431 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO OLEO SY365 B222100000494 SANY"
+      },
+      {
+        "nome": "Motor - Filtro de combustível separador",
+        "cor": "gold",
+        "filtro": "Original: 60307173 | SAP: 174945 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO COMB SY215H 60307173 SANY"
+      },
+      {
+        "nome": "Motor - Filtro de combustível separador",
+        "cor": "gold",
+        "filtro": "Original: GLQ007357390 | SAP: 174944 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO SEP SY215H GLQ007357390 SANY"
+      },
+      {
+        "nome": "Ar - Filtro de ar interno do motor",
+        "cor": "red",
+        "filtro": "Original: 60207264 | SAP: 174947 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO AR SEC SY215H 60207264 SANY"
+      },
+      {
+        "nome": "Ar - Filtro de ar interno do motor",
+        "cor": "red",
+        "filtro": "Original: 60207265 | SAP: 174946 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO AR PRIM SY215H 60207265 SANY"
+      },
+      {
+        "nome": "Ar - Filtro A/C interno",
+        "cor": "red",
+        "filtro": "Original: 60278857 | SAP: 174949 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO AR INT SY215H 60278857 SANY"
+      },
+      {
+        "nome": "Ar - Filtro A/C externo",
+        "cor": "red",
+        "filtro": "Original: 60250669 | SAP: 173436 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO A/C SY365 60250669 SANY"
+      },
+      {
+        "nome": "Hidráulico - Filtro hidráulico de sucção",
+        "cor": "orange",
+        "filtro": "Original: 60200364 | SAP: 174950 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO SUCCAO SY215H 60200364 SANY"
+      },
+      {
+        "nome": "Hidráulico - Filtro hidráulico de retorno",
+        "cor": "orange",
+        "filtro": "Original: 60200365 | SAP: 172413 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO HIDR SW978 60200365 SANY"
+      },
+      {
+        "nome": "Hidráulico - Filtro hidráulico do respiro",
+        "cor": "orange",
+        "filtro": "Original: 60186788 | SAP: 172414 | Qtd.: 1",
+        "fluido": "-",
+        "capacidade": "Qtd.: 1",
+        "viscosidade": "-",
+        "descricao": "FILTRO SW978 60186788 SANY"
+      },
       {
         "nome": "GRAXA",
         "cor": "red",
@@ -35596,7 +36928,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 119,
+    "id": 120,
     "nome": "SY245_SANY",
     "modelo": "Excavators",
     "categoria": "EXCAVATORS",
@@ -35669,7 +37001,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 120,
+    "id": 121,
     "nome": "SY365H_SANY",
     "modelo": "Excavators",
     "categoria": "EXCAVATORS",
@@ -35751,7 +37083,89 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 121,
+    "id": 128,
+    "nome": "SY956H5_SANY",
+    "modelo": "Loaders",
+    "categoria": "LOADERS",
+    "icone": "⚙️",
+    "cor": "blue",
+    "compartimentos": [
+      {
+        "nome": "DIESEL",
+        "cor": "blue",
+        "filtro": "-",
+        "fluido": "Diesel",
+        "capacidade": "300 L",
+        "viscosidade": "Diesel",
+        "periodicidade": "-"
+      },
+      {
+        "nome": "MOTOR CARTER",
+        "cor": "blue",
+        "filtro": "-",
+        "fluido": "URANIA K 10W-40",
+        "capacidade": "24 L",
+        "viscosidade": "SAE 10W-40",
+        "periodicidade": "250"
+      },
+      {
+        "nome": "TRANSMISSAO",
+        "cor": "blue",
+        "filtro": "-",
+        "fluido": "TUTELA MULTI ATF 500",
+        "capacidade": "65 L",
+        "viscosidade": "ATF",
+        "periodicidade": "1000"
+      },
+      {
+        "nome": "EIXO DIANTEIRO",
+        "cor": "orange",
+        "filtro": "-",
+        "fluido": "TUTELA GEAR 300 EP 80W-90",
+        "capacidade": "26,2 L",
+        "viscosidade": "SAE 80W-90",
+        "periodicidade": "1000"
+      },
+      {
+        "nome": "EIXO TRASEIRO",
+        "cor": "orange",
+        "filtro": "-",
+        "fluido": "TUTELA GEAR 300 EP 80W-90",
+        "capacidade": "26,2 L",
+        "viscosidade": "SAE 80W-90",
+        "periodicidade": "1000"
+      },
+      {
+        "nome": "SISTEMA HIDRAULICO",
+        "cor": "orange",
+        "filtro": "-",
+        "fluido": "TUTELA HV 68",
+        "capacidade": "220 L",
+        "viscosidade": "ISO 46/68",
+        "periodicidade": "4000"
+      },
+      {
+        "nome": "RADIADOR",
+        "cor": "blue",
+        "filtro": "-",
+        "fluido": "Coolant UP Pronto P/ Uso",
+        "capacidade": "45 L",
+        "viscosidade": "COOLANT",
+        "periodicidade": "2000"
+      },
+      {
+        "nome": "GRAXA",
+        "cor": "red",
+        "filtro": "-",
+        "fluido": "Casx 460/2",
+        "capacidade": "-",
+        "viscosidade": "EP NLGI No. 2",
+        "periodicidade": "10"
+      }
+    ]
+  },
+  {
+    "id": 122,
     "nome": "UT M. BENZ",
     "modelo": "Light Vehicle",
     "categoria": "LIGHT VEHICLE",
@@ -35833,7 +37247,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 122,
+    "id": 123,
     "nome": "VOLVO_FMX540",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -35880,7 +37294,7 @@ let EQUIPAMENTOS = [
         "nome": "MOTOR CARTER",
         "cor": "blue",
         "filtro": "-",
-        "fluido": "Arbor MTF 10W30",
+        "fluido": "Urania 3000 K 10W-30",
         "capacidade": "12,8 L",
         "viscosidade": "SAE 10W30",
         "periodicidade": "500"
@@ -35889,7 +37303,7 @@ let EQUIPAMENTOS = [
         "nome": "TRANSMISSAO",
         "cor": "blue",
         "filtro": "-",
-        "fluido": "Tutela Trans TO4 50W",
+        "fluido": "Urania Plus 50 (mineral)",
         "capacidade": "17,6 L",
         "viscosidade": "SAE 50",
         "periodicidade": "500"
@@ -35915,7 +37329,7 @@ let EQUIPAMENTOS = [
     ]
   },
   {
-    "id": 123,
+    "id": 124,
     "nome": "XE225BRLL _XCMG",
     "modelo": "Road Trucks",
     "categoria": "ROAD TRUCKS",
@@ -36090,6 +37504,7 @@ const MODELOS_FILTROS = [
   "930_KOMATSU",
   "966C_CAT",
   "980H_CAT",
+  "CB VOLVO_FMX540",
   "CD MB_3340",
   "CD MB_3344",
   "CD MB_4144",
@@ -36134,10 +37549,13 @@ const MODELOS_FILTROS = [
   "EX5500-6 HITACHI",
   "EX5600 HITACHI",
   "HD785_KOMATSU",
+  "LGMG_RHT100",
   "MB_4844",
+  "PC500_KOMATSU",
   "PF_DM30",
   "PF_DP1500i",
-  "PF_ROCD65"
+  "PF_ROCD65",
+  "SY215H_SANY"
 ];
 const MODELOS_LUBRIFICANTES = [
   "140M_CAT",
@@ -36242,12 +37660,15 @@ const MODELOS_LUBRIFICANTES = [
   "PF_DP1500i",
   "PF_ROCD65",
   "R984C_LIEBHERR",
+  "SCP160V2A_SANY",
+  "SSR120C_SANY",
   "SSR200C_SANY",
   "SW978K_SANY",
   "SW978_SANY",
   "SY215H_SANY",
   "SY245_SANY",
   "SY365H_SANY",
+  "SY956H5_SANY",
   "UT M. BENZ",
   "VOLVO_FMX540",
   "XE225BRLL _XCMG"
@@ -36293,6 +37714,7 @@ const TODOS_MODELOS = [
   "CAT_988",
   "CB MB_4844",
   "CB MB_4851",
+  "CB VOLVO_FMX540",
   "CC MB_117",
   "CC VW_11180",
   "CD MB_3340",
@@ -36368,12 +37790,15 @@ const TODOS_MODELOS = [
   "PF_DP1500i",
   "PF_ROCD65",
   "R984C_LIEBHERR",
+  "SCP160V2A_SANY",
+  "SSR120C_SANY",
   "SSR200C_SANY",
   "SW978K_SANY",
   "SW978_SANY",
   "SY215H_SANY",
   "SY245_SANY",
   "SY365H_SANY",
+  "SY956H5_SANY",
   "UT M. BENZ",
   "VOLVO_FMX540",
   "XE225BRLL _XCMG"

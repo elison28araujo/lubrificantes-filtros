@@ -86,3 +86,11 @@
 - Funcionalidade de anexo de "Foto de Evidência" usando a câmera do tablet. A imagem é compactada via Canvas (Max 600px, 70% JPEG) e convertida para formato texto (Base64) garantindo o envio seguro ao banco (Firestore) sem estourar limites de armazenamento e suportando offline.
 - Relatório técnico gerado na tela do tablet com envio instantâneo formatado para o WhatsApp e para a nuvem.
 - Criação de nova aba "Manutenções L.A." no painel PCM Web. O gestor tem acesso à lista em tempo real de manutenções e pode consultar os detalhes, status e as imagens fotográficas anexadas diretamente na web.
+
+## Fase 13: Atualização da Base de Lubrificantes e Filtros (FORM_117)
+- Atualização dos arquivos-fonte da planilha (`FILTROS.html` e `LUBRIFICANTES.html`) e folha de estilos/imagens.
+- Inclusão de 4 novos modelos de equipamentos: `CB VOLVO_FMX540`, `SCP160V2A_SANY`, `SSR120C_SANY` e `SY956H5_SANY` (totalizando 128 equipamentos).
+- Atualização e expansão de itens de filtros (totalizando 883 registros) e lubrificantes (totalizando 1.027 registros).
+- Garantia da declaração `let EQUIPAMENTOS` no script gerador `parse_data.js` para manter compatibilidade com o catálogo dinâmico via Firebase.
+- Atualização da versão de cache do Service Worker (`sw.js`) para `lubetrack-v8` garantindo a renovação do cache offline nos dispositivos.
+

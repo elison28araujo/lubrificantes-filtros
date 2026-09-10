@@ -221,7 +221,7 @@ const DADOS_FILTROS = ${JSON.stringify(filtros, null, 2)};
 
 const DADOS_LUBRIFICANTES = ${JSON.stringify(lubrificantes, null, 2)};
 
-const EQUIPAMENTOS = ${JSON.stringify(equipamentos, null, 2)};
+let EQUIPAMENTOS = ${JSON.stringify(equipamentos, null, 2)};
 
 const CATEGORIAS_FILTROS = ${JSON.stringify(categoriasFiltros, null, 2)};
 const CATEGORIAS_LUBRIFICANTES = ${JSON.stringify(categoriasLubrificantes, null, 2)};
