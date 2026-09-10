@@ -88,9 +88,26 @@
 - Criação de nova aba "Manutenções L.A." no painel PCM Web. O gestor tem acesso à lista em tempo real de manutenções e pode consultar os detalhes, status e as imagens fotográficas anexadas diretamente na web.
 
 ## Fase 13: Atualização da Base de Lubrificantes e Filtros (FORM_117)
-- Atualização dos arquivos-fonte da planilha (`FILTROS.html` e `LUBRIFICANTES.html`) e folha de estilos/imagens.
-- Inclusão de 4 novos modelos de equipamentos: `CB VOLVO_FMX540`, `SCP160V2A_SANY`, `SSR120C_SANY` e `SY956H5_SANY` (totalizando 128 equipamentos).
-- Atualização e expansão de itens de filtros (totalizando 883 registros) e lubrificantes (totalizando 1.027 registros).
-- Garantia da declaração `let EQUIPAMENTOS` no script gerador `parse_data.js` para manter compatibilidade com o catálogo dinâmico via Firebase.
-- Atualização da versão de cache do Service Worker (`sw.js`) para `lubetrack-v8` garantindo a renovação do cache offline nos dispositivos.
+- **Origem dos Dados:** Atualização a partir dos arquivos exportados da planilha mestre em `FORM_117 (1).xlsx~1` (`FILTROS.html`, `LUBRIFICANTES.html`, folha de estilos `resources/sheet.css` e novas imagens).
+- **Métricas de Expansão da Base de Dados:**
+  - **Filtros:** Expandido de 835 para **883 registros** (+48 novos cadastros de filtros).
+  - **Lubrificantes:** Expandido de 1.004 para **1.027 registros** (+23 novos registros de lubrificação).
+  - **Equipamentos:** Expandido de 124 para **128 modelos de equipamentos** (+4 novos modelos).
+- **Novos Modelos de Equipamentos Integrados:**
+  - `CB VOLVO_FMX540`
+  - `SCP160V2A_SANY`
+  - `SSR120C_SANY`
+  - `SY956H5_SANY`
+- **Atualizações Técnicas e Revisões em Equipamentos Existentes:**
+  - `SY215H_SANY`: Adicionada lista completa de filtros originais e referências SAP (óleo do motor, separadores de combustível, filtros de ar primário/secundário, filtros A/C e filtros hidráulicos).
+  - `VOLVO_FMX540`: Atualização nas especificações de fluidos de transmissão e motor (migração para *Urania 3000 K 10W-30* e *Urania Plus 50*).
+  - `SSR200C_SANY`: Ajustes nas capacidades e periodicidades de líquido arrefecedor e sistema hidráulico.
+  - Revisão de itens para `LGMG_RHT100` e `PC500_KOMATSU`.
+- **Integridade da Arquitetura e Engenharia de Software:**
+  - `parse_data.js`: Correção no template de geração para declarar explicitamente `let EQUIPAMENTOS` em vez de `const`. Isso preserva o funcionamento da Fase 11 (Catálogo Dinâmico), impedindo erros de atribuição quando o Firebase sobrescreve modelos em tempo de execução (`usuarios_pcm/equip_*`).
+  - `sw.js`: Incremento da versão de cache do Service Worker de `lubetrack-v7` para **`lubetrack-v8`**, garantindo invalidação de cache (Cache Busting) para todos os navegadores e PWAs instalados em campo.
+  - `build:web` e `npx cap sync android`: Recompilação automática dos assets estáticos na pasta de distribuição `www/` e sincronização completa para o container nativo Android (`android/app/src/main/assets/public/`).
+- **Versionamento e Deploy:**
+  - Sincronização direta com o repositório GitHub (`main`), garantindo atualização do GitHub Pages e base de código pronta para geração de APKs via `GERAR_APKS.bat`.
+
 
