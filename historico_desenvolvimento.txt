@@ -107,7 +107,11 @@
   - `parse_data.js`: Correção no template de geração para declarar explicitamente `let EQUIPAMENTOS` em vez de `const`. Isso preserva o funcionamento da Fase 11 (Catálogo Dinâmico), impedindo erros de atribuição quando o Firebase sobrescreve modelos em tempo de execução (`usuarios_pcm/equip_*`).
   - `sw.js`: Incremento da versão de cache do Service Worker de `lubetrack-v7` para **`lubetrack-v8`**, garantindo invalidação de cache (Cache Busting) para todos os navegadores e PWAs instalados em campo.
   - `build:web` e `npx cap sync android`: Recompilação automática dos assets estáticos na pasta de distribuição `www/` e sincronização completa para o container nativo Android (`android/app/src/main/assets/public/`).
-- **Versionamento e Deploy:**
-  - Sincronização direta com o repositório GitHub (`main`), garantindo atualização do GitHub Pages e base de código pronta para geração de APKs via `GERAR_APKS.bat`.
+## Fase 14: Ferramentas Administrativas de Limpeza e Manutenção de Dados (PCM)
+- **Exclusão de Registros de Estorno:** Habilitado botão "Excluir" exclusivo para perfil Administrador em linhas de `❌ ESTORNO DE ...`, permitindo remoção permanente do documento sem distorcer estoques.
+- **Botão "Limpar Todo o Histórico":** Integrado no topo da aba "Lançamentos" e na nova seção da aba "Segurança". Exclui em lote todos os documentos da coleção `historico` sob autenticação de senha de administrador (`UMCA123456` ou `123456ca`).
+- **Botão "Zerar Todos os Estoques":** Integrado na aba "Estoque" e na aba "Segurança". Redefine para 0L o Estoque Central do PCM (`estoque/status_atual`), o Estoque do Almoxarifado (`usuarios_pcm/almox_inventory`) e todos os compartimentos dos Caminhões de Comboio (`usuarios_pcm/comboio_*`).
+- **Zona de Manutenção e Segurança:** Criação de card visual de alerta na aba "Segurança" para centralizar as ferramentas de gerenciamento crítico do banco de dados.
+- **Cache Busting e Sincronização:** Atualizado Service Worker para `lubetrack-v9` e recompilados os assets em `www/` via `build-web.js`.
 
 

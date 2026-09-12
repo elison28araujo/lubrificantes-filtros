@@ -262,6 +262,9 @@
     
     .btn-danger { background: rgba(239,68,68,0.1); color: var(--red); border-color: rgba(239,68,68,0.2); }
     .btn-danger:active { background: rgba(239,68,68,0.2); }
+    .btn-danger-solid { background: #dc2626 !important; color: white !important; border: 1px solid rgba(255,255,255,0.2) !important; font-weight: 600 !important; }
+    .btn-danger-solid:hover { background: #b91c1c !important; }
+    .btn-danger-solid:active { transform: scale(0.95); background: #991b1b !important; }
 
     /* Barras de Busca */
     .search-container {
@@ -996,7 +999,7 @@
             if (isEstornado) {
               actionHtml = `<span style="color:#ef4444; font-weight:600; font-size:12px;">Estornado</span>`;
             } else if (isEstornoDoc) {
-              actionHtml = `<span style="opacity:0.5; font-size:12px;">Reg. Estorno</span>`;
+              actionHtml = userRole === 'admin' ? `<button class="btn-action btn-danger" onclick="window.excluirRegistroEstorno('${h.docId}')" title="Excluir este registro de estorno permanentemente">Excluir</button>` : `<span style="opacity:0.5; font-size:12px;">Reg. Estorno</span>`;
             } else {
               actionHtml = userRole === 'admin' ? `<button class="btn-action btn-danger" onclick="window.excluirLancamento('${h.docId}', '${h.item}', ${h.qty})">Excluir</button>` : '<span style="opacity:0.3">Restrito</span>';
             }
@@ -1021,9 +1024,12 @@
 
           contentHtml = `
             <div class="section active">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
                 <div class="section-title" style="margin:0;">Histórico Recente</div>
-                <button class="btn-action" style="background:var(--blue); color:white;" onclick="window.exportarExcel()">📥 Exportar Excel (CSV)</button>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                  <button class="btn-action" style="background:var(--blue); color:white;" onclick="window.exportarExcel()">📥 Exportar Excel (CSV)</button>
+                  ${userRole === 'admin' ? `<button class="btn-action btn-danger-solid" onclick="window.limparTodoHistorico()" title="Apagar todos os lançamentos e estornos">🗑️ Limpar Todo o Histórico</button>` : ''}
+                </div>
               </div>
               ${searchHtml}
               <div class="table-responsive">
@@ -1143,7 +1149,10 @@
 
           contentHtml = `
             <div class="section active">
-              <div class="section-title">Saldo Consolidado (Cloud)</div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
+                <div class="section-title" style="margin:0;">Saldo Consolidado (Cloud)</div>
+                ${userRole === 'admin' ? `<button class="btn-action btn-danger-solid" onclick="window.zerarTodosEstoques()" title="Zerar todos os produtos do PCM, Almoxarifado e Comboios">🧹 Zerar Todos os Estoques</button>` : ''}
+              </div>
               ${searchHtml}
               ${itemsHtml || '<p style="text-align:center; padding:40px; opacity:0.5;">Nenhum item encontrado</p>'}
             </div>
@@ -1275,6 +1284,28 @@
             `;
           }
 
+          let dangerZoneHtml = '';
+          if (userRole === 'admin') {
+            dangerZoneHtml = `
+              <div style="margin-top:40px; padding:20px; border-radius:12px; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.3);">
+                <div style="color:var(--red); font-weight:700; font-size:16px; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
+                  ⚠️ Manutenção e Limpeza da Base de Dados (Admin)
+                </div>
+                <div style="font-size:13px; opacity:0.8; margin-bottom:15px; line-height: 1.5;">
+                  Operações administrativas críticas para redefinição da base operacional. Exigem confirmação dupla e senha de administrador.
+                </div>
+                <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                  <button class="btn-action btn-danger-solid" style="padding:10px 18px; font-size:13px;" onclick="window.zerarTodosEstoques()">
+                    🧹 Zerar Todos os Estoques (PCM + Almox + Comboios)
+                  </button>
+                  <button class="btn-action btn-danger-solid" style="padding:10px 18px; font-size:13px;" onclick="window.limparTodoHistorico()">
+                    🗑️ Excluir Todo o Histórico de Lançamentos
+                  </button>
+                </div>
+              </div>
+            `;
+          }
+
           contentHtml = `
             <div class="section active">
               <div class="section-title">Gestão de Dispositivos (Segurança)</div>
@@ -1282,6 +1313,7 @@
               <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px;">${devsListHtml}</ul>
               <button class="btn-primary" onclick="window.adicionarDispositivo()">+ Autorizar Novo Tablet</button>
               ${usersHtml}
+              ${dangerZoneHtml}
             </div>
           `;
         } else if (window.currentTab === 'catalogo') {
@@ -1963,6 +1995,93 @@
           // O listener onSnapshot atualiza a lista automaticamente
         } catch (e) {
           alert("Erro ao excluir relatório: " + e.message);
+        }
+      };
+
+      window.excluirRegistroEstorno = async function(docId) {
+        if (userRole !== 'admin') return;
+        if (!confirm("Deseja realmente remover este registro de estorno do histórico?\n(Esta ação apaga a linha do painel sem recalcular os saldos atuais do estoque)")) return;
+        try {
+          await deleteDoc(doc(db, 'historico', docId));
+          alert("Registro de estorno removido!");
+        } catch (e) {
+          alert("Erro ao excluir estorno: " + e.message);
+        }
+      };
+
+      window.limparTodoHistorico = async function() {
+        if (userRole !== 'admin') return;
+        const senha = prompt("⚠️ ATENÇÃO: Esta ação excluirá permanentemente TODOS os lançamentos e registros de estorno do histórico.\n\nDigite a senha de Administrador (UMCA123456) para confirmar:");
+        if (!senha) return;
+        if (senha.trim() !== 'UMCA123456' && senha.trim() !== '123456ca') {
+          alert("Senha incorreta! Operação cancelada.");
+          return;
+        }
+        if (!confirm("CONFIRMAÇÃO FINAL: Tem certeza absoluta que deseja apagar TODOS os registros do histórico? Esta ação é irreversível.")) {
+          return;
+        }
+
+        try {
+          const snap = await getDocs(collection(db, 'historico'));
+          let count = 0;
+          for (const d of snap.docs) {
+            await deleteDoc(doc(db, 'historico', d.id));
+            count++;
+          }
+          alert(`Sucesso! ${count} registros de histórico foram excluídos permanentemente.`);
+        } catch (e) {
+          alert("Erro ao limpar histórico: " + e.message);
+        }
+      };
+
+      window.zerarTodosEstoques = async function() {
+        if (userRole !== 'admin') return;
+        const senha = prompt("⚠️ ATENÇÃO: Esta ação zerará (0L) todos os produtos no Estoque Central do PCM, Almoxarifado e Caminhões de Comboio.\n\nDigite a senha de Administrador (UMCA123456) para confirmar:");
+        if (!senha) return;
+        if (senha.trim() !== 'UMCA123456' && senha.trim() !== '123456ca') {
+          alert("Senha incorreta! Operação cancelada.");
+          return;
+        }
+        if (!confirm("CONFIRMAÇÃO FINAL: Deseja realmente zerar todos os estoques da operação para 0?")) {
+          return;
+        }
+
+        try {
+          // 1. Zerar Estoque Central PCM
+          const newInv = { ...inventoryData };
+          Object.keys(newInv).forEach(k => {
+            if (newInv[k]) newInv[k].current = 0;
+          });
+          await updateDoc(invDocRef, { inventory: newInv });
+
+          // 2. Zerar Estoque Almoxarifado
+          const almoxDocRef = doc(db, 'usuarios_pcm', 'almox_inventory');
+          const almoxSnap = await getDoc(almoxDocRef);
+          if (almoxSnap.exists()) {
+            const almoxInv = almoxSnap.data().inventory || {};
+            Object.keys(almoxInv).forEach(k => {
+              if (almoxInv[k]) almoxInv[k].current = 0;
+            });
+            await setDoc(almoxDocRef, {
+              inventory: almoxInv,
+              lastUpdate: new Date().toISOString(),
+              lastUser: currentUserName + " (Zerar Tudo)"
+            }, { merge: true });
+          }
+
+          // 3. Zerar Comboios
+          for (const c of comboiosData) {
+            const updatedComps = (c.compartments || []).map(cp => ({ ...cp, current: 0 }));
+            await updateDoc(doc(db, 'usuarios_pcm', 'comboio_' + c.id), {
+              compartments: updatedComps,
+              lastUpdate: new Date().toISOString(),
+              lastUser: currentUserName + " (Zerar Tudo)"
+            });
+          }
+
+          alert("Sucesso! Todos os estoques (PCM, Almoxarifado e Comboios) foram zerados com sucesso.");
+        } catch (e) {
+          alert("Erro ao zerar estoques: " + e.message);
         }
       };
 
