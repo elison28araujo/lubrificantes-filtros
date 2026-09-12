@@ -1463,25 +1463,126 @@ import { firebaseConfig } from "./firebase-config.js";
 
   const checklistConfig = [
     // GRUPO 1: Níveis e Fluidos Operacionais
-    { id: "nivelOleoMotor", grupo: "1. Níveis e Fluidos Operacionais", titulo: "Nível de óleo do motor diesel", perguntaDetalhe: "Informe se precisou completar e quantidade (L)." },
-    { id: "nivelOleoHidraulico", grupo: "1. Níveis e Fluidos Operacionais", titulo: "Nível do reservatório hidráulico", perguntaDetalhe: "Descreva condição encontrada ou vazamento no visor." },
-    { id: "nivelTransmissaoFreio", grupo: "1. Níveis e Fluidos Operacionais", titulo: "Nível da transmissão / freios úmidos", perguntaDetalhe: "Descreva se completou fluido ou sinais de contaminação." },
-    { id: "nivelArrefecimento", grupo: "1. Níveis e Fluidos Operacionais", titulo: "Nível do líquido de arrefecimento / radiador", perguntaDetalhe: "Informe reposição de aditivo/água ou vazamento em mangotes." },
+    {
+      id: "nivelOleoMotor",
+      grupo: "1. Níveis e Fluidos Operacionais",
+      titulo: "Nível de óleo do motor diesel",
+      perguntaDetalhe: "Informe se precisou completar e quantidade (L).",
+      tipos: ["Inspeção de Turno", "Revisão Periódica"]
+    },
+    {
+      id: "nivelOleoHidraulico",
+      grupo: "1. Níveis e Fluidos Operacionais",
+      titulo: "Nível do reservatório hidráulico",
+      perguntaDetalhe: "Descreva condição encontrada ou vazamento no visor.",
+      tipos: ["Inspeção de Turno", "Revisão Periódica"]
+    },
+    {
+      id: "nivelTransmissaoFreio",
+      grupo: "1. Níveis e Fluidos Operacionais",
+      titulo: "Nível da transmissão / freios úmidos",
+      perguntaDetalhe: "Descreva se completou fluido ou sinais de contaminação.",
+      tipos: ["Revisão Periódica"]
+    },
+    {
+      id: "nivelArrefecimento",
+      grupo: "1. Níveis e Fluidos Operacionais",
+      titulo: "Nível do líquido de arrefecimento / radiador",
+      perguntaDetalhe: "Informe reposição de aditivo/água ou vazamento em mangotes.",
+      tipos: ["Inspeção de Turno", "Revisão Periódica"]
+    },
 
     // GRUPO 2: Filtros e Admissão de Ar
-    { id: "filtroArPrimSec", grupo: "2. Filtros e Admissão de Ar", titulo: "Indicador de restrição do filtro de ar", perguntaDetalhe: "Informe se o elemento estava saturado ou foi limpo/trocado." },
-    { id: "drenoSedimentador", grupo: "2. Filtros e Admissão de Ar", titulo: "Drenagem de água do filtro sedimentador (Racoor)", perguntaDetalhe: "Descreva presença de água/borra no copo sedimentador." },
+    {
+      id: "filtroArPrimSec",
+      grupo: "2. Filtros e Admissão de Ar",
+      titulo: "Indicador de restrição do filtro de ar",
+      perguntaDetalhe: "Informe se o elemento estava saturado ou foi limpo/trocado.",
+      tipos: ["Inspeção de Turno", "Revisão Periódica"]
+    },
+    {
+      id: "drenoSedimentador",
+      grupo: "2. Filtros e Admissão de Ar",
+      titulo: "Drenagem de água do filtro sedimentador (Racoor)",
+      perguntaDetalhe: "Descreva presença de água/borra no copo sedimentador.",
+      tipos: ["Inspeção de Turno", "Revisão Periódica"]
+    },
 
     // GRUPO 3: Sistema de Lubrificação Automática (L.A.)
-    { id: "vazamentoMangueiras", grupo: "3. Sistema de Lubrificação Automática (L.A.)", titulo: "Mangueiras e conexões de alta pressão do L.A.", perguntaDetalhe: "Descreva onde foi encontrado vazamento ou mangueira estourada." },
-    { id: "vazamentoInjetores", grupo: "3. Sistema de Lubrificação Automática (L.A.)", titulo: "Blocos distribuidores e bicos injetores do L.A.", perguntaDetalhe: "Informe injetor entupido, travado ou sem dosagem.", perguntaQuantidade: "Quantos injetores com falha?" },
-    { id: "pressaoPropulsora", grupo: "3. Sistema de Lubrificação Automática (L.A.)", titulo: "Pressão e ciclagem da propulsora (pneumática/elétrica)", perguntaDetalhe: "Informe a pressão encontrada e comportamento da bomba." },
-    { id: "reabastecerReservatorio", grupo: "3. Sistema de Lubrificação Automática (L.A.)", titulo: "Nível e reabastecimento do reservatório de graxa", perguntaDetalhe: "Informe quantidade de graxa reabastecida ou condição." },
-    { id: "trocaInjetorPropulsora", grupo: "3. Sistema de Lubrificação Automática (L.A.)", titulo: "Troca de bicos / manutenção da propulsora", perguntaDetalhe: "Detalhe as peças substituídas ou reparo efetuado.", perguntaQuantidade: "Quantidade de bicos/peças:" },
+    {
+      id: "vazamentoMangueiras",
+      grupo: "3. Sistema de Lubrificação Automática (L.A.)",
+      titulo: "Mangueiras e conexões de alta pressão do L.A.",
+      perguntaDetalhe: "Descreva onde foi encontrado vazamento ou mangueira estourada.",
+      tipos: ["Preventiva L.A.", "Inspeção de Turno", "Revisão Periódica"]
+    },
+    {
+      id: "vazamentoInjetores",
+      grupo: "3. Sistema de Lubrificação Automática (L.A.)",
+      titulo: "Blocos distribuidores e bicos injetores do L.A.",
+      perguntaDetalhe: "Informe injetor entupido, travado ou sem dosagem.",
+      perguntaQuantidade: "Quantos injetores com falha?",
+      tipos: ["Preventiva L.A.", "Revisão Periódica"]
+    },
+    {
+      id: "pressaoPropulsora",
+      grupo: "3. Sistema de Lubrificação Automática (L.A.)",
+      titulo: "Pressão e ciclagem da propulsora (pneumática/elétrica)",
+      perguntaDetalhe: "Informe a pressão encontrada e comportamento da bomba.",
+      tipos: ["Preventiva L.A.", "Revisão Periódica"]
+    },
+    {
+      id: "chicotePressostato",
+      grupo: "3. Sistema de Lubrificação Automática (L.A.)",
+      titulo: "Chicote elétrico, fusível e pressostato de fim de linha",
+      perguntaDetalhe: "Informe falhas elétricas, fiação rompida ou alarme acionado.",
+      tipos: ["Preventiva L.A.", "Revisão Periódica"]
+    },
+    {
+      id: "reabastecerReservatorio",
+      grupo: "3. Sistema de Lubrificação Automática (L.A.)",
+      titulo: "Nível e reabastecimento do reservatório de graxa",
+      perguntaDetalhe: "Informe quantidade de graxa reabastecida ou condição.",
+      tipos: ["Preventiva L.A.", "Inspeção de Turno", "Revisão Periódica", "Lubrificação Manual"]
+    },
+    {
+      id: "trocaInjetorPropulsora",
+      grupo: "3. Sistema de Lubrificação Automática (L.A.)",
+      titulo: "Troca de bicos / reparo mecânico da propulsora",
+      perguntaDetalhe: "Detalhe as peças substituídas ou reparo efetuado.",
+      perguntaQuantidade: "Quantidade de bicos/peças:",
+      tipos: ["Preventiva L.A.", "Revisão Periódica"]
+    },
 
     // GRUPO 4: Pontos Críticos e Graxa Manual
-    { id: "lubrificacaoManualArtic", grupo: "4. Pontos Críticos e Graxa Manual", titulo: "Lubrificação manual de pinos e buchas (articulação)", perguntaDetalhe: "Informe pontos que não receberam graxa ou com folga excessiva." },
-    { id: "limpezaEngraxadeiras", grupo: "4. Pontos Críticos e Graxa Manual", titulo: "Limpeza e estado das graxeiras/proteções", perguntaDetalhe: "Informe graxeiras quebradas, frouxas ou sem bico protetor." }
+    {
+      id: "lubrificacaoManualArtic",
+      grupo: "4. Pontos Críticos e Graxa Manual",
+      titulo: "Lubrificação manual de pinos e buchas (chassi / articulação)",
+      perguntaDetalhe: "Informe pontos que não receberam graxa ou com folga excessiva.",
+      tipos: ["Lubrificação Manual", "Revisão Periódica"]
+    },
+    {
+      id: "pinosCacambaLanca",
+      grupo: "4. Pontos Críticos e Graxa Manual",
+      titulo: "Pinos da caçamba/concha, lança e cilindros hidráulicos",
+      perguntaDetalhe: "Informe pinos secos, buchas gastas ou engraxadeiras entupidas.",
+      tipos: ["Lubrificação Manual", "Revisão Periódica"]
+    },
+    {
+      id: "cardanCruzetas",
+      grupo: "4. Pontos Críticos e Graxa Manual",
+      titulo: "Cruzetas do cardan, juntas universais e mancais de giro",
+      perguntaDetalhe: "Informe folga em cruzetas ou rolamentos sem graxa.",
+      tipos: ["Lubrificação Manual", "Revisão Periódica"]
+    },
+    {
+      id: "limpezaEngraxadeiras",
+      grupo: "4. Pontos Críticos e Graxa Manual",
+      titulo: "Limpeza e estado das graxeiras/proteções",
+      perguntaDetalhe: "Informe graxeiras quebradas, frouxas ou sem bico protetor.",
+      tipos: ["Preventiva L.A.", "Lubrificação Manual", "Revisão Periódica"]
+    }
   ];
 
   const checklistFormMaint = document.getElementById("checklistForm");
@@ -1508,6 +1609,7 @@ import { firebaseConfig } from "./firebase-config.js";
         maintTipoServicoGrid.querySelectorAll(".maint-type-card").forEach(c => c.classList.remove("active"));
         card.classList.add("active");
         tipoServicoMaint.value = card.dataset.value;
+        filtrarChecklistPorTipo(card.dataset.value);
       });
     });
   }
@@ -1733,10 +1835,62 @@ import { firebaseConfig } from "./firebase-config.js";
     }
   }
 
+  // ─── FILTRAR CHECKLIST POR TIPO DE MANUTENÇÃO / SERVIÇO ───────────────────
+  function filtrarChecklistPorTipo(tipo) {
+    if (!checklistItemsMaint) return;
+    const tipoAtual = tipo || (tipoServicoMaint ? tipoServicoMaint.value : "Preventiva L.A.");
+    
+    // Atualiza título dinâmico com a quantidade de itens da modalidade
+    const tituloEl = document.getElementById("checklistTituloDinamico");
+    const itensCompativeis = checklistConfig.filter(it => it.tipos && it.tipos.includes(tipoAtual));
+    if (tituloEl) {
+      tituloEl.textContent = `Itens de Inspeção: ${tipoAtual} (${itensCompativeis.length} itens)`;
+    }
+
+    let itemNumber = 1;
+    checklistConfig.forEach(item => {
+      const itemEl = document.getElementById(`maint_item_${item.id}`);
+      const radios = document.querySelectorAll(`input[name="${item.id}_status"]`);
+      const belongs = item.tipos && item.tipos.includes(tipoAtual);
+
+      if (itemEl) {
+        if (belongs) {
+          itemEl.style.display = "block";
+          const titleEl = itemEl.querySelector(".maint-item-title");
+          if (titleEl) {
+            titleEl.textContent = `${String(itemNumber++).padStart(2, "0")} · ${item.titulo}`;
+          }
+          radios.forEach(r => { r.required = true; });
+        } else {
+          itemEl.style.display = "none";
+          radios.forEach(r => { 
+            r.required = false; 
+            r.checked = false;
+          });
+          const detalhe = document.getElementById(`${item.id}_detalhe`);
+          const qtd = document.getElementById(`${item.id}_quantidade`);
+          if (detalhe) { detalhe.value = ""; detalhe.disabled = true; detalhe.required = false; }
+          if (qtd) { qtd.value = ""; qtd.disabled = true; qtd.required = false; }
+          itemEl.classList.remove("has-issue");
+        }
+      }
+    });
+
+    // Atualiza cabeçalhos dos grupos
+    document.querySelectorAll(".maint-group-header").forEach(header => {
+      const grupoNome = header.dataset.grupo;
+      const temItemVisivel = checklistConfig.some(it => it.grupo === grupoNome && it.tipos && it.tipos.includes(tipoAtual));
+      header.style.display = temItemVisivel ? "flex" : "none";
+    });
+  }
+  window.filtrarChecklistPorTipo = filtrarChecklistPorTipo;
+
   // ─── BOTÃO: MARCAR TODOS COMO OK ──────────────────────────────────────────
   if (btnMarcarTodosConforme) {
     btnMarcarTodosConforme.addEventListener("click", () => {
-      checklistConfig.forEach(item => {
+      const tipoAtual = tipoServicoMaint ? tipoServicoMaint.value : "Preventiva L.A.";
+      const itensAtivos = checklistConfig.filter(it => it.tipos && it.tipos.includes(tipoAtual));
+      itensAtivos.forEach(item => {
         const okRadio = document.querySelector(`input[name="${item.id}_status"][value="OK"]`);
         if (okRadio) {
           okRadio.checked = true;
@@ -1746,7 +1900,7 @@ import { firebaseConfig } from "./firebase-config.js";
       // Seta o semáforo para Liberado
       const libOkCard = document.querySelector('.maint-liberacao-card[data-status="LIBERADO"]');
       if (libOkCard) libOkCard.click();
-      if (typeof showToast === 'function') showToast("Todos os itens foram marcados como Conformes (OK)!");
+      if (typeof showToast === 'function') showToast(`Todos os ${itensAtivos.length} itens de ${tipoAtual} foram marcados como OK!`);
     });
   }
 
@@ -1763,6 +1917,7 @@ import { firebaseConfig } from "./firebase-config.js";
         currentGrupo = item.grupo;
         const groupHeader = document.createElement("div");
         groupHeader.className = "maint-group-header";
+        groupHeader.dataset.grupo = currentGrupo;
         groupHeader.innerHTML = `<span>${currentGrupo}</span>`;
         checklistItemsMaint.appendChild(groupHeader);
       }
@@ -1817,6 +1972,7 @@ import { firebaseConfig } from "./firebase-config.js";
     carregarDadosTecnicoMemoria();
     autoPreencherDataHora();
     initSignatureCanvas();
+    filtrarChecklistPorTipo(tipoServicoMaint ? tipoServicoMaint.value : "Preventiva L.A.");
   };
 
   function atualizarCamposCondicionaisMaint() {
@@ -1915,20 +2071,25 @@ import { firebaseConfig } from "./firebase-config.js";
         btnSalvar.innerHTML = `Salvando e transmitindo...`;
       }
 
-      const checklist = checklistConfig.map((item) => {
-        const statusEl = document.querySelector(`input[name="${item.id}_status"]:checked`);
-        const status = statusEl ? statusEl.value : "OK";
-        const detalhe = document.getElementById(`${item.id}_detalhe`)?.value.trim() || "";
-        const quantidade = document.getElementById(`${item.id}_quantidade`)?.value || "";
-        return {
-          id: item.id,
-          grupo: item.grupo,
-          titulo: item.titulo,
-          status,
-          detalhe: detalhe || (status === "OK" ? "Conforme" : status === "NÃO" ? "Não aplicável" : ""),
-          quantidade
-        };
-      });
+      const tipoServico = (tipoServicoMaint && tipoServicoMaint.value) || "Preventiva L.A.";
+      const statusLiberacao = (statusLiberacaoMaint && statusLiberacaoMaint.value) || "LIBERADO";
+
+      const checklist = checklistConfig
+        .filter((item) => !item.tipos || item.tipos.includes(tipoServico))
+        .map((item) => {
+          const statusEl = document.querySelector(`input[name="${item.id}_status"]:checked`);
+          const status = statusEl ? statusEl.value : "OK";
+          const detalhe = document.getElementById(`${item.id}_detalhe`)?.value.trim() || "";
+          const quantidade = document.getElementById(`${item.id}_quantidade`)?.value || "";
+          return {
+            id: item.id,
+            grupo: item.grupo,
+            titulo: item.titulo,
+            status,
+            detalhe: detalhe || (status === "OK" ? "Conforme" : status === "NÃO" ? "Não aplicável" : ""),
+            quantidade
+          };
+        });
 
       const tag = document.getElementById("tagEquipamento").value.trim().toUpperCase();
       const horimetro = document.getElementById("horimetroMaint").value;
@@ -1958,9 +2119,6 @@ import { firebaseConfig } from "./firebase-config.js";
       const nomeLubrificador = document.getElementById("nomeLubrificador").value.trim();
       const matricula = document.getElementById("matriculaLubrificador").value.trim();
       salvarDadosTecnicoMemoria(nomeLubrificador, matricula);
-
-      const tipoServico = (tipoServicoMaint && tipoServicoMaint.value) || "Preventiva L.A.";
-      const statusLiberacao = (statusLiberacaoMaint && statusLiberacaoMaint.value) || "LIBERADO";
 
       // Insumos
       const graxaKg = maintGraxaKg ? parseFloat(maintGraxaKg.value) || 0 : 0;
@@ -2085,6 +2243,8 @@ import { firebaseConfig } from "./firebase-config.js";
       atualizarCamposCondicionaisMaint();
       const libOkCard = document.querySelector('.maint-liberacao-card[data-status="LIBERADO"]');
       if (libOkCard) libOkCard.click();
+      const tipoDefaultCard = document.querySelector('.maint-type-card[data-value="Preventiva L.A."]');
+      if (tipoDefaultCard) tipoDefaultCard.click();
     }
   });
 
