@@ -114,4 +114,16 @@
 - **Zona de Manutenção e Segurança:** Criação de card visual de alerta na aba "Segurança" para centralizar as ferramentas de gerenciamento crítico do banco de dados.
 - **Cache Busting e Sincronização:** Atualizado Service Worker para `lubetrack-v9` e recompilados os assets em `www/` via `build-web.js`.
 
+## Fase 15: Inteligência de PCM & Preventiva (Previsão de Trocas, Alerta de Vazamentos e Exportador SAP)
+- **Aba "🎯 Previsão de Trocas (Preventiva)":** Implementada no Painel PCM com cálculo dinâmico de horas restantes para a próxima troca de óleo de cada compartimento de cada equipamento, baseado na telemetria de horímetro dos lançamentos e na periodicidade técnica do catálogo.
+- **Semáforo Operacional Visual:** Classificação em tempo real dos equipamentos em:
+  - 🔴 Vencida (Horas restantes <= 0h)
+  - 🟡 Atenção (Faltam <= 50h)
+  - 🟢 Em Dia (Faltam > 50h)
+  com barras de progresso proporcionais ao desgaste do lubrificante e filtros por status/semáforo.
+- **Detector de Consumo Excessivo & Alerta de Vazamentos:** Algoritmo automático no PCM que identifica equipamentos com múltiplos abastecimentos acumulando alto volume de reposição em curto intervalo de horímetro, emitindo alertas de possível vazamento tanto na aba de Previsão quanto na de Indicadores.
+- **Exportador Padrão SAP (Layout MIGO 261 / BAPI):** Inclusão de botão dedicado na aba "Lançamentos" para gerar planilha CSV padronizada com Centro de Custo, Código SAP do Material, Tipo de Movimento (261), Descrição, Quantidade e TAG da Frota pronta para importação no SAP MM/PM.
+- **Cache Busting e Sincronização:** Incremento do Service Worker para `lubetrack-v10` e compilação de assets em `www/` via `build-web.js`.
+
+
 
