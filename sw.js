@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lubetrack-v11';
+const CACHE_NAME = 'lubetrack-v12';
 
 const ASSETS_TO_CACHE = [
   './',

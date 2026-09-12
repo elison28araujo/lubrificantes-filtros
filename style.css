@@ -15,6 +15,7 @@
   --gold: #f59e0b;
   --gold-light: #fcd34d;
   --green: #10b981;
+  --secondary: #00a859;
   --red: #ef4444;
   --purple: #8b5cf6;
   --orange: #f97316;
@@ -1176,50 +1177,47 @@ html, body {
 }
 
 /* ==========================================================================
-   MAINTENANCE L.A. MODULE STYLES (Prefixed with maint-)
+   MAINTENANCE / PREVENTIVE CHECKLIST MODULE - LUBETRACK DARK EMERALD THEME
    ========================================================================== */
 
 #viewMaintenance {
-  background: radial-gradient(circle at top left, rgba(15,118,110,.16), transparent 30%), linear-gradient(180deg, #f8fafc, #eef3f8);
-  color: #172033;
+  background: var(--bg);
+  color: var(--text);
 }
 
-#viewMaintenance input, #viewMaintenance textarea, #viewMaintenance select {
+#viewMaintenance input,
+#viewMaintenance textarea,
+#viewMaintenance select {
   width: 100%;
-  border: 1px solid #dbe3ea;
-  border-radius: 14px;
-  padding: 13px 14px;
-  font-size: 15px;
+  background: var(--bg2) !important;
+  border: 1.5px solid var(--border2) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 11px 14px !important;
+  font-size: 14px !important;
+  color: var(--text) !important;
   outline: none;
-  background: #fff;
-  transition: .2s;
-  color: #172033;
-}
-#viewMaintenance textarea { resize: vertical; }
-#viewMaintenance input:focus, #viewMaintenance textarea:focus, #viewMaintenance select:focus {
-  border-color: #0f766e;
-  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
+  box-sizing: border-box;
+  transition: all 0.2s;
+  color-scheme: dark;
 }
 
-.maint-btn {
-  border: 0;
-  border-radius: 14px;
-  padding: 12px 16px;
-  cursor: pointer;
-  font-weight: 800;
-  font-size: 14px;
-  transition: .2s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  white-space: nowrap;
+#viewMaintenance input::placeholder,
+#viewMaintenance textarea::placeholder {
+  color: var(--text3);
+  opacity: 0.8;
 }
-.maint-btn:hover { transform: translateY(-1px); }
 
-/* ==========================================================================
-   MAINTENANCE / PREVENTIVE CHECKLIST MODULE - LUBETRACK DARK EMERALD THEME
-   ========================================================================== */
+#viewMaintenance input:focus,
+#viewMaintenance textarea:focus,
+#viewMaintenance select:focus {
+  border-color: var(--secondary) !important;
+  background: var(--surface2) !important;
+  box-shadow: 0 0 0 3px rgba(0, 168, 89, 0.25) !important;
+}
+
+#viewMaintenance textarea {
+  resize: vertical;
+}
 
 .maint-btn {
   font-family: inherit;
@@ -1244,9 +1242,9 @@ html, body {
 }
 .maint-btn-primary:hover { background: #00bf65; }
 
-.maint-btn-dark { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-.maint-btn-soft { background: var(--surface2); color: var(--secondary); border: 1px solid rgba(0, 168, 89, 0.3); }
-.maint-btn-soft:hover { background: rgba(0, 168, 89, 0.15); }
+.maint-btn-dark { background: var(--surface2); color: var(--text); border: 1px solid var(--border2); }
+.maint-btn-soft { background: rgba(0, 168, 89, 0.12); color: #00e676; border: 1px solid rgba(0, 168, 89, 0.35); }
+.maint-btn-soft:hover { background: rgba(0, 168, 89, 0.22); color: #fff; }
 .maint-btn-whatsapp { background: #25D366; color: #052410; font-weight: 800; }
 .maint-btn-danger { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
 .maint-btn-full { width: 100%; margin-top: 18px; padding: 14px; font-size: 15px; }
@@ -1324,22 +1322,24 @@ html, body {
   color: var(--text2);
   margin-bottom: 5px;
 }
-.maint-grid input, .maint-grid select, .maint-filter-box input {
+.maint-grid input, .maint-grid select, .maint-filter-box input, .maint-insumos-grid input {
   width: 100%;
-  padding: 10px 12px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  color: var(--text);
+  padding: 11px 14px;
+  background: var(--bg2) !important;
+  border: 1.5px solid var(--border2) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text) !important;
   font-family: inherit;
   font-size: 14px;
   box-sizing: border-box;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
+  color-scheme: dark;
 }
-.maint-grid input:focus, .maint-grid select:focus, .maint-filter-box input:focus {
+.maint-grid input:focus, .maint-grid select:focus, .maint-filter-box input:focus, .maint-insumos-grid input:focus {
   outline: none;
-  border-color: var(--secondary);
-  background: var(--bg3);
+  border-color: var(--secondary) !important;
+  background: var(--surface2) !important;
+  box-shadow: 0 0 0 3px rgba(0, 168, 89, 0.25) !important;
 }
 
 /* Tipo de Preventiva Selector */
@@ -1412,14 +1412,22 @@ html, body {
 .maint-item textarea, .maint-item input[type="number"], .maint-item input[type="text"] {
   margin-top: 10px;
   width: 100%;
-  padding: 8px 12px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
+  padding: 10px 14px;
+  background: var(--bg2) !important;
+  border: 1.5px solid var(--border2) !important;
+  border-radius: var(--radius-sm);
+  color: var(--text) !important;
   font-family: inherit;
   font-size: 13px;
   box-sizing: border-box;
+  color-scheme: dark;
+  transition: all 0.2s;
+}
+.maint-item textarea:focus, .maint-item input:focus {
+  border-color: var(--secondary) !important;
+  background: var(--surface2) !important;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 168, 89, 0.25) !important;
 }
 
 /* Insumos Grid */
