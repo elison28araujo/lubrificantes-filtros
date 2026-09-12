@@ -1483,18 +1483,39 @@
             maintHistory.forEach(h => {
               const date = h.data ? h.data.split('-').reverse().join('/') : '-';
               const ocorrencias = h.checklist ? h.checklist.filter(c => c.status === "SIM").length : 0;
-              const hasAlert = ocorrencias > 0;
-              const statusBadge = hasAlert
-                ? `<span class="maint-card-badge maint-badge-alert">⚠️ ${ocorrencias} Intervenç${ocorrencias > 1 ? 'ões' : 'ão'}</span>`
-                : `<span class="maint-card-badge maint-badge-ok">✅ Tudo OK</span>`;
+              const statusLib = h.statusLiberacao || (ocorrencias > 0 ? "RESSALVA" : "LIBERADO");
+              const hasAlert = statusLib === "BLOQUEADO" || statusLib === "RESSALVA" || ocorrencias > 0;
+              
+              let statusBadge = '';
+              if (statusLib === "BLOQUEADO") {
+                statusBadge = `<span class="maint-card-badge" style="background: rgba(239,68,68,0.2); border: 1px solid #ef4444; color: #fca5a5;">🔴 Bloqueado</span>`;
+              } else if (statusLib === "RESSALVA") {
+                statusBadge = `<span class="maint-card-badge" style="background: rgba(245,158,11,0.2); border: 1px solid #f59e0b; color: #fcd34d;">🟡 Ressalva (${ocorrencias})</span>`;
+              } else {
+                statusBadge = `<span class="maint-card-badge maint-badge-ok">🟢 Liberado 100%</span>`;
+              }
+
               const deleteBtnHtml = userRole === 'admin'
                 ? `<button class="btn-maint-del" onclick="window.excluirManutencaoPCM('${h.docId}')">🗑️ Excluir</button>`
                 : '';
+
+              const graxa = h.insumos?.graxaKg || h.graxaKg || 0;
+              const oleo = h.insumos?.oleoLitros || h.oleoLitros || 0;
+              const insumoPill = (graxa > 0 || oleo > 0)
+                ? `<span style="font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(0,168,89,0.15); color: var(--secondary); border: 1px solid rgba(0,168,89,0.3); font-weight: 700;">⛽ ${graxa > 0 ? graxa + 'kg graxa ' : ''}${oleo > 0 ? oleo + 'L óleo' : ''}</span>`
+                : '';
+
               cardsHtml += `
                 <div class="maint-card ${hasAlert ? 'has-alert' : ''}">
                   <div class="maint-card-header">
-                    <div class="maint-card-tag">🏷️ ${h.tagEquipamento || '-'}</div>
-                    ${statusBadge}
+                    <div>
+                      <div class="maint-card-tag">🏷️ ${h.tagEquipamento || '-'}</div>
+                      <div style="font-size: 11px; color: var(--secondary); font-weight: 700; margin-top: 3px;">🔧 ${h.tipoServico || 'Preventiva L.A.'}</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                      ${statusBadge}
+                      ${insumoPill}
+                    </div>
                   </div>
                   <div class="maint-card-meta">
                     <div class="maint-meta-item">
@@ -1519,7 +1540,7 @@
                     ${h.codigoRelatorio ? `<span style="margin-left:auto; font-size:10px; opacity:0.5;">#${h.codigoRelatorio}</span>` : ''}
                   </div>
                   <div class="maint-card-footer">
-                    <button class="btn-maint-view" onclick="window.abrirRelatorioMaintPCM('${h.docId}')">📋 Ver Relatório</button>
+                    <button class="btn-maint-view" onclick="window.abrirRelatorioMaintPCM('${h.docId}')">📋 Ver Relatório Completo</button>
                     ${deleteBtnHtml}
                   </div>
                 </div>
@@ -1998,80 +2019,149 @@
 
         // Customizar o tamanho do modal para relatórios
         const modalBox = document.querySelector('.modal-box');
-        if (modalBox) modalBox.style.maxWidth = '600px';
+        if (modalBox) modalBox.style.maxWidth = '750px';
         const cancelBtn = document.getElementById('modalCancelBtn');
         if (cancelBtn) cancelBtn.textContent = 'Fechar';
+
+        const statusLib = item.statusLiberacao || "LIBERADO";
+        let semaforoBanner = '';
+        if (statusLib === "BLOQUEADO") {
+          semaforoBanner = `<div style="padding: 12px; border-radius: 10px; background: rgba(239,68,68,0.18); border: 1.5px solid #ef4444; color: #fca5a5; font-weight: 800; font-size: 13px; text-align: center; margin-bottom: 16px;">🔴 EQUIPAMENTO BLOQUEADO - RISCO GRAVE IMINENTE</div>`;
+        } else if (statusLib === "RESSALVA") {
+          semaforoBanner = `<div style="padding: 12px; border-radius: 10px; background: rgba(245,158,11,0.18); border: 1.5px solid #f59e0b; color: #fcd34d; font-weight: 800; font-size: 13px; text-align: center; margin-bottom: 16px;">🟡 LIBERADO COM RESSALVA - MONITORAR INTERVENÇÕES</div>`;
+        } else {
+          semaforoBanner = `<div style="padding: 12px; border-radius: 10px; background: rgba(16,185,129,0.18); border: 1.5px solid #10b981; color: #86efac; font-weight: 800; font-size: 13px; text-align: center; margin-bottom: 16px;">🟢 100% LIBERADO PARA OPERAÇÃO PLENA</div>`;
+        }
 
         let itemsHtml = '<table style="width:100%; border-collapse:collapse; margin-top:15px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border);">';
         itemsHtml += `<thead style="background: var(--surface2); border-bottom: 1px solid var(--border);">
           <tr>
-            <th style="padding: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; text-align: left;">Item</th>
-            <th style="padding: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; text-align: center; width: 80px;">Status</th>
-            <th style="padding: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; text-align: left;">Detalhe / Obs</th>
+            <th style="padding: 10px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; text-align: left;">Item Inspecionado</th>
+            <th style="padding: 10px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; text-align: center; width: 110px;">Status</th>
+            <th style="padding: 10px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; text-align: left;">Detalhe / Observação</th>
           </tr>
         </thead><tbody>`;
         
         if (item.checklist) {
+          let currentGrupo = "";
           item.checklist.forEach((c, idx) => {
+            if (c.grupo && c.grupo !== currentGrupo) {
+              currentGrupo = c.grupo;
+              itemsHtml += `
+                <tr style="background: rgba(255,255,255,0.04); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+                  <td colspan="3" style="padding: 7px 12px; font-size: 11px; font-weight: 700; color: var(--secondary); text-transform: uppercase;">${currentGrupo}</td>
+                </tr>
+              `;
+            }
             let statusBadge = '';
             if (c.status === "OK") {
-              statusBadge = `<span style="display: inline-block; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.2); color: #4ade80;">OK</span>`;
+              statusBadge = `<span style="display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.3); color: #4ade80;">OK</span>`;
             } else if (c.status === "SIM") {
-              statusBadge = `<span style="display: inline-block; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: #ef4444;">SIM</span>`;
+              statusBadge = `<span style="display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #ef4444;">FALHA</span>`;
             } else {
-              statusBadge = `<span style="display: inline-block; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.2); color: #fbbf24;">NÃO</span>`;
+              statusBadge = `<span style="display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; background: rgba(251,191,36,0.15); border: 1px solid rgba(251,191,36,0.3); color: #fbbf24;">N/A</span>`;
             }
-            const rowBg = idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.02)';
+            const rowBg = idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)';
             itemsHtml += `<tr style="background: ${rowBg}; border-bottom: 1px solid rgba(255,255,255,0.03);">
-              <td style="padding: 12px; font-size: 13px; color: var(--text); font-weight: 500;">${c.titulo}</td>
-              <td style="padding: 12px; text-align: center;">${statusBadge}</td>
-              <td style="padding: 12px; font-size: 13px; color: var(--text2);">${c.detalhe || "-"}</td>
+              <td style="padding: 10px 12px; font-size: 13px; color: var(--text); font-weight: 500;">${c.titulo}</td>
+              <td style="padding: 10px 12px; text-align: center;">${statusBadge}</td>
+              <td style="padding: 10px 12px; font-size: 12px; color: var(--text2);">${c.detalhe || "-"}${c.quantidade ? ` <span style="opacity:0.8;">(Qtd: ${c.quantidade})</span>` : ''}</td>
             </tr>`;
           });
         }
         itemsHtml += '</tbody></table>';
 
-        if (item.fotoEvidencia) {
-          itemsHtml += `
-            <div style="margin-top: 20px;">
-              <h4 style="margin: 0 0 10px 0; color: var(--text2); font-size: 14px; font-weight: 600;">Evidência Fotográfica</h4>
-              <div style="background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 8px; text-align: center;">
-                <img src="${item.fotoEvidencia}" style="max-width:100%; max-height:350px; border-radius:6px; display: inline-block;">
+        const graxa = item.insumos?.graxaKg || item.graxaKg || 0;
+        const oleo = item.insumos?.oleoLitros || item.oleoLitros || 0;
+        const pecas = item.insumos?.pecasTrocadas || item.pecasTrocadas || "";
+        let insumosHtml = '';
+        if (graxa > 0 || oleo > 0 || pecas) {
+          insumosHtml = `
+            <div style="margin-top: 15px; padding: 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;">
+              <span style="display:block; font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:var(--secondary); font-weight:700; margin-bottom:6px;">Insumos e Peças Aplicadas</span>
+              <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:8px; font-size:12px;">
+                <div><span style="opacity:0.6;">Graxa Aplicada:</span> <strong>${graxa} kg</strong></div>
+                <div><span style="opacity:0.6;">Óleo Reposto:</span> <strong>${oleo} L</strong></div>
+                <div style="grid-column: 1 / -1;"><span style="opacity:0.6;">Peças/Bicos:</span> <strong>${pecas || 'Nenhuma'}</strong></div>
               </div>
             </div>
           `;
         }
 
-        window.openModal(`Relatório de Manutenção: ${item.tagEquipamento}`, [], () => {
+        let fotosHtml = '';
+        if (item.fotoAntes || item.fotoDepois || item.fotoEvidencia) {
+          fotosHtml = `
+            <div style="margin-top: 20px;">
+              <h4 style="margin: 0 0 10px 0; color: var(--text2); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Evidências Fotográficas</h4>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                ${item.fotoAntes ? `
+                  <div style="background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 8px; text-align: center;">
+                    <span style="display: block; font-size: 10px; font-weight: 700; color: #ef4444; margin-bottom: 4px;">FOTO 1: ANTES / FALHA</span>
+                    <img src="${item.fotoAntes}" style="max-width:100%; max-height:240px; border-radius:6px; object-fit: cover;">
+                  </div>
+                ` : ''}
+                ${item.fotoDepois ? `
+                  <div style="background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 8px; text-align: center;">
+                    <span style="display: block; font-size: 10px; font-weight: 700; color: #4ade80; margin-bottom: 4px;">FOTO 2: DEPOIS / CONCLUÍDO</span>
+                    <img src="${item.fotoDepois}" style="max-width:100%; max-height:240px; border-radius:6px; object-fit: cover;">
+                  </div>
+                ` : (item.fotoEvidencia && !item.fotoAntes ? `
+                  <div style="background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 8px; text-align: center;">
+                    <span style="display: block; font-size: 10px; font-weight: 700; color: var(--text2); margin-bottom: 4px;">EVIDÊNCIA FOTOGRÁFICA</span>
+                    <img src="${item.fotoEvidencia}" style="max-width:100%; max-height:240px; border-radius:6px; object-fit: cover;">
+                  </div>
+                ` : '')}
+              </div>
+            </div>
+          `;
+        }
+
+        let assinaturaHtml = '';
+        if (item.assinatura) {
+          assinaturaHtml = `
+            <div style="margin-top: 20px; padding: 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; text-align: center;">
+              <span style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.6; margin-bottom: 6px;">Assinatura Digital do Técnico Responsável</span>
+              <img src="${item.assinatura}" style="max-height: 80px; display: inline-block; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 4px; margin-bottom: 6px;">
+              <div style="font-size: 13px; font-weight: 700; color: var(--text);">${item.nomeLubrificador}</div>
+              <div style="font-size: 11px; color: var(--text2);">Matrícula: ${item.matricula || '-'} | Autenticado Digitalmente no Tablet</div>
+            </div>
+          `;
+        }
+
+        window.openModal(`Laudo de Preventiva: ${item.tagEquipamento}`, [], () => {
           window.closeModal();
         });
 
         // Inserir HTML customizado e premium
         const mBody = document.getElementById('modalBody');
         mBody.innerHTML = `
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; font-size: 13px;">
-            <div style="background: var(--bg2); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);">
-              <span style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; margin-bottom: 4px;">Código do Relatório</span>
-              <strong style="color: var(--text); font-size: 13px;">${item.codigoRelatorio}</strong>
+          ${semaforoBanner}
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; font-size: 12px;">
+            <div style="background: var(--bg2); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);">
+              <span style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; margin-bottom: 3px;">Tipo de Manutenção</span>
+              <strong style="color: var(--secondary); font-size: 13px;">🔧 ${item.tipoServico || 'Preventiva L.A.'}</strong>
             </div>
-            <div style="background: var(--bg2); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);">
-              <span style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; margin-bottom: 4px;">Data de Execução</span>
-              <strong style="color: var(--text); font-size: 13px;">${item.data ? item.data.split('-').reverse().join('/') : '-'}</strong>
+            <div style="background: var(--bg2); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);">
+              <span style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; margin-bottom: 3px;">Código do Relatório</span>
+              <strong style="color: var(--text); font-size: 13px;">${item.codigoRelatorio || item.id}</strong>
             </div>
-            <div style="background: var(--bg2); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);">
-              <span style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; margin-bottom: 4px;">Horímetro</span>
-              <strong style="color: var(--secondary); font-size: 13px;">⏱️ ${item.horimetro} h</strong>
+            <div style="background: var(--bg2); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);">
+              <span style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; margin-bottom: 3px;">Data e Horário</span>
+              <strong style="color: var(--text); font-size: 13px;">${item.data ? item.data.split('-').reverse().join('/') : '-'} (${item.horaInicial || ''} - ${item.horaFim || ''})</strong>
             </div>
-            <div style="background: var(--bg2); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);">
-              <span style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; margin-bottom: 4px;">Duração</span>
-              <strong style="color: var(--text); font-size: 13px;">⏳ ${item.duracao || '-'}</strong>
+            <div style="background: var(--bg2); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);">
+              <span style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; margin-bottom: 3px;">Horímetro Operacional</span>
+              <strong style="color: var(--secondary); font-size: 13px;">⏱️ ${item.horimetro} h ${item.duracao ? `(${item.duracao})` : ''}</strong>
             </div>
-            <div style="background: var(--bg2); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); grid-column: span 2;">
-              <span style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; margin-bottom: 4px;">Lubrificador Responsável</span>
-              <strong style="color: var(--text); font-size: 13px;">👤 ${item.nomeLubrificador} (Matrícula: ${item.matricula || '-'})</strong>
+            <div style="background: var(--bg2); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); grid-column: span 2;">
+              <span style="display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; margin-bottom: 3px;">Técnico / Lubrificador</span>
+              <strong style="color: var(--text); font-size: 13px;">👤 ${item.nomeLubrificador} (Matrícula: ${item.matricula || '-'}) | Tablet: ${item.deviceId || '-'}</strong>
             </div>
           </div>
+          ${insumosHtml}
           ${itemsHtml}
+          ${fotosHtml}
+          ${assinaturaHtml}
           ${userRole === 'admin' ? `
           <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid var(--border); text-align: right;">
             <button onclick="window.deletarManutencao('${item.docId}')" style="background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.2)'" onmouseout="this.style.background='rgba(239,68,68,0.1)'">🗑️ Excluir Relatório</button>

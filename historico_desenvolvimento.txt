@@ -123,7 +123,24 @@
   com barras de progresso proporcionais ao desgaste do lubrificante e filtros por status/semáforo.
 - **Detector de Consumo Excessivo & Alerta de Vazamentos:** Algoritmo automático no PCM que identifica equipamentos com múltiplos abastecimentos acumulando alto volume de reposição em curto intervalo de horímetro, emitindo alertas de possível vazamento tanto na aba de Previsão quanto na de Indicadores.
 - **Exportador Padrão SAP (Layout MIGO 261 / BAPI):** Inclusão de botão dedicado na aba "Lançamentos" para gerar planilha CSV padronizada com Centro de Custo, Código SAP do Material, Tipo de Movimento (261), Descrição, Quantidade e TAG da Frota pronta para importação no SAP MM/PM.
-- **Cache Busting e Sincronização:** Incremento do Service Worker para `lubetrack-v10` e compilação de assets em `www/` via `build-web.js`.
-
-
-
+## Fase 16: Checklist de Manutenção Preventiva & Inspeção Operacional de Campo
+- **Identidade Visual Dark Emerald:** Migração completa da interface de manutenção (`#viewMaintenance`) para o padrão dark emerald industrial do Lubetrack (`#05100c`, `#0c2118`, `#00a859`).
+- **Seleção de Tipo de Serviço:** Implementada seleção rápida em cards para 4 modalidades de serviço: *Preventiva L.A.*, *Inspeção de Turno*, *Revisão Periódica (250h/500h/1000h)* e *Lubrificação Manual*.
+- **Checklist Técnico em 4 Grupos Especializados:**
+  1. *Níveis e Fluidos Operacionais:* Óleo de motor diesel, reservatório hidráulico, transmissão/freios úmidos e arrefecimento/radiador.
+  2. *Filtros e Admissão de Ar:* Restrição do filtro de ar primário/secundário e drenagem de água do filtro sedimentador (Racoor).
+  3. *Sistema de Lubrificação Automática (L.A.):* Linhas/mangueiras de alta pressão, blocos injetores/dosadores, pressão e ciclagem da propulsora pneumática/elétrica, nível do reservatório de graxa e trocas de injetores/componentes.
+  4. *Pontos Críticos e Graxa Manual:* Lubrificação de pinos, buchas de articulação, cruzetas e limpeza/proteção de bicos graxeiros.
+- **Botão "Marcar Todos como OK":** Agiliza o preenchimento de rotinas diárias com um toque, permitindo intervenções pontuais onde necessário.
+- **Semáforo de Liberação Operacional do Equipamento:**
+  - 🟢 Liberado 100% (Apto para operação plena)
+  - 🟡 Liberado com Ressalva (Requer monitoramento ou intervenção futura)
+  - 🔴 Bloqueado (Impedir funcionamento por risco mecânico grave)
+  Com alteração inteligente automática para *Ressalva* quando o técnico sinaliza qualquer falha.
+- **Apontamento de Insumos e Peças:** Campos para registro de graxa aplicada (kg), óleo completado (L) e peças/injetores substituídos.
+- **Evidências Fotográficas Duplas (Antes e Depois):** Upload/captura de câmera para fotos do defeito/vazamento encontrado (*Antes / Falha*) e do serviço concluído (*Depois / Concluído*), com compressão dinâmica via Canvas (máximo 600px, 70% JPEG) para preservar cotas do Firestore.
+- **Assinatura Digital do Técnico no Tablet:** Canvas touch/mouse integrado com traçado verde neon, permitindo ao lubrificador assinar diretamente na tela para chancelar o laudo de preventiva.
+- **Memória Inteligente e Autocomplete:** Pré-carregamento automático do nome e matrícula do lubrificador via `localStorage`, auto-preenchimento de data/hora atual e autocompletação do TAG do equipamento via `<datalist>` dinâmico do catálogo `EQUIPAMENTOS`.
+- **Relatório e Compartilhamento WhatsApp:** Laudo técnico completo com semáforos, insumos, fotos antes/depois e assinatura digital; envio formatado para WhatsApp com destaques operacionais e emojis.
+- **Visualização Completa no Dashboard PCM:** Cards no painel PCM exibem o tipo de preventiva, o semáforo de liberação e os insumos aplicados. O modal de relatório técnico foi ampliado e renderiza o laudo completo com fotos e assinatura digital.
+- **Cache e Build:** Incremento do Service Worker para `lubetrack-v11` e sincronização dos assets compilados em `www/` via `build-web.js`.

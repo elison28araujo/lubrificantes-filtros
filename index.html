@@ -276,8 +276,8 @@
     <!-- View: Manutenção -->
     <div id="viewMaintenance" class="view hidden">
       <header class="view-header">
-        <h2 class="view-title">Manutenção L.A.</h2>
-        <p class="view-subtitle">Controle de manutenção corretiva</p>
+        <h2 class="view-title">Manutenção & Preventiva</h2>
+        <p class="view-subtitle">Checklist operacional e inspeção técnica de campo</p>
       </header>
       <main class="view-body" style="padding: 10px; padding-bottom: 90px; overflow-y: auto; height: 100%;">
         
@@ -290,9 +290,9 @@
             <span>Equip. Atendidos</span>
             <strong id="totalEquipamentos">0</strong>
           </div>
-          <div class="maint-stat-card" style="grid-column: span 2;">
+          <div class="maint-stat-card">
             <span>Último Registro</span>
-            <strong id="ultimoRegistro" style="font-size: 16px;">--</strong>
+            <strong id="ultimoRegistro" style="font-size: 15px;">--</strong>
           </div>
         </section>
 
@@ -300,26 +300,52 @@
           <section class="maint-panel">
             <div class="maint-section-title">
               <div>
-                <span class="maint-section-kicker">Registro técnico</span>
-                <h3>Novo Checklist</h3>
+                <span class="maint-section-kicker">Inspeção & Ordem de Serviço</span>
+                <h3>Novo Checklist Preventivo</h3>
               </div>
               <button id="limparFormMaint" class="maint-btn maint-btn-soft" type="button">Limpar formulário</button>
             </div>
 
             <form id="checklistForm">
+              <!-- Tipo de Serviço / Preventiva -->
               <div class="maint-form-block">
-                <h4>Dados da manutenção</h4>
+                <h4>Tipo de Manutenção / Serviço</h4>
+                <div class="maint-type-grid" id="maintTipoServicoGrid">
+                  <div class="maint-type-card active" data-value="Preventiva L.A.">
+                    <strong>Preventiva L.A.</strong>
+                    <span>Lubrificação Central</span>
+                  </div>
+                  <div class="maint-type-card" data-value="Inspeção de Turno">
+                    <strong>Inspeção de Turno</strong>
+                    <span>Checagem diária</span>
+                  </div>
+                  <div class="maint-type-card" data-value="Revisão Periódica">
+                    <strong>Revisão Periódica</strong>
+                    <span>250h / 500h / 1000h</span>
+                  </div>
+                  <div class="maint-type-card" data-value="Lubrificação Manual">
+                    <strong>Lubrificação Manual</strong>
+                    <span>Graxa / Pontos Críticos</span>
+                  </div>
+                </div>
+                <input type="hidden" id="tipoServicoMaint" value="Preventiva L.A." />
+              </div>
+
+              <!-- Dados Operacionais -->
+              <div class="maint-form-block">
+                <h4>Identificação Operacional</h4>
                 <div class="maint-grid maint-two">
                   <div>
                     <label>TAG do Equipamento</label>
-                    <input type="text" id="tagEquipamento" placeholder="Ex: EX-001" required />
+                    <input type="text" id="tagEquipamento" list="listaEquipamentosMaint" placeholder="Ex: EX-001" required autocomplete="off" />
+                    <datalist id="listaEquipamentosMaint"></datalist>
                   </div>
                   <div>
-                    <label>Horímetro</label>
+                    <label>Horímetro Atual</label>
                     <input type="number" id="horimetroMaint" min="0" placeholder="Ex: 15420" required />
                   </div>
                   <div>
-                    <label>Data</label>
+                    <label>Data da Execução</label>
                     <input type="date" id="dataMaint" required />
                   </div>
                   <div>
@@ -327,48 +353,128 @@
                     <input type="time" id="horaInicial" required />
                   </div>
                   <div>
-                    <label>Hora Fim</label>
+                    <label>Hora Conclusão</label>
                     <input type="time" id="horaFim" required />
                   </div>
                   <div>
-                    <label>Nome do Lubrificador</label>
+                    <label>Técnico / Lubrificador</label>
                     <input type="text" id="nomeLubrificador" placeholder="Nome completo" required />
                   </div>
                   <div>
-                    <label>Matrícula</label>
+                    <label>Matrícula / Crachá</label>
                     <input type="text" id="matriculaLubrificador" placeholder="Ex: 12345" required />
                   </div>
                 </div>
               </div>
 
+              <!-- Checklist Técnico -->
               <div class="maint-form-block">
-                <h4>Checklist obrigatório</h4>
-                <p class="maint-helper">Marque OK quando estiver conforme. Marque SIM quando houver intervenção, troca, falha ou necessidade de observação.</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
+                  <h4 style="margin: 0;">Itens de Inspeção Técnica</h4>
+                  <button type="button" id="btnMarcarTodosConforme" class="maint-btn maint-btn-soft" style="font-size: 11px; padding: 6px 12px; border-radius: 20px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Marcar Todos como OK
+                  </button>
+                </div>
+                <p class="maint-helper">Selecione OK para itens conformes. Em caso de anomalia, selecione FALHA/SIM para detalhar a intervenção realizada.</p>
                 <div id="checklistItems" class="maint-checklist"></div>
               </div>
 
+              <!-- Insumos & Peças -->
               <div class="maint-form-block">
-                <h4>Evidência Fotográfica</h4>
-                <p class="maint-helper">Anexe uma foto do vazamento, peça danificada ou serviço realizado.</p>
-                <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px; align-items: flex-start;">
-                  <label for="fotoEvidencia" class="maint-btn maint-btn-soft" style="cursor: pointer; width: 100%;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                      <circle cx="12" cy="13" r="4"/>
-                    </svg>
-                    Tirar Foto ou Anexar Imagem
-                  </label>
-                  <input type="file" id="fotoEvidencia" accept="image/*" capture="environment" style="display: none;">
-                  <div id="previewFotoContainer" class="hidden" style="position: relative; border-radius: 14px; overflow: hidden; border: 1px solid #dbe3ea; max-width: 100%;">
-                    <img id="previewFoto" src="" style="display: block; max-width: 100%; max-height: 250px; object-fit: contain;">
-                    <button type="button" id="removerFoto" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                    </button>
+                <h4>Insumos e Peças Aplicadas</h4>
+                <div class="maint-insumos-grid">
+                  <div>
+                    <label>Graxa Aplicada (kg)</label>
+                    <input type="number" id="maintGraxaKg" step="0.1" min="0" placeholder="0.0">
+                  </div>
+                  <div>
+                    <label>Óleo Hidr./Motor (L)</label>
+                    <input type="number" id="maintOleoLitros" step="0.5" min="0" placeholder="0.0">
+                  </div>
+                  <div style="grid-column: 1 / -1;">
+                    <label>Peças / Injetores / Mangueiras Substituídas</label>
+                    <input type="text" id="maintPecasTrocadas" placeholder="Ex: 2 bicos lubrificadores 1/8 reta, 1 flexível 3/8">
                   </div>
                 </div>
               </div>
 
-              <button type="submit" class="maint-btn maint-btn-primary maint-btn-full">Confirmar e Finalizar Manutenção</button>
+              <!-- Evidências Fotográficas (Antes / Depois) -->
+              <div class="maint-form-block">
+                <h4>Evidências Fotográficas</h4>
+                <p class="maint-helper">Anexe fotos da condição encontrada (falha/sujeira) e da conclusão do serviço.</p>
+                <div class="maint-photos-grid">
+                  <!-- Foto Antes -->
+                  <div class="maint-photo-box">
+                    <label for="fotoAntes" class="maint-btn maint-btn-soft" style="cursor: pointer; width: 100%; font-size: 12px; text-align: center;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
+                      </svg>
+                      Foto 1: Antes / Falha
+                    </label>
+                    <input type="file" id="fotoAntes" accept="image/*" capture="environment" style="display: none;">
+                    <div id="previewFotoAntesContainer" class="hidden maint-photo-preview-wrap">
+                      <img id="previewFotoAntes" src="" alt="Foto Antes">
+                      <button type="button" id="removerFotoAntes" class="maint-photo-remove-btn" title="Remover Foto">×</button>
+                    </div>
+                  </div>
+                  <!-- Foto Depois -->
+                  <div class="maint-photo-box">
+                    <label for="fotoDepois" class="maint-btn maint-btn-soft" style="cursor: pointer; width: 100%; font-size: 12px; text-align: center;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
+                      </svg>
+                      Foto 2: Depois / Concluído
+                    </label>
+                    <input type="file" id="fotoDepois" accept="image/*" capture="environment" style="display: none;">
+                    <div id="previewFotoDepoisContainer" class="hidden maint-photo-preview-wrap">
+                      <img id="previewFotoDepois" src="" alt="Foto Depois">
+                      <button type="button" id="removerFotoDepois" class="maint-photo-remove-btn" title="Remover Foto">×</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Semáforo de Liberação Operacional -->
+              <div class="maint-form-block">
+                <h4>Semáforo de Liberação do Equipamento</h4>
+                <div class="maint-liberacao-grid">
+                  <div class="maint-liberacao-card lib-ok active" data-status="LIBERADO">
+                    <div style="font-size: 22px; margin-bottom: 4px;">🟢</div>
+                    <strong style="font-size: 13px; display: block;">100% Liberado</strong>
+                    <span style="font-size: 11px; opacity: 0.8; display: block; margin-top: 2px;">Apto para operação plena</span>
+                  </div>
+                  <div class="maint-liberacao-card lib-ressalva" data-status="RESSALVA">
+                    <div style="font-size: 22px; margin-bottom: 4px;">🟡</div>
+                    <strong style="font-size: 13px; display: block;">Com Ressalva</strong>
+                    <span style="font-size: 11px; opacity: 0.8; display: block; margin-top: 2px;">Operar c/ monitoramento</span>
+                  </div>
+                  <div class="maint-liberacao-card lib-bloqueado" data-status="BLOQUEADO">
+                    <div style="font-size: 22px; margin-bottom: 4px;">🔴</div>
+                    <strong style="font-size: 13px; display: block;">Bloqueado</strong>
+                    <span style="font-size: 11px; opacity: 0.8; display: block; margin-top: 2px;">Impedir funcionamento</span>
+                  </div>
+                </div>
+                <input type="hidden" id="statusLiberacaoMaint" value="LIBERADO" />
+              </div>
+
+              <!-- Assinatura Digital do Técnico -->
+              <div class="maint-form-block">
+                <h4>Assinatura Digital do Técnico</h4>
+                <p class="maint-helper">Assine no quadro abaixo com o dedo ou stylus touch para chancelar o laudo de preventiva.</p>
+                <div class="maint-signature-container">
+                  <canvas id="signatureCanvas" class="maint-signature-canvas"></canvas>
+                  <button type="button" id="limparAssinatura" class="maint-signature-clear">Limpar Assinatura</button>
+                </div>
+              </div>
+
+              <button type="submit" class="maint-btn maint-btn-primary maint-btn-full" id="btnSalvarManutencao" style="font-size: 15px; font-weight: 800; padding: 16px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 6px;">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Confirmar e Finalizar Preventiva
+              </button>
             </form>
           </section>
 

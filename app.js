@@ -639,6 +639,7 @@ import { firebaseConfig } from "./firebase-config.js";
     if (viewName === 'History') renderHistory();
     if (viewName === 'Maintenance') {
       if (typeof montarChecklist === 'function') montarChecklist();
+      if (typeof recalcularCanvasAssinatura === 'function') recalcularCanvasAssinatura();
       if (typeof renderizarHistoricoMaint === 'function') renderizarHistoricoMaint();
       if (typeof atualizarDashboardMaint === 'function') atualizarDashboardMaint();
     }
@@ -1446,22 +1447,41 @@ import { firebaseConfig } from "./firebase-config.js";
   init();
 
   // ==========================================================================
-  // MAINTENANCE L.A. MODULE LOGIC
+  // MAINTENANCE & PREVENTIVE CHECKLIST MODULE LOGIC
   // ==========================================================================
 
   const STORAGE_KEY_MAINT = "historico_manutencao_lubrificacao_v2";
+  const KEY_TECH_NAME = "lubetrack_maint_tech_name";
+  const KEY_TECH_MATR = "lubetrack_maint_tech_matr";
+
   let relatorioAtualMaint = null;
-  let fotoBase64Maint = "";
+  let fotoBase64Antes = "";
+  let fotoBase64Depois = "";
+  let hasSignature = false;
+  let isDrawing = false;
+  let sigCtx = null;
 
   const checklistConfig = [
-    { id: "vazamentoMangueiras", titulo: "Verificar vazamentos em mangueiras", perguntaDetalhe: "Descreva onde foi encontrado o vazamento ou a ação realizada." },
-    { id: "vazamentoInjetores", titulo: "Verificar vazamentos em injetores", perguntaDetalhe: "Informe o ponto, injetor afetado e ação realizada." },
-    { id: "funcionamentoPropulsora", titulo: "Verificar funcionamento da propulsora", perguntaDetalhe: "Descreva a falha ou observação no funcionamento." },
-    { id: "pressaoPropulsora", titulo: "Verificar pressão da propulsora", perguntaDetalhe: "Informe a pressão encontrada e observações." },
-    { id: "trocaInjetor", titulo: "Foi necessário trocar injetor?", perguntaDetalhe: "Se sim, explique o motivo da troca.", perguntaQuantidade: "Quantos injetores foram trocados?" },
-    { id: "manutencaoPropulsora", titulo: "Foi preciso fazer manutenção na propulsora?", perguntaDetalhe: "Se sim, explique o motivo e o serviço realizado." },
-    { id: "reabastecerReservatorio", titulo: "Reabastecer reservatório de graxa", perguntaDetalhe: "Informe quantidade, tipo de graxa ou observação." },
-    { id: "trocaPropulsora", titulo: "Houve necessidade de trocar a propulsora?", perguntaDetalhe: "Se sim, informe o motivo da troca." }
+    // GRUPO 1: Níveis e Fluidos Operacionais
+    { id: "nivelOleoMotor", grupo: "1. Níveis e Fluidos Operacionais", titulo: "Nível de óleo do motor diesel", perguntaDetalhe: "Informe se precisou completar e quantidade (L)." },
+    { id: "nivelOleoHidraulico", grupo: "1. Níveis e Fluidos Operacionais", titulo: "Nível do reservatório hidráulico", perguntaDetalhe: "Descreva condição encontrada ou vazamento no visor." },
+    { id: "nivelTransmissaoFreio", grupo: "1. Níveis e Fluidos Operacionais", titulo: "Nível da transmissão / freios úmidos", perguntaDetalhe: "Descreva se completou fluido ou sinais de contaminação." },
+    { id: "nivelArrefecimento", grupo: "1. Níveis e Fluidos Operacionais", titulo: "Nível do líquido de arrefecimento / radiador", perguntaDetalhe: "Informe reposição de aditivo/água ou vazamento em mangotes." },
+
+    // GRUPO 2: Filtros e Admissão de Ar
+    { id: "filtroArPrimSec", grupo: "2. Filtros e Admissão de Ar", titulo: "Indicador de restrição do filtro de ar", perguntaDetalhe: "Informe se o elemento estava saturado ou foi limpo/trocado." },
+    { id: "drenoSedimentador", grupo: "2. Filtros e Admissão de Ar", titulo: "Drenagem de água do filtro sedimentador (Racoor)", perguntaDetalhe: "Descreva presença de água/borra no copo sedimentador." },
+
+    // GRUPO 3: Sistema de Lubrificação Automática (L.A.)
+    { id: "vazamentoMangueiras", grupo: "3. Sistema de Lubrificação Automática (L.A.)", titulo: "Mangueiras e conexões de alta pressão do L.A.", perguntaDetalhe: "Descreva onde foi encontrado vazamento ou mangueira estourada." },
+    { id: "vazamentoInjetores", grupo: "3. Sistema de Lubrificação Automática (L.A.)", titulo: "Blocos distribuidores e bicos injetores do L.A.", perguntaDetalhe: "Informe injetor entupido, travado ou sem dosagem.", perguntaQuantidade: "Quantos injetores com falha?" },
+    { id: "pressaoPropulsora", grupo: "3. Sistema de Lubrificação Automática (L.A.)", titulo: "Pressão e ciclagem da propulsora (pneumática/elétrica)", perguntaDetalhe: "Informe a pressão encontrada e comportamento da bomba." },
+    { id: "reabastecerReservatorio", grupo: "3. Sistema de Lubrificação Automática (L.A.)", titulo: "Nível e reabastecimento do reservatório de graxa", perguntaDetalhe: "Informe quantidade de graxa reabastecida ou condição." },
+    { id: "trocaInjetorPropulsora", grupo: "3. Sistema de Lubrificação Automática (L.A.)", titulo: "Troca de bicos / manutenção da propulsora", perguntaDetalhe: "Detalhe as peças substituídas ou reparo efetuado.", perguntaQuantidade: "Quantidade de bicos/peças:" },
+
+    // GRUPO 4: Pontos Críticos e Graxa Manual
+    { id: "lubrificacaoManualArtic", grupo: "4. Pontos Críticos e Graxa Manual", titulo: "Lubrificação manual de pinos e buchas (articulação)", perguntaDetalhe: "Informe pontos que não receberam graxa ou com folga excessiva." },
+    { id: "limpezaEngraxadeiras", grupo: "4. Pontos Críticos e Graxa Manual", titulo: "Limpeza e estado das graxeiras/proteções", perguntaDetalhe: "Informe graxeiras quebradas, frouxas ou sem bico protetor." }
   ];
 
   const checklistFormMaint = document.getElementById("checklistForm");
@@ -1471,12 +1491,37 @@ import { firebaseConfig } from "./firebase-config.js";
   const relatorioSectionMaint = document.getElementById("relatorioSection");
   const relatorioElMaint = document.getElementById("relatorioMaint");
 
-  // ─── FOTO DE EVIDÊNCIA ───────────────────────────────────────────────────
-  const fotoEvidencia = document.getElementById("fotoEvidencia");
-  const previewFotoContainer = document.getElementById("previewFotoContainer");
-  const previewFoto = document.getElementById("previewFoto");
-  const removerFoto = document.getElementById("removerFoto");
+  // Insumos & Controles
+  const maintTipoServicoGrid = document.getElementById("maintTipoServicoGrid");
+  const tipoServicoMaint = document.getElementById("tipoServicoMaint");
+  const statusLiberacaoMaint = document.getElementById("statusLiberacaoMaint");
+  const btnMarcarTodosConforme = document.getElementById("btnMarcarTodosConforme");
+  const maintGraxaKg = document.getElementById("maintGraxaKg");
+  const maintOleoLitros = document.getElementById("maintOleoLitros");
+  const maintPecasTrocadas = document.getElementById("maintPecasTrocadas");
+  const listaEquipamentosMaint = document.getElementById("listaEquipamentosMaint");
 
+  // ─── TIPO DE SERVIÇO & SEMÁFORO ──────────────────────────────────────────
+  if (maintTipoServicoGrid && tipoServicoMaint) {
+    maintTipoServicoGrid.querySelectorAll(".maint-type-card").forEach(card => {
+      card.addEventListener("click", () => {
+        maintTipoServicoGrid.querySelectorAll(".maint-type-card").forEach(c => c.classList.remove("active"));
+        card.classList.add("active");
+        tipoServicoMaint.value = card.dataset.value;
+      });
+    });
+  }
+
+  const liberacaoCards = document.querySelectorAll(".maint-liberacao-card");
+  liberacaoCards.forEach(card => {
+    card.addEventListener("click", () => {
+      liberacaoCards.forEach(c => c.classList.remove("active"));
+      card.classList.add("active");
+      if (statusLiberacaoMaint) statusLiberacaoMaint.value = card.dataset.status;
+    });
+  });
+
+  // ─── COMPRESSÃO DE IMAGENS ────────────────────────────────────────────────
   function resizeImage(file, maxSize, callback) {
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -1505,58 +1550,273 @@ import { firebaseConfig } from "./firebase-config.js";
     reader.readAsDataURL(file);
   }
 
-  function limparFotoMaint() {
-    fotoBase64Maint = "";
-    if (fotoEvidencia) fotoEvidencia.value = "";
-    if (previewFoto) previewFoto.src = "";
-    if (previewFotoContainer) previewFotoContainer.classList.add("hidden");
+  // ─── FOTOS ANTES E DEPOIS ─────────────────────────────────────────────────
+  const fotoAntes = document.getElementById("fotoAntes");
+  const previewFotoAntesContainer = document.getElementById("previewFotoAntesContainer");
+  const previewFotoAntes = document.getElementById("previewFotoAntes");
+  const removerFotoAntes = document.getElementById("removerFotoAntes");
+
+  const fotoDepois = document.getElementById("fotoDepois");
+  const previewFotoDepoisContainer = document.getElementById("previewFotoDepoisContainer");
+  const previewFotoDepois = document.getElementById("previewFotoDepois");
+  const removerFotoDepois = document.getElementById("removerFotoDepois");
+
+  function limparFotoAntes() {
+    fotoBase64Antes = "";
+    if (fotoAntes) fotoAntes.value = "";
+    if (previewFotoAntes) previewFotoAntes.src = "";
+    if (previewFotoAntesContainer) previewFotoAntesContainer.classList.add("hidden");
   }
 
-  if (fotoEvidencia) {
-    fotoEvidencia.addEventListener('change', function(e) {
+  function limparFotoDepois() {
+    fotoBase64Depois = "";
+    if (fotoDepois) fotoDepois.value = "";
+    if (previewFotoDepois) previewFotoDepois.src = "";
+    if (previewFotoDepoisContainer) previewFotoDepoisContainer.classList.add("hidden");
+  }
+
+  if (fotoAntes) {
+    fotoAntes.addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
-        // Reduz a imagem para max 600px para não estourar o limite do Firestore/Storage Local
         resizeImage(file, 600, function(base64Str) {
-          fotoBase64Maint = base64Str;
-          previewFoto.src = base64Str;
-          previewFotoContainer.classList.remove("hidden");
+          fotoBase64Antes = base64Str;
+          if (previewFotoAntes) previewFotoAntes.src = base64Str;
+          if (previewFotoAntesContainer) previewFotoAntesContainer.classList.remove("hidden");
         });
       }
     });
   }
+  if (removerFotoAntes) removerFotoAntes.addEventListener('click', limparFotoAntes);
 
-  if (removerFoto) {
-    removerFoto.addEventListener('click', limparFotoMaint);
+  if (fotoDepois) {
+    fotoDepois.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        resizeImage(file, 600, function(base64Str) {
+          fotoBase64Depois = base64Str;
+          if (previewFotoDepois) previewFotoDepois.src = base64Str;
+          if (previewFotoDepoisContainer) previewFotoDepoisContainer.classList.remove("hidden");
+        });
+      }
+    });
+  }
+  if (removerFotoDepois) removerFotoDepois.addEventListener('click', limparFotoDepois);
+
+  // ─── ASSINATURA DIGITAL CANVAS ────────────────────────────────────────────
+  const signatureCanvas = document.getElementById("signatureCanvas");
+  const limparAssinaturaBtn = document.getElementById("limparAssinatura");
+
+  function clearSignature() {
+    if (!signatureCanvas || !sigCtx) return;
+    sigCtx.fillStyle = "#030b08";
+    sigCtx.fillRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+    // Linha guia sutil
+    sigCtx.beginPath();
+    sigCtx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+    sigCtx.lineWidth = 1;
+    sigCtx.setLineDash([4, 4]);
+    sigCtx.moveTo(25, signatureCanvas.height - 35);
+    sigCtx.lineTo(signatureCanvas.width - 25, signatureCanvas.height - 35);
+    sigCtx.stroke();
+    sigCtx.setLineDash([]);
+    // Reset estilos do traço
+    sigCtx.lineWidth = 2.5;
+    sigCtx.lineCap = "round";
+    sigCtx.lineJoin = "round";
+    sigCtx.strokeStyle = "#00e676"; // Verde neon tecnológico
+    hasSignature = false;
   }
 
+  function initSignatureCanvas() {
+    if (!signatureCanvas) return;
+    const rect = signatureCanvas.getBoundingClientRect();
+    const targetWidth = rect.width > 50 ? Math.floor(rect.width) : 460;
+    signatureCanvas.width = targetWidth;
+    signatureCanvas.height = 130;
+    sigCtx = signatureCanvas.getContext("2d");
+    clearSignature();
+  }
+
+  window.recalcularCanvasAssinatura = function() {
+    if (!signatureCanvas) return;
+    const rect = signatureCanvas.getBoundingClientRect();
+    if (rect.width > 50 && Math.abs(signatureCanvas.width - Math.floor(rect.width)) > 10) {
+      signatureCanvas.width = Math.floor(rect.width);
+      signatureCanvas.height = 130;
+      sigCtx = signatureCanvas.getContext("2d");
+      clearSignature();
+    }
+  };
+
+  if (limparAssinaturaBtn) {
+    limparAssinaturaBtn.addEventListener("click", clearSignature);
+  }
+
+  if (signatureCanvas) {
+    function getCanvasPos(e) {
+      const rect = signatureCanvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: (clientX - rect.left) * (signatureCanvas.width / rect.width),
+        y: (clientY - rect.top) * (signatureCanvas.height / rect.height)
+      };
+    }
+
+    function startDraw(e) {
+      if (!sigCtx) initSignatureCanvas();
+      isDrawing = true;
+      hasSignature = true;
+      const pos = getCanvasPos(e);
+      sigCtx.beginPath();
+      sigCtx.moveTo(pos.x, pos.y);
+      if (e.cancelable && e.type.startsWith('touch')) e.preventDefault();
+    }
+
+    function moveDraw(e) {
+      if (!isDrawing || !sigCtx) return;
+      const pos = getCanvasPos(e);
+      sigCtx.lineTo(pos.x, pos.y);
+      sigCtx.stroke();
+      if (e.cancelable && e.type.startsWith('touch')) e.preventDefault();
+    }
+
+    function endDraw(e) {
+      if (isDrawing && sigCtx) {
+        sigCtx.closePath();
+        isDrawing = false;
+      }
+    }
+
+    signatureCanvas.addEventListener("mousedown", startDraw);
+    signatureCanvas.addEventListener("mousemove", moveDraw);
+    window.addEventListener("mouseup", endDraw);
+
+    signatureCanvas.addEventListener("touchstart", startDraw, { passive: false });
+    signatureCanvas.addEventListener("touchmove", moveDraw, { passive: false });
+    signatureCanvas.addEventListener("touchend", endDraw, { passive: false });
+  }
+
+  // ─── MEMÓRIA & AUTO-PREENCHIMENTO ─────────────────────────────────────────
+  function carregarDadosTecnicoMemoria() {
+    const nome = localStorage.getItem(KEY_TECH_NAME);
+    const matr = localStorage.getItem(KEY_TECH_MATR);
+    const nomeEl = document.getElementById("nomeLubrificador");
+    const matrEl = document.getElementById("matriculaLubrificador");
+    if (nomeEl && nome && !nomeEl.value) nomeEl.value = nome;
+    if (matrEl && matr && !matrEl.value) matrEl.value = matr;
+  }
+
+  function salvarDadosTecnicoMemoria(nome, matr) {
+    if (nome) localStorage.setItem(KEY_TECH_NAME, nome);
+    if (matr) localStorage.setItem(KEY_TECH_MATR, matr);
+  }
+
+  function autoPreencherDataHora() {
+    const now = new Date();
+    const dataEl = document.getElementById("dataMaint");
+    const horaIniEl = document.getElementById("horaInicial");
+    if (dataEl && !dataEl.value) dataEl.valueAsDate = now;
+    if (horaIniEl && !horaIniEl.value) {
+      const hh = String(now.getHours()).padStart(2, "0");
+      const mm = String(now.getMinutes()).padStart(2, "0");
+      horaIniEl.value = `${hh}:${mm}`;
+    }
+  }
+
+  function popularDatalistMaint() {
+    if (!listaEquipamentosMaint) return;
+    const catalogo = window.EQUIPAMENTOS || (typeof EQUIPAMENTOS !== 'undefined' ? EQUIPAMENTOS : []);
+    if (catalogo.length > 0) {
+      listaEquipamentosMaint.innerHTML = catalogo.map(e => `<option value="${e.nome}">${e.categoria || ''}</option>`).join("");
+    }
+  }
+
+  // ─── BOTÃO: MARCAR TODOS COMO OK ──────────────────────────────────────────
+  if (btnMarcarTodosConforme) {
+    btnMarcarTodosConforme.addEventListener("click", () => {
+      checklistConfig.forEach(item => {
+        const okRadio = document.querySelector(`input[name="${item.id}_status"][value="OK"]`);
+        if (okRadio) {
+          okRadio.checked = true;
+          okRadio.dispatchEvent(new Event('change'));
+        }
+      });
+      // Seta o semáforo para Liberado
+      const libOkCard = document.querySelector('.maint-liberacao-card[data-status="LIBERADO"]');
+      if (libOkCard) libOkCard.click();
+      if (typeof showToast === 'function') showToast("Todos os itens foram marcados como Conformes (OK)!");
+    });
+  }
+
+  // ─── MONTAR CHECKLIST AGRUPADO ────────────────────────────────────────────
   window.montarChecklist = function() {
     if(!checklistItemsMaint) return;
     if(checklistItemsMaint.innerHTML !== "") return; // Já montado
 
-    checklistConfig.forEach((item, index) => {
+    let currentGrupo = "";
+    let itemIndex = 1;
+
+    checklistConfig.forEach((item) => {
+      if (item.grupo !== currentGrupo) {
+        currentGrupo = item.grupo;
+        const groupHeader = document.createElement("div");
+        groupHeader.className = "maint-group-header";
+        groupHeader.innerHTML = `<span>${currentGrupo}</span>`;
+        checklistItemsMaint.appendChild(groupHeader);
+      }
+
       const div = document.createElement("div");
       div.className = "maint-item";
+      div.id = `maint_item_${item.id}`;
       div.innerHTML = `
-        <div class="maint-item-title">${String(index + 1).padStart(2, "0")} · ${item.titulo}</div>
+        <div class="maint-item-title">${String(itemIndex++).padStart(2, "0")} · ${item.titulo}</div>
         <div class="maint-options">
-          <label><input type="radio" name="${item.id}_status" value="OK" required> OK</label>
-          <label><input type="radio" name="${item.id}_status" value="SIM"> SIM / Houve intervenção</label>
-          <label><input type="radio" name="${item.id}_status" value="NÃO"> NÃO</label>
+          <label><input type="radio" name="${item.id}_status" value="OK" required> OK (Conforme)</label>
+          <label><input type="radio" name="${item.id}_status" value="SIM"> Falha / Intervenção</label>
+          <label><input type="radio" name="${item.id}_status" value="NÃO"> N/A ou Não Realizado</label>
         </div>
         ${item.perguntaQuantidade ? `<input class="campo-condicional quantidade" type="number" min="0" id="${item.id}_quantidade" placeholder="${item.perguntaQuantidade}" disabled>` : ""}
-        <textarea class="campo-condicional detalhe" id="${item.id}_detalhe" rows="3" placeholder="${item.perguntaDetalhe}" disabled></textarea>
+        <textarea class="campo-condicional detalhe" id="${item.id}_detalhe" rows="2" placeholder="${item.perguntaDetalhe}" disabled></textarea>
       `;
       checklistItemsMaint.appendChild(div);
     });
 
     document.querySelectorAll("#checklistItems input[type='radio']").forEach((radio) => {
-      radio.addEventListener("change", atualizarCamposCondicionaisMaint);
+      radio.addEventListener("change", (e) => {
+        atualizarCamposCondicionaisMaint();
+
+        // Estilização visual imediata das opções
+        const parentItem = e.target.closest(".maint-item");
+        if (parentItem) {
+          parentItem.querySelectorAll(".maint-options label").forEach(lbl => {
+            lbl.classList.remove("selected-ok", "selected-sim", "selected-nao");
+          });
+          if (e.target.value === "OK") {
+            e.target.closest("label").classList.add("selected-ok");
+            parentItem.classList.remove("has-issue");
+          } else if (e.target.value === "SIM") {
+            e.target.closest("label").classList.add("selected-sim");
+            parentItem.classList.add("has-issue");
+
+            // Se for marcada uma falha e o semáforo ainda estiver 100% Liberado, sugere Ressalva
+            if (statusLiberacaoMaint && statusLiberacaoMaint.value === "LIBERADO") {
+              const ressalvaCard = document.querySelector('.maint-liberacao-card[data-status="RESSALVA"]');
+              if (ressalvaCard) ressalvaCard.click();
+            }
+          } else {
+            e.target.closest("label").classList.add("selected-nao");
+            parentItem.classList.remove("has-issue");
+          }
+        }
+      });
     });
-    
-    if (document.getElementById("dataMaint")) {
-      document.getElementById("dataMaint").valueAsDate = new Date();
-    }
+
+    popularDatalistMaint();
+    carregarDadosTecnicoMemoria();
+    autoPreencherDataHora();
+    initSignatureCanvas();
   };
 
   function atualizarCamposCondicionaisMaint() {
@@ -1591,25 +1851,35 @@ import { firebaseConfig } from "./firebase-config.js";
   window.renderizarHistoricoMaint = function() {
     if(!historicoMaintEl) return;
     const filtro = filtroTagMaint ? filtroTagMaint.value.trim().toUpperCase() : "";
-    const historico = carregarHistoricoMaint().filter((item) => item.tagEquipamento.includes(filtro));
+    const historico = carregarHistoricoMaint().filter((item) => item.tagEquipamento && item.tagEquipamento.includes(filtro));
 
     if (historico.length === 0) {
-      historicoMaintEl.innerHTML = `<p class="empty">Nenhum histórico encontrado.</p>`;
+      historicoMaintEl.innerHTML = `<p class="empty" style="color: var(--text2); text-align: center; padding: 20px;">Nenhum checklist registrado ainda.</p>`;
       return;
     }
 
     historicoMaintEl.innerHTML = historico.map((item) => {
-      const ocorrencias = item.checklist.filter(c => c.status === "SIM").length;
+      const ocorrencias = item.checklist ? item.checklist.filter(c => c.status === "SIM").length : 0;
+      const statusLib = item.statusLiberacao || "LIBERADO";
+      const semaforoBadge = statusLib === "BLOQUEADO"
+        ? `<span class="maint-badge nao">🔴 Bloqueado</span>`
+        : statusLib === "RESSALVA"
+        ? `<span class="maint-badge alerta">🟡 Com Ressalva</span>`
+        : `<span class="maint-badge ok">🟢 Liberado</span>`;
+
       return `
         <div class="maint-history-card">
-          <h4>${item.tagEquipamento}</h4>
-          <p><strong>Relatório:</strong> ${item.codigoRelatorio || item.id}</p>
-          <p><strong>Data:</strong> ${item.data.split('-').reverse().join('/')} | <strong>Horímetro:</strong> ${item.horimetro}</p>
-          <p><strong>Lubrificador:</strong> ${item.nomeLubrificador} | <strong>Matrícula:</strong> ${item.matricula}</p>
-          <p><strong>Horário:</strong> ${item.horaInicial} às ${item.horaFim} ${item.duracao ? `| <strong>Duração:</strong> ${item.duracao}` : ""}</p>
-          <p><strong>Ocorrências:</strong> ${ocorrencias}</p>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <h4 style="margin: 0; color: var(--text); font-size: 16px;">🏷️ ${item.tagEquipamento}</h4>
+            ${semaforoBadge}
+          </div>
+          <p><strong>Tipo:</strong> ${item.tipoServico || "Preventiva L.A."}</p>
+          <p><strong>Data:</strong> ${item.data ? item.data.split('-').reverse().join('/') : '-'} | <strong>Horímetro:</strong> ${item.horimetro} h</p>
+          <p><strong>Técnico:</strong> ${item.nomeLubrificador} ${item.matricula ? `(${item.matricula})` : ''}</p>
+          <p><strong>Horário:</strong> ${item.horaInicial} às ${item.horaFim} ${item.duracao ? `(${item.duracao})` : ""}</p>
+          <p><strong>Intervenções / Falhas:</strong> ${ocorrencias > 0 ? `<strong style="color: #f87171;">${ocorrencias} item(ns)</strong>` : '<span style="color: #86efac;">Nenhuma</span>'}</p>
           <div class="maint-history-actions">
-            <button class="maint-btn maint-btn-soft" onclick="window.abrirRelatorioMaint(${item.id})">Ver relatório</button>
+            <button class="maint-btn maint-btn-soft" onclick="window.abrirRelatorioMaint(${item.id})">Ver Relatório</button>
             <button class="maint-btn maint-btn-whatsapp" onclick="window.abrirRelatorioWhatsAppMaint(${item.id})">WhatsApp</button>
           </div>
         </div>
@@ -1619,46 +1889,59 @@ import { firebaseConfig } from "./firebase-config.js";
 
   window.atualizarDashboardMaint = function() {
     const historico = carregarHistoricoMaint();
-    const tagsUnicas = new Set(historico.map((item) => item.tagEquipamento));
-    const totalOcorrencias = historico.reduce((total, item) => total + item.checklist.filter(c => c.status === "SIM").length, 0);
+    const tagsUnicas = new Set(historico.map((item) => item.tagEquipamento).filter(Boolean));
 
     const elTotal = document.getElementById("totalManutencoes");
     const elEquip = document.getElementById("totalEquipamentos");
-    const elOcorr = document.getElementById("totalOcorrencias");
     const elUltimo = document.getElementById("ultimoRegistro");
 
     if(elTotal) elTotal.textContent = historico.length;
     if(elEquip) elEquip.textContent = tagsUnicas.size;
-    if(elOcorr) elOcorr.textContent = totalOcorrencias;
     if(elUltimo) {
       elUltimo.textContent = historico[0]
-        ? `${historico[0].tagEquipamento} - ${historico[0].data.split('-').reverse().join('/')}`
+        ? `${historico[0].tagEquipamento} (${historico[0].data ? historico[0].data.split('-').reverse().join('/') : ''})`
         : "--";
     }
   };
 
+  // ─── SUBMISSÃO DO CHECKLIST PREVENTIVO ────────────────────────────────────
   if(checklistFormMaint) {
     checklistFormMaint.addEventListener("submit", async (event) => {
       event.preventDefault();
 
+      const btnSalvar = document.getElementById("btnSalvarManutencao");
+      if (btnSalvar) {
+        btnSalvar.disabled = true;
+        btnSalvar.innerHTML = `Salvando e transmitindo...`;
+      }
+
       const checklist = checklistConfig.map((item) => {
         const statusEl = document.querySelector(`input[name="${item.id}_status"]:checked`);
-        const status = statusEl ? statusEl.value : "";
+        const status = statusEl ? statusEl.value : "OK";
         const detalhe = document.getElementById(`${item.id}_detalhe`)?.value.trim() || "";
         const quantidade = document.getElementById(`${item.id}_quantidade`)?.value || "";
         return {
+          id: item.id,
+          grupo: item.grupo,
           titulo: item.titulo,
           status,
-          detalhe: detalhe || (status === "OK" || status === "NÃO" ? "OK" : ""),
+          detalhe: detalhe || (status === "OK" ? "Conforme" : status === "NÃO" ? "Não aplicável" : ""),
           quantidade
         };
       });
 
       const tag = document.getElementById("tagEquipamento").value.trim().toUpperCase();
+      const horimetro = document.getElementById("horimetroMaint").value;
       const data = document.getElementById("dataMaint").value;
       const horaInicial = document.getElementById("horaInicial").value;
-      const horaFim = document.getElementById("horaFim").value;
-      
+      let horaFim = document.getElementById("horaFim").value;
+
+      if (!horaFim) {
+        const nowTime = new Date();
+        horaFim = String(nowTime.getHours()).padStart(2, "0") + ":" + String(nowTime.getMinutes()).padStart(2, "0");
+        document.getElementById("horaFim").value = horaFim;
+      }
+
       let duracao = "";
       if (horaInicial && horaFim) {
         const [hi, mi] = horaInicial.split(":").map(Number);
@@ -1672,72 +1955,137 @@ import { firebaseConfig } from "./firebase-config.js";
         duracao = h === 0 ? `${m}min` : `${h}h ${String(m).padStart(2, "0")}min`;
       }
 
+      const nomeLubrificador = document.getElementById("nomeLubrificador").value.trim();
+      const matricula = document.getElementById("matriculaLubrificador").value.trim();
+      salvarDadosTecnicoMemoria(nomeLubrificador, matricula);
+
+      const tipoServico = (tipoServicoMaint && tipoServicoMaint.value) || "Preventiva L.A.";
+      const statusLiberacao = (statusLiberacaoMaint && statusLiberacaoMaint.value) || "LIBERADO";
+
+      // Insumos
+      const graxaKg = maintGraxaKg ? parseFloat(maintGraxaKg.value) || 0 : 0;
+      const oleoLitros = maintOleoLitros ? parseFloat(maintOleoLitros.value) || 0 : 0;
+      const pecasTrocadas = maintPecasTrocadas ? maintPecasTrocadas.value.trim() : "";
+
+      // Assinatura digital
+      let assinaturaBase64 = "";
+      if (hasSignature && signatureCanvas) {
+        try {
+          assinaturaBase64 = signatureCanvas.toDataURL("image/png");
+        } catch (e) {
+          console.warn("Lubetrack: Falha ao exportar assinatura:", e);
+        }
+      }
+
       const agora = new Date();
       const dataStr = agora.toISOString().slice(0, 10).replaceAll("-", "");
       const horaStr = String(agora.getHours()).padStart(2, "0") + String(agora.getMinutes()).padStart(2, "0");
-      const codigoRelatorio = `REL-${tag}-${dataStr}-${horaStr}`;
+      const codigoRelatorio = `PREV-${tag}-${dataStr}-${horaStr}`;
 
       const dados = {
         id: Date.now(),
-        date: agora.toISOString(), // Campo obrigatório para a query do PCM (orderBy 'date')
+        date: agora.toISOString(), // Obrigatório para indexação e ordenação do PCM
         codigoRelatorio,
         tagEquipamento: tag,
-        equip: tag, // Alinhado para validação de segurança
-        horimetro: document.getElementById("horimetroMaint").value,
+        equip: tag, // Alinhado para segurança e relatórios
+        horimetro,
         data,
         horaInicial,
         horaFim,
         duracao,
-        nomeLubrificador: document.getElementById("nomeLubrificador").value.trim(),
-        user: document.getElementById("nomeLubrificador").value.trim(), // Alinhado para validação de segurança
-        matricula: document.getElementById("matriculaLubrificador").value.trim(),
+        tipoServico,
+        statusLiberacao,
+        insumos: {
+          graxaKg,
+          oleoLitros,
+          pecasTrocadas
+        },
+        graxaKg, // Fallback plano
+        oleoLitros, // Fallback plano
+        pecasTrocadas, // Fallback plano
+        nomeLubrificador,
+        user: nomeLubrificador, // Alinhado com validação de regras do Firebase
+        matricula,
         checklist,
-        fotoEvidencia: fotoBase64Maint,
+        fotoAntes: fotoBase64Antes,
+        fotoDepois: fotoBase64Depois,
+        fotoEvidencia: fotoBase64Depois || fotoBase64Antes || "", // Compatibilidade total c/ versões anteriores
+        assinatura: assinaturaBase64,
         criadoEm: agora.toLocaleString("pt-BR"),
         deviceId: deviceId,
-        device: deviceId, // Campo CRÍTICO: validado pelas regras de segurança do Firebase
+        device: deviceId, // Campo de segurança validado no Firestore
         type: "manutencao",
-        comp: "Manutenção L.A.", // Alinhado para validação de segurança
-        item: "MANUTENÇÃO L.A.", // Alinhado para validação de segurança
-        qty: 0 // Alinhado para validação de segurança
+        comp: "Manutenção L.A.",
+        item: "MANUTENÇÃO L.A.",
+        qty: 0
       };
 
-      // 1. Salva local
+      // 1. Salvar no localStorage local
       const historicoLocal = carregarHistoricoMaint();
       historicoLocal.unshift(dados);
       salvarHistoricoMaint(historicoLocal);
 
-      // 2. Salva no Firebase (Cloud) - Coleção "historico"
-      // Usa addDoc (mesmo método dos lançamentos normais) para respeitar as regras do Firebase
+      // 2. Transmissão para o Firestore Cloud
       if (db) {
         try {
           await addDoc(collection(db, 'historico'), { ...dados, timestamp: serverTimestamp() });
-          console.log("Lubetrack: Manutenção enviada para o Firebase com sucesso.");
+          console.log("Lubetrack: Preventiva enviada para o Firebase com sucesso.");
         } catch (error) {
-          console.error("Lubetrack: Erro ao salvar manutenção no Firebase:", error);
-          alert("Aviso: O relatório foi salvo localmente no tablet, mas não pôde ser enviado para a nuvem. Erro: " + error.message);
+          console.error("Lubetrack: Erro ao salvar preventiva no Firebase:", error);
+          alert("Aviso: Relatório salvo localmente no tablet, mas falhou o envio para a nuvem. Ele será sincronizado quando houver conexão. Detalhe: " + error.message);
         }
       }
 
       gerarRelatorioMaint(dados);
+
+      // Limpeza parcial do formulário (preserva dados do lubrificador)
       checklistFormMaint.reset();
-      limparFotoMaint();
-      document.getElementById("dataMaint").valueAsDate = new Date();
+      limparFotoAntes();
+      limparFotoDepois();
+      clearSignature();
+      carregarDadosTecnicoMemoria();
+      autoPreencherDataHora();
       atualizarCamposCondicionaisMaint();
+
+      // Reset semáforo para Liberado padrão
+      const libOkCard = document.querySelector('.maint-liberacao-card[data-status="LIBERADO"]');
+      if (libOkCard) libOkCard.click();
+
+      // Reset tipo para Preventiva L.A.
+      const tipoDefaultCard = document.querySelector('.maint-type-card[data-value="Preventiva L.A."]');
+      if (tipoDefaultCard) tipoDefaultCard.click();
+
       window.renderizarHistoricoMaint();
       window.atualizarDashboardMaint();
 
+      if (btnSalvar) {
+        btnSalvar.disabled = false;
+        btnSalvar.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 6px;">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Confirmar e Finalizar Preventiva
+        `;
+      }
+
       relatorioSectionMaint.classList.remove("hidden");
       relatorioSectionMaint.scrollIntoView({ behavior: "smooth" });
-      if(typeof showToast === 'function') showToast("Manutenção salva e enviada.");
+      if(typeof showToast === 'function') showToast("Checklist de Preventiva concluído com sucesso!");
     });
   }
 
   document.getElementById("limparFormMaint")?.addEventListener("click", () => {
-    checklistFormMaint.reset();
-    limparFotoMaint();
-    document.getElementById("dataMaint").valueAsDate = new Date();
-    atualizarCamposCondicionaisMaint();
+    if (confirm("Deseja realmente limpar todo o formulário de checklist?")) {
+      checklistFormMaint.reset();
+      limparFotoAntes();
+      limparFotoDepois();
+      clearSignature();
+      carregarDadosTecnicoMemoria();
+      autoPreencherDataHora();
+      atualizarCamposCondicionaisMaint();
+      const libOkCard = document.querySelector('.maint-liberacao-card[data-status="LIBERADO"]');
+      if (libOkCard) libOkCard.click();
+    }
   });
 
   if(filtroTagMaint) filtroTagMaint.addEventListener("input", () => window.renderizarHistoricoMaint());
@@ -1756,72 +2104,194 @@ import { firebaseConfig } from "./firebase-config.js";
     document.getElementById("whatsappRelatorio")?.click();
   };
 
+  // ─── RENDERIZAÇÃO DO RELATÓRIO TÉCNICO ───────────────────────────────────
   function gerarRelatorioMaint(dados) {
     relatorioAtualMaint = dados;
 
-    const linhasChecklist = dados.checklist.map((item, index) => {
-      const classe = item.status === "OK" ? "maint-badge ok" : item.status === "SIM" ? "maint-badge alerta" : "maint-badge nao";
-      return `
+    const statusLib = dados.statusLiberacao || "LIBERADO";
+    let semaforoHtml = '';
+    if (statusLib === "BLOQUEADO") {
+      semaforoHtml = `<div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: rgba(239, 68, 68, 0.2); border: 1.5px solid #ef4444; color: #fca5a5; font-weight: 800; font-size: 13px;">🔴 EQUIPAMENTO BLOQUEADO</div>`;
+    } else if (statusLib === "RESSALVA") {
+      semaforoHtml = `<div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: rgba(245, 158, 11, 0.2); border: 1.5px solid #f59e0b; color: #fcd34d; font-weight: 800; font-size: 13px;">🟡 LIBERADO COM RESSALVA</div>`;
+    } else {
+      semaforoHtml = `<div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: rgba(16, 185, 129, 0.2); border: 1.5px solid #10b981; color: #86efac; font-weight: 800; font-size: 13px;">🟢 100% LIBERADO PARA OPERAÇÃO</div>`;
+    }
+
+    // Tabela de itens
+    let tabelaLinhas = "";
+    let currentGrupo = "";
+    dados.checklist.forEach((item, index) => {
+      if (item.grupo && item.grupo !== currentGrupo) {
+        currentGrupo = item.grupo;
+        tabelaLinhas += `
+          <tr style="background: rgba(255,255,255,0.05); font-weight: 700; color: var(--secondary);">
+            <td colspan="4" style="padding: 8px 12px; font-size: 12px; text-transform: uppercase;">${currentGrupo}</td>
+          </tr>
+        `;
+      }
+      const classe = item.status === "OK" ? "maint-badge ok" : item.status === "SIM" ? "maint-badge nao" : "maint-badge alerta";
+      const statusLabel = item.status === "OK" ? "OK" : item.status === "SIM" ? "FALHA / INTERVENÇÃO" : "N/A";
+      tabelaLinhas += `
         <tr>
-          <td>${String(index + 1).padStart(2, "0")}</td>
-          <td>${item.titulo}</td>
-          <td><span class="${classe}">${item.status}</span></td>
-          <td>${item.quantidade || "-"}</td>
-          <td>${item.detalhe || "OK"}</td>
+          <td style="width: 35px; text-align: center; opacity: 0.6;">${String(index + 1).padStart(2, "0")}</td>
+          <td><strong>${item.titulo}</strong></td>
+          <td style="text-align: center;"><span class="${classe}">${statusLabel}</span></td>
+          <td>${item.detalhe || "-"}${item.quantidade ? ` <span style="opacity:0.8;">(Qtd: ${item.quantidade})</span>` : ''}</td>
         </tr>
       `;
-    }).join("");
+    });
+
+    // Insumos
+    const graxa = dados.insumos?.graxaKg || dados.graxaKg || 0;
+    const oleo = dados.insumos?.oleoLitros || dados.oleoLitros || 0;
+    const pecas = dados.insumos?.pecasTrocadas || dados.pecasTrocadas || "";
+    const temInsumos = graxa > 0 || oleo > 0 || pecas;
+
+    const insumosHtml = temInsumos ? `
+      <div style="margin-top: 18px; padding: 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;">
+        <span style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--secondary); font-weight: 800; margin-bottom: 8px;">Insumos e Peças Utilizadas</span>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; font-size: 13px;">
+          <div><span style="color: var(--text2);">Graxa Aplicada:</span> <strong>${graxa} kg</strong></div>
+          <div><span style="color: var(--text2);">Óleo Reposto:</span> <strong>${oleo} L</strong></div>
+          <div style="grid-column: 1 / -1;"><span style="color: var(--text2);">Peças / Bicos:</span> <strong>${pecas || 'Nenhuma'}</strong></div>
+        </div>
+      </div>
+    ` : "";
+
+    // Fotos Antes e Depois
+    let fotosHtml = "";
+    if (dados.fotoAntes || dados.fotoDepois || dados.fotoEvidencia) {
+      fotosHtml = `
+        <div style="margin-top: 20px;">
+          <span class="maint-section-kicker">Evidências Fotográficas</span>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 10px;">
+            ${dados.fotoAntes ? `
+              <div style="background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 10px; text-align: center;">
+                <span style="display: block; font-size: 11px; color: #f87171; font-weight: 700; margin-bottom: 6px;">FOTO 1: ANTES / FALHA</span>
+                <img src="${dados.fotoAntes}" style="width: 100%; max-height: 260px; object-fit: cover; border-radius: 8px;">
+              </div>
+            ` : ""}
+            ${dados.fotoDepois ? `
+              <div style="background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 10px; text-align: center;">
+                <span style="display: block; font-size: 11px; color: #86efac; font-weight: 700; margin-bottom: 6px;">FOTO 2: DEPOIS / CONCLUÍDO</span>
+                <img src="${dados.fotoDepois}" style="width: 100%; max-height: 260px; object-fit: cover; border-radius: 8px;">
+              </div>
+            ` : (dados.fotoEvidencia && !dados.fotoAntes ? `
+              <div style="background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 10px; text-align: center;">
+                <span style="display: block; font-size: 11px; color: var(--text2); font-weight: 700; margin-bottom: 6px;">EVIDÊNCIA FOTOGRÁFICA</span>
+                <img src="${dados.fotoEvidencia}" style="width: 100%; max-height: 260px; object-fit: cover; border-radius: 8px;">
+              </div>
+            ` : "")}
+          </div>
+        </div>
+      `;
+    }
+
+    // Assinatura digital
+    let assinaturaHtml = "";
+    if (dados.assinatura) {
+      assinaturaHtml = `
+        <div style="margin-top: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; text-align: center;">
+          <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text2); margin-bottom: 8px;">Validação Técnica e Responsabilidade</span>
+          <img src="${dados.assinatura}" style="max-height: 90px; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 6px; margin-bottom: 6px;">
+          <strong style="font-size: 14px; color: var(--text);">${dados.nomeLubrificador}</strong>
+          <span style="font-size: 12px; color: var(--text2);">Matrícula: ${dados.matricula || '-'} | Autenticado no Tablet</span>
+        </div>
+      `;
+    }
 
     relatorioElMaint.innerHTML = `
       <div class="maint-report-header">
         <div>
-          <span class="maint-section-kicker">Relatório Técnico</span>
-          <h2>Manutenção Corretiva L.A.</h2>
-          <p>Documento de registro operacional.</p>
+          <span class="maint-section-kicker">${dados.tipoServico || 'Preventiva L.A.'}</span>
+          <h2 style="margin: 6px 0 8px;">Laudo de Inspeção & Preventiva</h2>
+          ${semaforoHtml}
         </div>
         <div class="maint-report-code">
-          <strong>Código:</strong><br>
+          <strong>Ordem:</strong><br>
           ${dados.codigoRelatorio || dados.id}<br><br>
-          <strong>Gerado em:</strong><br>
-          ${dados.criadoEm}
+          <strong>Executado em:</strong><br>
+          ${dados.criadoEm || dados.date}
         </div>
       </div>
+
       <div class="maint-report-grid">
         <div class="maint-report-info"><span>TAG</span><strong>${dados.tagEquipamento}</strong></div>
-        <div class="maint-report-info"><span>Horímetro</span><strong>${dados.horimetro}</strong></div>
-        <div class="maint-report-info"><span>Data</span><strong>${dados.data.split('-').reverse().join('/')}</strong></div>
+        <div class="maint-report-info"><span>Horímetro</span><strong>${dados.horimetro} h</strong></div>
+        <div class="maint-report-info"><span>Data / Horário</span><strong>${dados.data ? dados.data.split('-').reverse().join('/') : '-'} (${dados.horaInicial} às ${dados.horaFim})</strong></div>
         <div class="maint-report-info"><span>Duração</span><strong>${dados.duracao || "-"}</strong></div>
       </div>
-      <table style="width:100%; text-align:left; border-collapse:collapse; margin-top:20px;">
-        <tr style="background:#f3f7f9;"><th>Item</th><th>Status</th><th>Obs/Motivo</th></tr>
-        ${dados.checklist.map(c => `<tr><td style="border-bottom:1px solid #eee; padding:8px;">${c.titulo}</td><td style="border-bottom:1px solid #eee; padding:8px;">${c.status}</td><td style="border-bottom:1px solid #eee; padding:8px;">${c.detalhe}</td></tr>`).join('')}
-      </table>
-      ${dados.fotoEvidencia ? `
-      <div style="margin-top: 20px; page-break-inside: avoid;">
-        <span class="maint-section-kicker">Evidência Fotográfica</span>
-        <div style="margin-top: 10px; border: 1px solid #d8e2ea; border-radius: 14px; padding: 10px; text-align: center; background: #f8fafc;">
-          <img src="${dados.fotoEvidencia}" style="max-width: 100%; max-height: 400px; border-radius: 8px;">
-        </div>
+
+      ${insumosHtml}
+
+      <div style="overflow-x: auto; margin-top: 18px;">
+        <table style="width:100%; border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th style="width: 35px;">#</th>
+              <th>Item Verificado</th>
+              <th style="text-align: center; width: 140px;">Condição</th>
+              <th>Observação / Intervenção</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${tabelaLinhas}
+          </tbody>
+        </table>
       </div>
-      ` : ""}
+
+      ${fotosHtml}
+      ${assinaturaHtml}
     `;
   }
 
+  // ─── COMPARTILHAMENTO NO WHATSAPP ─────────────────────────────────────────
   document.getElementById("whatsappRelatorio")?.addEventListener("click", () => {
     if (!relatorioAtualMaint) return;
-    const dados = relatorioAtualMaint;
-    const ocorrencias = dados.checklist.filter(i => i.status === "SIM").map(i => `- ${i.titulo}: ${i.detalhe}`).join("\\n");
-    const msg = `*RELATÓRIO MANUTENÇÃO L.A.*\nCódigo: ${dados.codigoRelatorio}\nTAG: ${dados.tagEquipamento}\nHorímetro: ${dados.horimetro}\nData: ${dados.data.split('-').reverse().join('/')}\n\n*OCORRÊNCIAS:*\n${ocorrencias || "Sem ocorrências"}`;
+    const d = relatorioAtualMaint;
+    const statusLib = d.statusLiberacao || "LIBERADO";
+    const semaforoIcon = statusLib === "BLOQUEADO" ? "🔴 BLOQUEADO" : statusLib === "RESSALVA" ? "🟡 LIBERADO COM RESSALVA" : "🟢 100% LIBERADO";
+
+    const falhas = d.checklist ? d.checklist.filter(i => i.status === "SIM") : [];
+    const falhasTexto = falhas.length > 0
+      ? falhas.map(i => `• *${i.titulo}*: ${i.detalhe}${i.quantidade ? ` (Qtd: ${i.quantidade})` : ''}`).join("\n")
+      : "✅ Nenhum vazamento ou avaria encontrada.";
+
+    const graxa = d.insumos?.graxaKg || d.graxaKg || 0;
+    const oleo = d.insumos?.oleoLitros || d.oleoLitros || 0;
+    const pecas = d.insumos?.pecasTrocadas || d.pecasTrocadas || "";
+    let insumosTexto = "";
+    if (graxa > 0 || oleo > 0 || pecas) {
+      insumosTexto = `\n\n*INSUMOS APLICADOS:*\n` +
+        (graxa > 0 ? `• Graxa: ${graxa} kg\n` : "") +
+        (oleo > 0 ? `• Óleo completado: ${oleo} L\n` : "") +
+        (pecas ? `• Peças/Bicos: ${pecas}\n` : "");
+    }
+
+    const msg = `*RELATÓRIO DE PREVENTIVA / INSPEÇÃO*
+*Condição Operacional:* ${semaforoIcon}
+*Tipo de Serviço:* ${d.tipoServico || 'Preventiva L.A.'}
+*TAG Equipamento:* ${d.tagEquipamento}
+*Horímetro:* ${d.horimetro} h
+*Data:* ${d.data ? d.data.split('-').reverse().join('/') : '-'} (${d.horaInicial} às ${d.horaFim} | ${d.duracao || ''})
+*Técnico:* ${d.nomeLubrificador} (Matrícula: ${d.matricula || '-'})
+*Código:* ${d.codigoRelatorio || d.id}
+
+*ITENS COM INTERVENÇÃO / FALHA:*
+${falhasTexto}${insumosTexto}
+${d.assinatura ? '✍️ *Laudo com Assinatura Digital do Técnico*' : ''}`;
+
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
   });
 
   document.getElementById("copiarRelatorio")?.addEventListener("click", async () => {
     if (!relatorioAtualMaint) return;
-    const dados = relatorioAtualMaint;
-    const msg = `RELATÓRIO MANUTENÇÃO L.A.\nCódigo: ${dados.codigoRelatorio}\nTAG: ${dados.tagEquipamento}\nData: ${dados.data.split('-').reverse().join('/')}`;
+    const d = relatorioAtualMaint;
+    const msg = `RELATÓRIO DE PREVENTIVA - ${d.tagEquipamento} (${d.data ? d.data.split('-').reverse().join('/') : ''})\nStatus: ${d.statusLiberacao || 'LIBERADO'}\nHorímetro: ${d.horimetro} h\nTécnico: ${d.nomeLubrificador}\nCódigo: ${d.codigoRelatorio || d.id}`;
     try {
       await navigator.clipboard.writeText(msg);
-      if(typeof showToast === 'function') showToast("Copiado!");
+      if(typeof showToast === 'function') showToast("Resumo copiado para a área de transferência!");
     } catch(e) { }
   });
 
