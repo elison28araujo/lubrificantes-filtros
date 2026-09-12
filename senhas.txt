@@ -26,3 +26,7 @@ Obs: Outros usuários do PCM são gerenciados via coleção 'usuarios_pcm' no Fi
      Senha: almoxarife123
 
    Obs: Novos usuários do Almoxarifado podem ser gerenciados diretamente na aba "Gestão de Usuários" (acesso exclusivo do Gerente), salvos na coleção 'usuarios_almoxarifado'.
+
+6. CONFIGURAÇÃO / RENOMEAR TABLET (ÍCONE DE ENGRENAGEM NO APP DE CAMPO):
+   Senha: UMCAPCM
+
