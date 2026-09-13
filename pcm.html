@@ -517,6 +517,8 @@
       justify-content: center;
       align-items: center;
       padding: 20px;
+      overflow-y: auto;
+      box-sizing: border-box;
     }
     .modal-overlay.hidden { display: none; }
     
@@ -524,14 +526,81 @@
       background: var(--surface);
       border: 1.5px solid var(--border2);
       border-radius: var(--radius);
-      padding: 25px;
+      padding: 24px;
       width: 100%;
       max-width: 450px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
       animation: fadeIn 0.3s ease;
+      position: relative;
+      box-sizing: border-box;
     }
     
-    .modal-box h3 { margin: 0 0 20px 0; color: var(--secondary); font-size: 18px; }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .modal-header h3, .modal-box h3 { 
+      margin: 0; 
+      color: var(--secondary); 
+      font-size: 18px; 
+      font-weight: 700;
+    }
+
+    .modal-close-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .modal-close-btn:hover {
+      background: rgba(239, 68, 68, 0.25);
+      border-color: rgba(239, 68, 68, 0.5);
+      color: #f87171;
+      transform: scale(1.05);
+    }
+
+    #modalBody {
+      overflow-y: auto;
+      flex: 1 1 auto;
+      padding-right: 6px;
+      margin-bottom: 15px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #modalBody::-webkit-scrollbar {
+      width: 6px;
+    }
+    #modalBody::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+    }
+    #modalBody::-webkit-scrollbar-thumb {
+      background: rgba(0, 168, 89, 0.5);
+      border-radius: 4px;
+    }
+    #modalBody::-webkit-scrollbar-thumb:hover {
+      background: var(--secondary);
+    }
     
     .modal-field { margin-bottom: 15px; }
     .modal-field label { display: block; font-size: 12px; opacity: 0.6; margin-bottom: 5px; }
@@ -558,7 +627,9 @@
       display: flex;
       justify-content: flex-end;
       gap: 10px;
-      margin-top: 25px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
     }
 
     /* Estilos para Comboio / Caminhões */
@@ -845,7 +916,10 @@
   <!-- Custom Modal HTML -->
   <div id="customModal" class="modal-overlay hidden">
     <div class="modal-box">
-      <h3 id="modalTitle">Título</h3>
+      <div class="modal-header">
+        <h3 id="modalTitle">Título</h3>
+        <button type="button" class="modal-close-btn" onclick="window.closeModal()" title="Fechar janela (Esc)">✕</button>
+      </div>
       <div id="modalBody"></div>
       <div class="modal-footer">
         <button class="btn-action" onclick="window.closeModal()" id="modalCancelBtn">Cancelar</button>
@@ -1828,9 +1902,22 @@
         const mTitle = document.getElementById('modalTitle');
         const mBody = document.getElementById('modalBody');
         const mConfirm = document.getElementById('modalConfirmBtn');
+        const cancelBtn = document.getElementById('modalCancelBtn');
 
         // Garantir que o botão confirmar esteja visível (pode ter sido escondido na tela de relatório)
         mConfirm.style.display = '';
+
+        // Resetar estilos do botão de cancelamento/fechar
+        if (cancelBtn) {
+          cancelBtn.textContent = 'Cancelar';
+          cancelBtn.style.background = '';
+          cancelBtn.style.color = '';
+          cancelBtn.style.padding = '';
+          cancelBtn.style.fontWeight = '';
+          cancelBtn.style.fontSize = '';
+          cancelBtn.style.borderRadius = '';
+          cancelBtn.style.boxShadow = '';
+        }
 
         mTitle.textContent = title;
         mBody.innerHTML = '';
@@ -1873,12 +1960,40 @@
       };
 
       window.closeModal = function() {
-        document.getElementById('customModal').classList.add('hidden');
+        const modal = document.getElementById('customModal');
+        if (modal) modal.classList.add('hidden');
         const modalBox = document.querySelector('.modal-box');
         if (modalBox) modalBox.style.maxWidth = '450px'; // Resetar largura padrão
         const cancelBtn = document.getElementById('modalCancelBtn');
-        if (cancelBtn) cancelBtn.textContent = 'Cancelar'; // Resetar rótulo padrão
+        if (cancelBtn) {
+          cancelBtn.textContent = 'Cancelar'; // Resetar rótulo padrão
+          cancelBtn.style.background = '';
+          cancelBtn.style.color = '';
+          cancelBtn.style.padding = '';
+          cancelBtn.style.fontWeight = '';
+          cancelBtn.style.fontSize = '';
+          cancelBtn.style.borderRadius = '';
+          cancelBtn.style.boxShadow = '';
+        }
       };
+
+      // Fechar modal ao clicar fora (backdrop) e tecla ESC
+      const modalBackdrop = document.getElementById('customModal');
+      if (modalBackdrop) {
+        modalBackdrop.addEventListener('click', (e) => {
+          if (e.target === modalBackdrop) {
+            window.closeModal();
+          }
+        });
+      }
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          const m = document.getElementById('customModal');
+          if (m && !m.classList.contains('hidden')) {
+            window.closeModal();
+          }
+        }
+      });
 
       window.editarEquipamento = function(index, tipo) {
         // Obter o equipamento do catálogo filtrado atual, ou diretamente de EQUIPAMENTOS
@@ -2017,12 +2132,6 @@
         const item = maintenanceData.find(h => h.docId === docId);
         if (!item) return;
 
-        // Customizar o tamanho do modal para relatórios
-        const modalBox = document.querySelector('.modal-box');
-        if (modalBox) modalBox.style.maxWidth = '750px';
-        const cancelBtn = document.getElementById('modalCancelBtn');
-        if (cancelBtn) cancelBtn.textContent = 'Fechar';
-
         const statusLib = item.statusLiberacao || "LIBERADO";
         let semaforoBanner = '';
         if (statusLib === "BLOQUEADO") {
@@ -2131,6 +2240,21 @@
         window.openModal(`Laudo de Preventiva: ${item.tagEquipamento}`, [], () => {
           window.closeModal();
         });
+
+        // Customizar o modal para o laudo
+        const modalBox = document.querySelector('.modal-box');
+        if (modalBox) modalBox.style.maxWidth = '750px';
+        const cancelBtn = document.getElementById('modalCancelBtn');
+        if (cancelBtn) {
+          cancelBtn.textContent = 'Fechar Relatório';
+          cancelBtn.style.background = 'var(--secondary)';
+          cancelBtn.style.color = '#ffffff';
+          cancelBtn.style.padding = '10px 25px';
+          cancelBtn.style.fontWeight = '700';
+          cancelBtn.style.fontSize = '14px';
+          cancelBtn.style.borderRadius = '8px';
+          cancelBtn.style.boxShadow = '0 4px 14px rgba(0, 168, 89, 0.4)';
+        }
 
         // Inserir HTML customizado e premium
         const mBody = document.getElementById('modalBody');
